@@ -136,3 +136,121 @@ export function generateSeamlessStarTiles(
 
   return result;
 }
+
+/**
+ * Forward warp perspective star geometry.
+ * Stars emanate from central vanishing point (320, 180) and accelerate outward
+ * with realistic radial perspective elongation and streak trails.
+ */
+export interface ForwardStar {
+  x: number;
+  y: number;
+  r: number;
+  o: number;
+  color: string;
+  hasStreak?: boolean;
+  streakX?: number;
+  streakY?: number;
+  hasSpike?: boolean;
+}
+
+export interface ForwardStarWave {
+  id: number;
+  stars: ForwardStar[];
+}
+
+function generateForwardWaves(): ForwardStarWave[] {
+  const waves: ForwardStarWave[] = [];
+  const WAVE_COUNT = 6;
+  const STARS_PER_WAVE = 36;
+  const cx = 320;
+  const cy = 180;
+
+  // Linear Congruential Generator for deterministic starfield coordinates
+  function createRng(seed: number) {
+    let s = seed;
+    return () => {
+      s = (s * 9301 + 49297) % 233280;
+      return s / 233280;
+    };
+  }
+
+  for (let w = 0; w < WAVE_COUNT; w++) {
+    const rand = createRng(101 + w * 211);
+    const stars: ForwardStar[] = [];
+
+    for (let s = 0; s < STARS_PER_WAVE; s++) {
+      // Angular distribution covering 360 degrees with organic jitter
+      const baseAngle = (s / STARS_PER_WAVE) * Math.PI * 2;
+      const angleJitter = (rand() - 0.5) * 0.38;
+      const angle = baseAngle + angleJitter;
+
+      // Distance from center: keep clear of immediate center reticle pip (min 38), extend to 360
+      const dist = 38 + Math.pow(rand(), 0.85) * 322;
+
+      const x = Math.round((cx + Math.cos(angle) * dist) * 10) / 10;
+      const y = Math.round((cy + Math.sin(angle) * dist) * 10) / 10;
+
+      const sizeRoll = rand();
+      let r = 0.8;
+      let color = '#ffffff';
+      let hasStreak = false;
+      let hasSpike = false;
+
+      if (sizeRoll < 0.5) {
+        // Distant small star
+        r = Math.round((0.7 + rand() * 0.5) * 10) / 10;
+        color = rand() < 0.35 ? '#7dd3fc' : '#e2e8f0';
+      } else if (sizeRoll < 0.82) {
+        // Mid-field star
+        r = Math.round((1.3 + rand() * 0.7) * 10) / 10;
+        color = rand() < 0.25 ? '#bae6fd' : '#ffffff';
+      } else {
+        // High-speed near stellar object
+        r = Math.round((2.2 + rand() * 0.9) * 10) / 10;
+        color = rand() < 0.2 ? '#fef08a' : '#ffffff';
+        if (dist >= 80) {
+          hasStreak = true;
+        }
+        if (r >= 2.6) {
+          hasSpike = true;
+        }
+      }
+
+      const o = Math.round((0.55 + rand() * 0.45) * 100) / 100;
+
+      let streakX: number | undefined;
+      let streakY: number | undefined;
+
+      if (hasStreak) {
+        const dx = x - cx;
+        const dy = y - cy;
+        const len = Math.hypot(dx, dy) || 1;
+        const streakLen = 8 + rand() * 14;
+        streakX = Math.round((x - (dx / len) * streakLen) * 10) / 10;
+        streakY = Math.round((y - (dy / len) * streakLen) * 10) / 10;
+      }
+
+      stars.push({
+        x,
+        y,
+        r,
+        o,
+        color,
+        hasStreak,
+        streakX,
+        streakY,
+        hasSpike,
+      });
+    }
+
+    waves.push({
+      id: w,
+      stars,
+    });
+  }
+
+  return waves;
+}
+
+export const FORWARD_STAR_WAVES: ForwardStarWave[] = generateForwardWaves();

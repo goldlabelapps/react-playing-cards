@@ -11,7 +11,7 @@
             :root {
                 --bg-fill: #0c1524;
                 --border-stroke: #15868F;
-                --glyph-fill: #4C979C;
+                --glyph-fill: #FFFFFF;
             }
         }
         .mwp-flash-bg {
