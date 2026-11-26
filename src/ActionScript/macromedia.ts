@@ -1,6 +1,5 @@
 import { gsap } from 'gsap';
 import type { ActionScriptOptions } from '../types';
-import { playFighterZoomSound, playTargetingLockBeep, startCockpitAmbient } from '../Sound';
 
 export function macromediaActionScript({
   target,
@@ -15,13 +14,6 @@ export function macromediaActionScript({
     repeat: loop ? -1 : 0,
     repeatDelay: 0, // Zero delay to ensure seamless continuous wraparound
     onComplete,
-    onStart: () => {
-      startCockpitAmbient();
-      playFighterZoomSound(0.4);
-    },
-    onRepeat: () => {
-      playFighterZoomSound(0.4);
-    },
   });
 
   tl.timeScale(speed);
@@ -295,12 +287,8 @@ export function macromediaActionScript({
     4.8
   );
 
-  // 6. TARGETING COMPUTER HUD LOCK PING & BLINK
+  // 6. TARGETING COMPUTER HUD LOCK PULSE & BLINK
   if (bracketLeft && bracketRight) {
-    tl.add(() => {
-      playTargetingLockBeep(1760);
-    }, 3.6);
-
     tl.to(
       [bracketLeft, bracketRight],
       {

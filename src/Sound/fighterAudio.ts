@@ -9,7 +9,7 @@
 
 let audioCtx: AudioContext | null = null;
 let masterGain: GainNode | null = null;
-let isMuted = false;
+let isMuted = true; // Audio disabled by default
 let ambientEngineNodes: {
   osc: OscillatorNode;
   gain: GainNode;
