@@ -1,0 +1,13 @@
+# React Playing Cards
+
+> Vector graphics and animation library for React and TypeScript based on the Flash concept.
+
+## Overview
+- [Architecture & Control Surface](docs/agentic-control-surface.md): Baseline agentic control surface and engineering directives.
+- [Project Readme](README.md): Repository overview and foundational scope.
+
+## Technical Interfaces
+- [Agent Directives](AGENTS.md): Autonomous agent pairing contracts and verification baselines.
+
+## Optional & Deep Dive
+- [Full Documentation](llms-full.txt): Complete concatenated repository context.

@@ -1,5 +1,29 @@
+# Dependencies and build outputs
 node_modules/
 dist/
 build/
-.DS_Store
 *.log
+
+# Operating system artifacts
+.DS_Store
+Thumbs.db
+
+# Secrets, keys, and credentials (GS-AI-DATA-02)
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.dump
+*.cert
+*.crt
+
+# Agent scratchpad and transient work
+.agents/scratch/*
+!.agents/scratch/.gitkeep
+
+# Caches and coverage
+.turbo/
+.next/
+.pytest_cache/
+coverage/
