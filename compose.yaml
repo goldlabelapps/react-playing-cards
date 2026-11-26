@@ -1,0 +1,14 @@
+services:
+  flash-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flash-animation-studio
+    ports:
+      - "3800:3800"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped

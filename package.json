@@ -1,47 +1,47 @@
 {
   "name": "react-playing-cards",
-  "description": "Customisable SVG based playing card system in React",
-  "version": "0.2.7",
-  "scripts": {
-    "start": "clear && yarn storybook",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook",
-    "deploy": "clear && build-storybook -s public && firebase deploy"
-  },
-  "author": {
-    "name": "listingslab",
-    "email": "listingslab@gmail.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/listingslab-software/react-playing-cards.git"
-  },
+  "version": "1.0.0",
+  "description": "SVG-based Flash animation engine and prompt-driven animation studio for Next.js and WordPress.",
   "license": "MIT",
+  "author": "Goldlabel°",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./bundle": "./dist/flash-bundle.min.js",
+    "./styles.css": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "docs"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "build:bundle": "vite build --config vite.bundle.config.ts",
+    "type-check": "tsc --noEmit",
+    "test": "python3 scripts/verify-hygiene.py",
+    "studio": "vite --port 3800 --host"
+  },
   "dependencies": {
-    "@material-ui/core": "^4.9.3",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.43",
-    "@u-wave/react-vimeo": "^0.8.2",
-    "gsap": "^3.2.0",
-    "react-material-color-picker": "^1.1.2"
+    "gsap": "^3.12.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.28.5",
-    "@storybook/addon-actions": "^5.3.14",
-    "@storybook/addon-links": "^5.3.14",
-    "@storybook/addon-viewport": "^5.3.14",
-    "@storybook/addons": "^5.3.14",
-    "@storybook/react": "^5.3.14",
-    "babel-loader": "^8.0.6"
-  },
-  "resolutions": {
-    "react-draggable": "4.4.6"
-  },
-  "keywords": [
-    "Poker",
-    "JavaScript",
-    "SVG",
-    "React"
-  ]
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
 }

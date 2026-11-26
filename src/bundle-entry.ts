@@ -1,0 +1,91 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { Flash } from './Flash';
+import { Stage } from './Stage';
+import { parsePrompt } from './PromptEngine';
+import { actionScripts, registerActionScript, getActionScript, corkScrew, asMovieClip } from './ActionScript';
+import * as PlayingCards from './MovieClips/PlayingCards';
+import type { MovieName, PromptScene } from './types';
+
+interface MountOptions {
+  movie?: MovieName;
+  prompt?: string;
+  scene?: PromptScene;
+  width?: string | number;
+  height?: string | number;
+  color?: string;
+  loop?: boolean;
+  autoPlay?: boolean;
+  speed?: number;
+}
+
+/**
+ * Universal mount function for WordPress mwp-flash and vanilla browser embedding.
+ */
+export function mount(element: HTMLElement, options: MountOptions = {}) {
+  const root = createRoot(element);
+
+  const scene = options.prompt ? parsePrompt(options.prompt) : options.scene;
+
+  root.render(
+    React.createElement(Flash, {
+      movie: options.movie,
+      scene,
+      width: options.width ?? '100%',
+      height: options.height ?? '320px',
+      color: options.color ?? 'transparent',
+      loop: options.loop ?? true,
+      autoPlay: options.autoPlay ?? true,
+      speed: options.speed ?? 1,
+    }),
+  );
+
+  return {
+    destroy: () => root.unmount(),
+  };
+}
+
+/**
+ * Auto-discovery runner: Scans document for .mwp-flash-stage or [data-flash-movie]
+ */
+export function autoMount() {
+  if (typeof document === 'undefined') return;
+
+  const containers = document.querySelectorAll<HTMLElement>('.mwp-flash-stage, [data-flash-stage="true"]');
+  containers.forEach((el) => {
+    const movie = (el.getAttribute('data-movie') || 'logo') as MovieName;
+    const prompt = el.getAttribute('data-prompt') || undefined;
+    const color = el.getAttribute('data-color') || undefined;
+    const loop = el.getAttribute('data-loop') !== 'false';
+    const autoPlay = el.getAttribute('data-autoplay') !== 'false';
+    const speed = parseFloat(el.getAttribute('data-speed') || '1');
+
+    mount(el, { movie, prompt, color, loop, autoPlay, speed });
+  });
+}
+
+// Auto mount on DOMContentLoaded
+if (typeof window !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', autoMount);
+  } else {
+    autoMount();
+  }
+
+  // Attach to global window for WordPress mwp-flash runtime
+  (window as unknown as { mwpFlash: unknown }).mwpFlash = {
+    mount,
+    autoMount,
+    Flash,
+    Stage,
+    parsePrompt,
+    actionScripts,
+    registerActionScript,
+    getActionScript,
+    corkScrew,
+    asMovieClip,
+    PlayingCards,
+  };
+}
+
+export { Flash, Stage, parsePrompt, actionScripts, registerActionScript, getActionScript, corkScrew, asMovieClip, PlayingCards };

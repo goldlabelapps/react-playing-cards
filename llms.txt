@@ -1,0 +1,15 @@
+# React Playing Cards // Flash SVG Animation Studio
+
+> SVG-based Flash animation engine, GSAP ActionScript choreography, and prompt-driven animation studio for Next.js and WordPress.
+
+## Core Documentation
+- [Project Overview](README.md): Flash animation engine and prompt studio scope.
+- [Docker Harness Specification](docs/docker-harness.md): Container architecture, port configuration, and operational commands.
+- [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step guides for Next.js and WordPress setups.
+- [Agentic Control Surface](docs/agentic-control-surface.md): Baseline agentic controls and verification tooling.
+
+## Technical Interfaces
+- [Agent Directives](AGENTS.md): Autonomous agent pairing contracts and verification baselines.
+
+## Deep Dive Context
+- [Full Documentation](llms-full.txt): Complete concatenated technical corpus.
