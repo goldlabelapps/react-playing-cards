@@ -80,7 +80,7 @@ export default function MyAnimation() {
                 ← Back to Home
               </button>
               <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.02em', color: '#38bdf8', margin: 0 }}>
-                ⚡ Flash SVG Animation Studio
+                Flash SVG Animation Studio
               </h1>
             </div>
             <p style={{ color: '#94a3b8', marginTop: 8, fontSize: 14 }}>

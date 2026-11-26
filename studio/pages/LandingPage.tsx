@@ -121,7 +121,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >
-          <span>{isMuted ? '🔇' : '⚡'}</span>
+          <span>{isMuted ? '🔇' : '🔊'}</span>
           <span>{isMuted ? 'AUDIO: OFF' : 'HUD AUDIO: ON'}</span>
         </button>
       </div>
@@ -137,16 +137,14 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
           justifyContent: 'center',
           position: 'relative',
           overflow: 'hidden',
-          padding: '24px',
+          padding: 0,
           boxSizing: 'border-box',
         }}
       >
         <div
           style={{
             width: '100%',
-            maxWidth: 960,
             height: '100%',
-            maxHeight: 640,
             position: 'relative',
             display: 'flex',
             alignItems: 'center',
@@ -290,7 +288,11 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 20, fontWeight: 900, color: '#4C979C' }}>⚡</span>
+              <img
+                src="/favicon.svg"
+                alt="Flash logo"
+                style={{ width: 22, height: 22, borderRadius: 5 }}
+              />
               <div>
                 <h2
                   id="dialog-title"

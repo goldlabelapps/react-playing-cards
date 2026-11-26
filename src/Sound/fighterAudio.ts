@@ -24,9 +24,19 @@ function getAudioContext(): AudioContext | null {
       (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     if (AudioContextClass) {
       audioCtx = new AudioContextClass();
+
+      // Dynamics compressor to ensure high volume with zero digital clipping
+      const compressor = audioCtx.createDynamicsCompressor();
+      compressor.threshold.setValueAtTime(-10, audioCtx.currentTime);
+      compressor.knee.setValueAtTime(8, audioCtx.currentTime);
+      compressor.ratio.setValueAtTime(4, audioCtx.currentTime);
+      compressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+      compressor.release.setValueAtTime(0.2, audioCtx.currentTime);
+      compressor.connect(audioCtx.destination);
+
       masterGain = audioCtx.createGain();
-      masterGain.gain.setValueAtTime(isMuted ? 0 : 0.35, audioCtx.currentTime);
-      masterGain.connect(audioCtx.destination);
+      masterGain.gain.setValueAtTime(isMuted ? 0 : 0.8, audioCtx.currentTime);
+      masterGain.connect(compressor);
     }
   }
   if (audioCtx && audioCtx.state === 'suspended') {
@@ -87,7 +97,7 @@ export function playFighterZoomSound(panDirection: number = 0.4): void {
 
   const oscGain = ctx.createGain();
   oscGain.gain.setValueAtTime(0, now);
-  oscGain.gain.linearRampToValueAtTime(0.18, now + 0.4);
+  oscGain.gain.linearRampToValueAtTime(0.42, now + 0.4);
   oscGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
   // 4. Stereo Panner (pans along with the camera / starfield pan)
@@ -101,7 +111,7 @@ export function playFighterZoomSound(panDirection: number = 0.4): void {
   // 5. Volume Envelope
   const noiseGain = ctx.createGain();
   noiseGain.gain.setValueAtTime(0, now);
-  noiseGain.gain.linearRampToValueAtTime(0.42, now + 0.45);
+  noiseGain.gain.linearRampToValueAtTime(0.85, now + 0.45);
   noiseGain.gain.exponentialRampToValueAtTime(0.002, now + duration);
 
   // Connect graph
@@ -143,7 +153,7 @@ export function playTargetingLockBeep(freq: number = 1320): void {
   osc.frequency.setValueAtTime(freq, now);
   osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + duration);
 
-  gain.gain.setValueAtTime(0.15, now);
+  gain.gain.setValueAtTime(0.35, now);
   gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
   osc.connect(gain);
@@ -199,7 +209,7 @@ export function stopCockpitAmbient(): void {
 export function setFighterAudioMuted(muted: boolean): boolean {
   isMuted = muted;
   if (masterGain && audioCtx) {
-    masterGain.gain.setValueAtTime(isMuted ? 0 : 0.35, audioCtx.currentTime);
+    masterGain.gain.setValueAtTime(isMuted ? 0 : 0.8, audioCtx.currentTime);
   }
   if (!isMuted) {
     getAudioContext();

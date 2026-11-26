@@ -1,5 +1,11 @@
 import type { CSSProperties } from 'react';
 import { MACROMEDIA_FLASH_PATH, FLASH_RAYS } from './constants';
+import {
+  BASE_FAR_STARS,
+  BASE_MID_STARS,
+  BASE_NEAR_STARS,
+  generateSeamlessStarTiles,
+} from './starsData';
 
 export interface MacromediaProps {
   width?: string | number;
@@ -10,77 +16,11 @@ export interface MacromediaProps {
   showLogo?: boolean;
 }
 
-// Deterministic parallax star coordinates across wider canvas (-240 to 880, 0 to 360)
-// To ensure smooth, seamless parallax drift as the fighter pans to the right
-const FAR_STARS = [
-  { x: -180, y: 45, r: 0.8, o: 0.5 },
-  { x: -130, y: 120, r: 0.7, o: 0.4 },
-  { x: -95, y: 280, r: 0.9, o: 0.6 },
-  { x: -50, y: 80, r: 0.6, o: 0.35 },
-  { x: -20, y: 220, r: 0.8, o: 0.5 },
-  { x: 15, y: 40, r: 0.7, o: 0.45 },
-  { x: 35, y: 170, r: 0.9, o: 0.6 },
-  { x: 60, y: 310, r: 0.6, o: 0.4 },
-  { x: 90, y: 95, r: 0.8, o: 0.55 },
-  { x: 120, y: 240, r: 0.7, o: 0.4 },
-  { x: 155, y: 60, r: 0.9, o: 0.65 },
-  { x: 180, y: 190, r: 0.8, o: 0.5 },
-  { x: 210, y: 330, r: 0.7, o: 0.4 },
-  { x: 245, y: 110, r: 0.8, o: 0.5 },
-  { x: 275, y: 45, r: 0.6, o: 0.35 },
-  { x: 305, y: 260, r: 0.9, o: 0.6 },
-  { x: 335, y: 85, r: 0.7, o: 0.45 },
-  { x: 370, y: 215, r: 0.8, o: 0.55 },
-  { x: 400, y: 50, r: 0.6, o: 0.4 },
-  { x: 430, y: 320, r: 0.9, o: 0.6 },
-  { x: 460, y: 140, r: 0.7, o: 0.45 },
-  { x: 495, y: 75, r: 0.8, o: 0.5 },
-  { x: 530, y: 270, r: 0.7, o: 0.4 },
-  { x: 565, y: 115, r: 0.9, o: 0.65 },
-  { x: 600, y: 340, r: 0.6, o: 0.35 },
-  { x: 635, y: 90, r: 0.8, o: 0.55 },
-  { x: 670, y: 230, r: 0.7, o: 0.45 },
-  { x: 710, y: 65, r: 0.9, o: 0.6 },
-  { x: 745, y: 295, r: 0.7, o: 0.4 },
-  { x: 780, y: 160, r: 0.8, o: 0.5 },
-  { x: 820, y: 40, r: 0.6, o: 0.35 },
-  { x: 855, y: 250, r: 0.9, o: 0.6 },
-];
-
-const MID_STARS = [
-  { x: -160, y: 85, r: 1.4, o: 0.75 },
-  { x: -110, y: 230, r: 1.6, o: 0.85 },
-  { x: -60, y: 150, r: 1.3, o: 0.7 },
-  { x: 5, y: 70, r: 1.5, o: 0.8 },
-  { x: 45, y: 280, r: 1.7, o: 0.9 },
-  { x: 95, y: 130, r: 1.4, o: 0.75 },
-  { x: 140, y: 50, r: 1.6, o: 0.85 },
-  { x: 195, y: 260, r: 1.3, o: 0.7 },
-  { x: 250, y: 175, r: 1.5, o: 0.8 },
-  { x: 290, y: 320, r: 1.8, o: 0.9 },
-  { x: 350, y: 65, r: 1.4, o: 0.75 },
-  { x: 410, y: 240, r: 1.6, o: 0.85 },
-  { x: 465, y: 95, r: 1.5, o: 0.8 },
-  { x: 520, y: 310, r: 1.7, o: 0.9 },
-  { x: 580, y: 160, r: 1.3, o: 0.7 },
-  { x: 640, y: 45, r: 1.6, o: 0.85 },
-  { x: 695, y: 275, r: 1.4, o: 0.75 },
-  { x: 760, y: 120, r: 1.5, o: 0.8 },
-  { x: 815, y: 300, r: 1.8, o: 0.9 },
-];
-
-const NEAR_STARS = [
-  { x: -140, y: 190, r: 2.2, o: 0.95 },
-  { x: -40, y: 100, r: 2.6, o: 1.0 },
-  { x: 70, y: 220, r: 2.3, o: 0.9 },
-  { x: 170, y: 120, r: 2.7, o: 1.0 },
-  { x: 280, y: 270, r: 2.4, o: 0.95 },
-  { x: 380, y: 80, r: 2.8, o: 1.0 },
-  { x: 490, y: 210, r: 2.3, o: 0.9 },
-  { x: 590, y: 135, r: 2.6, o: 1.0 },
-  { x: 700, y: 255, r: 2.4, o: 0.95 },
-  { x: 810, y: 90, r: 2.7, o: 1.0 },
-];
+// Generate horizontally tiled star arrays across multiple 640px periods
+// for mathematically seamless infinite wraparound parallax
+const SEAMLESS_FAR_STARS = generateSeamlessStarTiles(BASE_FAR_STARS, [-1, 2]);
+const SEAMLESS_MID_STARS = generateSeamlessStarTiles(BASE_MID_STARS, [-1, 3]);
+const SEAMLESS_NEAR_STARS = generateSeamlessStarTiles(BASE_NEAR_STARS, [-1, 5]);
 
 export function Macromedia({
   width = '100%',
@@ -110,11 +50,14 @@ export function Macromedia({
     >
       <svg
         viewBox="0 0 640 360"
+        preserveAspectRatio="xMidYMid slice"
         style={{
+          position: 'absolute',
+          inset: 0,
           width: '100%',
-          maxWidth: 960,
-          maxHeight: 540,
-          overflow: 'visible',
+          height: '100%',
+          display: 'block',
+          overflow: 'hidden',
         }}
         aria-label="Starfighter Cockpit HUD & Parallax Starfield"
       >
@@ -148,10 +91,10 @@ export function Macromedia({
           </clipPath>
         </defs>
 
-        {/* 1. PARALLAX STARFIELD LAYERS */}
-        {/* Layer A: Distant Deep Space (Slow Shift) */}
+        {/* 1. PARALLAX STARFIELD LAYERS (STRETCHING FULL VERTICAL BOUNDS: -120 TO 480) */}
+        {/* Layer A: Distant Deep Space (Slow Shift, repeats every 640px) */}
         <g data-part="stars-far">
-          {FAR_STARS.map((star, idx) => (
+          {SEAMLESS_FAR_STARS.map((star, idx) => (
             <circle
               key={`far-${idx}`}
               cx={star.x}
@@ -163,9 +106,9 @@ export function Macromedia({
           ))}
         </g>
 
-        {/* Layer B: Mid-Field Nebula & Medium Stars (Moderate Shift) */}
+        {/* Layer B: Mid-Field Nebula & Medium Stars (Moderate Shift, repeats every 1280px) */}
         <g data-part="stars-mid">
-          {MID_STARS.map((star, idx) => (
+          {SEAMLESS_MID_STARS.map((star, idx) => (
             <circle
               key={`mid-${idx}`}
               cx={star.x}
@@ -177,9 +120,9 @@ export function Macromedia({
           ))}
         </g>
 
-        {/* Layer C: Near Stellar Objects & Speed Streaks (Fast Shift) */}
+        {/* Layer C: Near Stellar Objects & Speed Streaks (Fast Shift, repeats every 2560px) */}
         <g data-part="stars-near" filter="url(#starGlow)">
-          {NEAR_STARS.map((star, idx) => (
+          {SEAMLESS_NEAR_STARS.map((star, idx) => (
             <g key={`near-${idx}`}>
               <circle
                 cx={star.x}
@@ -188,7 +131,7 @@ export function Macromedia({
                 fill="#ffffff"
                 opacity={star.o}
               />
-              {/* Subtle 4-point diffraction spike on prominent near stars */}
+              {/* 4-point diffraction spike on prominent near stars */}
               <line
                 x1={star.x - star.r * 2.5}
                 y1={star.y}
@@ -211,121 +154,156 @@ export function Macromedia({
           ))}
         </g>
 
-        {/* Cockpit canopy vignette overlay */}
-        <rect width="640" height="360" fill="url(#cockpitVignette)" pointerEvents="none" />
+        {/* Full-bleed cockpit canopy vignette */}
+        <rect
+          x="-640"
+          y="-140"
+          width="2560"
+          height="640"
+          fill="url(#cockpitVignette)"
+          pointerEvents="none"
+        />
 
-        {/* 2. STARFIGHTER HUD RETICLE (CENTERED AT 320, 180) */}
-        <g data-part="reticle" style={{ transformOrigin: '320px 180px' }}>
-          {/* HUD Targeting Aura Glow */}
-          <circle
-            data-part="hud-aura"
-            cx="320"
-            cy="180"
-            r="160"
-            fill="url(#hudHubAura)"
-            opacity="0.8"
-          />
+        {/* 2. STARFIGHTER HUD RETICLE & DYNAMIC TELEMETRY SYSTEM */}
+        <g data-part="hud-assembly">
+          {/* Main Reticle Assembly scaled to half size (0.5x), Centered at 320, 180 */}
+          <g
+            data-part="reticle"
+            style={{
+              transform: 'scale(0.5)',
+              transformOrigin: '320px 180px',
+            }}
+          >
+            {/* HUD Targeting Aura Glow */}
+            <circle
+              data-part="hud-aura"
+              cx="320"
+              cy="180"
+              r="160"
+              fill="url(#hudHubAura)"
+              opacity="0.8"
+            />
 
-          {/* Outer Compass / Azimuth Ring */}
-          <circle
-            data-part="outer-ring"
-            cx="320"
-            cy="180"
-            r="128"
-            fill="none"
-            stroke="#1e293b"
-            strokeWidth="1.5"
-            strokeDasharray="6 8"
-            opacity="0.7"
-          />
+            {/* Outer Compass / Azimuth Ring */}
+            <circle
+              data-part="outer-ring"
+              cx="320"
+              cy="180"
+              r="128"
+              fill="none"
+              stroke="#1e293b"
+              strokeWidth="2.0"
+              strokeDasharray="6 8"
+              opacity="0.75"
+            />
 
-          {/* Rotating Rangefinder Reticle Ring */}
-          <circle
-            data-part="ring"
-            cx="320"
-            cy="180"
-            r="96"
-            fill="none"
-            stroke={color}
-            strokeWidth="1.6"
-            strokeDasharray="24 12 8 12"
-            opacity="0.75"
-            style={{ transformOrigin: '320px 180px' }}
-          />
-
-          {/* Inner Precision Targeting Circle */}
-          <circle
-            data-part="inner-ring"
-            cx="320"
-            cy="180"
-            r="48"
-            fill="none"
-            stroke={color}
-            strokeWidth="1.2"
-            strokeDasharray="8 6"
-            opacity="0.6"
-          />
-
-          {/* Central Target Focal Pip */}
-          <circle
-            data-part="center-pip"
-            cx="320"
-            cy="180"
-            r="3.5"
-            fill={color}
-            opacity="0.9"
-          />
-          <circle
-            cx="320"
-            cy="180"
-            r="8"
-            fill="none"
-            stroke={color}
-            strokeWidth="0.8"
-            opacity="0.4"
-          />
-
-          {/* Axis Alignment Crosshairs */}
-          <g data-part="crosshairs" stroke={color} strokeWidth="1.5" opacity="0.65">
-            <line x1="320" y1="44" x2="320" y2="76" />
-            <line x1="320" y1="284" x2="320" y2="316" />
-            <line x1="184" y1="180" x2="216" y2="180" />
-            <line x1="424" y1="180" x2="456" y2="180" />
-          </g>
-
-          {/* Pitch Ladder & Horizon Ticks */}
-          <g data-part="pitch-ladder" stroke="#64748b" strokeWidth="1.2" opacity="0.5">
-            <line x1="284" y1="130" x2="306" y2="130" />
-            <line x1="334" y1="130" x2="356" y2="130" />
-            <line x1="284" y1="230" x2="306" y2="230" />
-            <line x1="334" y1="230" x2="356" y2="230" />
-          </g>
-
-          {/* Star Wars Fighter Targeting Acquisition Brackets */}
-          <g data-part="target-brackets" stroke={color} strokeWidth="2" fill="none" opacity="0.85">
-            {/* Left Bracket */}
-            <path
-              data-part="bracket-left"
-              d="M 276,160 L 260,160 L 260,200 L 276,200"
+            {/* Rotating Rangefinder Reticle Ring */}
+            <circle
+              data-part="ring"
+              cx="320"
+              cy="180"
+              r="96"
+              fill="none"
+              stroke={color}
+              strokeWidth="2.2"
+              strokeDasharray="24 12 8 12"
+              opacity="0.85"
               style={{ transformOrigin: '320px 180px' }}
             />
-            {/* Right Bracket */}
-            <path
-              data-part="bracket-right"
-              d="M 364,160 L 380,160 L 380,200 L 364,200"
+
+            {/* Inner Precision Targeting Circle */}
+            <circle
+              data-part="inner-ring"
+              cx="320"
+              cy="180"
+              r="48"
+              fill="none"
+              stroke={color}
+              strokeWidth="1.8"
+              strokeDasharray="8 6"
+              opacity="0.7"
               style={{ transformOrigin: '320px 180px' }}
             />
+
+            {/* Central Target Focal Pip */}
+            <circle
+              data-part="center-pip"
+              cx="320"
+              cy="180"
+              r="4.5"
+              fill={color}
+              opacity="0.95"
+            />
+            <circle
+              cx="320"
+              cy="180"
+              r="10"
+              fill="none"
+              stroke={color}
+              strokeWidth="1.2"
+              opacity="0.5"
+            />
+
+            {/* Axis Alignment Crosshairs */}
+            <g data-part="crosshairs" stroke={color} strokeWidth="2.0" opacity="0.75">
+              <line x1="320" y1="40" x2="320" y2="76" />
+              <line x1="320" y1="284" x2="320" y2="320" />
+              <line x1="180" y1="180" x2="216" y2="180" />
+              <line x1="424" y1="180" x2="460" y2="180" />
+            </g>
+
+            {/* Dynamic Pitch Ladder (Pitches vertically and tilts with flight attitude) */}
+            <g data-part="pitch-ladder" stroke={color} strokeWidth="1.8" opacity="0.75" style={{ transformOrigin: '320px 180px' }}>
+              {/* +10° Climb Ladder Rung & Label */}
+              <path d="M 276,120 L 302,120 L 302,126 M 338,126 L 338,120 L 364,120" fill="none" />
+              <text x="268" y="123" textAnchor="end" fontSize="10" fill={color} stroke="none" fontWeight="700">
+                +10
+              </text>
+              {/* +5° Climb Tick */}
+              <line x1="290" y1="150" x2="304" y2="150" />
+              <line x1="336" y1="150" x2="350" y2="150" />
+              {/* 0° Artificial Horizon Bar & Label */}
+              <line x1="256" y1="180" x2="288" y2="180" strokeDasharray="6 3" />
+              <line x1="352" y1="180" x2="384" y2="180" strokeDasharray="6 3" />
+              <text x="246" y="184" textAnchor="end" fontSize="10" fill={color} stroke="none" fontWeight="700">
+                00
+              </text>
+              {/* -5° Dive Tick */}
+              <line x1="290" y1="210" x2="304" y2="210" strokeDasharray="3 3" />
+              <line x1="336" y1="210" x2="350" y2="210" strokeDasharray="3 3" />
+              {/* -10° Dive Ladder Rung & Label */}
+              <path d="M 276,240 L 302,240 L 302,234 M 338,234 L 338,240 L 364,240" strokeDasharray="4 3" fill="none" />
+              <text x="268" y="244" textAnchor="end" fontSize="10" fill={color} stroke="none" fontWeight="700">
+                -10
+              </text>
+            </g>
+
+            {/* Star Wars Fighter Targeting Acquisition Brackets */}
+            <g data-part="target-brackets" stroke={color} strokeWidth="2.8" fill="none" opacity="0.95">
+              {/* Left Bracket */}
+              <path
+                data-part="bracket-left"
+                d="M 276,160 L 260,160 L 260,200 L 276,200"
+                style={{ transformOrigin: '320px 180px' }}
+              />
+              {/* Right Bracket */}
+              <path
+                data-part="bracket-right"
+                d="M 364,160 L 380,160 L 380,200 L 364,200"
+                style={{ transformOrigin: '320px 180px' }}
+              />
+            </g>
           </g>
 
           {/* Corner Framing Markers (Rectangular Canopy Bounds) */}
-          <g data-part="corner-markers" stroke="#475569" strokeWidth="2" fill="none" opacity="0.6">
+          <g data-part="corner-markers" stroke="#475569" strokeWidth="2" fill="none" opacity="0.65">
             <path d="M 120,60 L 80,60 L 80,100" />
             <path d="M 520,60 L 560,60 L 560,100" />
             <path d="M 120,300 L 80,300 L 80,260" />
             <path d="M 520,300 L 560,300 L 560,260" />
           </g>
 
-          {/* Cockpit HUD Flight Telemetry Readouts */}
+          {/* Cockpit HUD Dynamic Telemetry Metrics */}
           <g
             data-part="telemetry"
             fill={color}
@@ -335,23 +313,43 @@ export function Macromedia({
               letterSpacing: '0.12em',
               userSelect: 'none',
             }}
-            opacity="0.8"
+            opacity="0.85"
           >
-            {/* Upper Right Flight Vectors */}
-            <text x="550" y="52" textAnchor="end">
-              AZM +028.4° // VEL 1.2c
+            {/* Top Left: Nav Heading & Pitch Angle */}
+            <text data-part="telemetry-heading" x="90" y="48" textAnchor="start">
+              HDG 082° // SYS: ONLINE
             </text>
-            {/* Upper Left Nav Heading */}
-            <text x="90" y="52" textAnchor="start">
-              HDG 084 // SYS: ONLINE
+            <text data-part="telemetry-pitch" x="90" y="62" textAnchor="start">
+              PCH +00.0° // ELEV: LVL
             </text>
-            {/* Lower Right Targeting Acquisition */}
-            <text data-part="telemetry-lock" x="550" y="318" textAnchor="end">
+
+            {/* Top Right: Dynamic Azimuth & Sublight Velocity / Thrust */}
+            <text data-part="telemetry-azimuth" x="550" y="48" textAnchor="end">
+              AZM +024.0° // VEC: R-PAN
+            </text>
+            <text data-part="telemetry-velocity" x="550" y="62" textAnchor="end">
+              VEL 1.10c // THR 65%
+            </text>
+
+            {/* Mid Right: Real-time G-Force Acceleration Sensor */}
+            <text data-part="telemetry-gforce" x="550" y="184" textAnchor="end" fill="#94a3b8">
+              ACC +1.0G
+            </text>
+
+            {/* Bottom Left: Dynamic Rangefinder & Radar Sensor State */}
+            <text data-part="telemetry-range" x="90" y="306" textAnchor="start">
+              RNG 0940m // TGT DIST
+            </text>
+            <text data-part="telemetry-sensor" x="90" y="320" textAnchor="start" fill="#64748b">
+              RADAR: ACQUIRED // 4-B
+            </text>
+
+            {/* Bottom Right: Target Acquisition Lock & Flight Computer */}
+            <text data-part="telemetry-lock" x="550" y="306" textAnchor="end">
               TGT LOCK: ACQUIRED
             </text>
-            {/* Lower Left Range Telemetry */}
-            <text x="90" y="318" textAnchor="start">
-              RANGE: 0482m
+            <text data-part="telemetry-status" x="550" y="320" textAnchor="end" fill="#64748b">
+              AUTO-TRIM: ENGAGED
             </text>
           </g>
         </g>
