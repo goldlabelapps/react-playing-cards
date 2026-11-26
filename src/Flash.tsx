@@ -8,6 +8,7 @@ import { Blackjack } from './MovieClips/Blackjack';
 import { LightningBolt } from './MovieClips/LightningBolt';
 import { Base, Rank, Suit } from './MovieClips/PlayingCards';
 import { TitleText } from './MovieClips/Typography';
+import { Macromedia } from './MovieClips/Macromedia';
 import { getActionScript, corkScrew } from './ActionScript';
 import type { FlashHandle, FlashProps, PromptSceneElement } from './types';
 
@@ -181,6 +182,12 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
             <SpriteMC size={(el.props.size as number) || 80} />
           </div>
         );
+      case 'macromedia':
+        return (
+          <div key={el.id} data-element-id={el.id} style={commonStyle}>
+            <Macromedia color={(el.props.color as string) || '#E5252A'} />
+          </div>
+        );
       default:
         return null;
     }
@@ -217,6 +224,8 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
         return <SpriteMC />;
       case 'lightning':
         return <LightningBolt />;
+      case 'macromedia':
+        return <Macromedia />;
       default:
         return null;
     }

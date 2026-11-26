@@ -58,7 +58,8 @@ export type BuiltinMovie =
   | 'twist'
   | 'flipInX'
   | 'deal'
-  | 'lightning';
+  | 'lightning'
+  | 'macromedia';
 
 /**
  * Props for the `<Blackjack />` MovieClip component.
@@ -133,7 +134,7 @@ export interface FlashProps {
  */
 export interface PromptSceneElement {
   id: string;
-  type: 'card' | 'ball' | 'logo' | 'title' | 'lightning' | 'sprite';
+  type: 'card' | 'ball' | 'logo' | 'title' | 'lightning' | 'sprite' | 'macromedia';
   x?: number;
   y?: number;
   scale?: number;

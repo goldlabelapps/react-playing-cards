@@ -151,6 +151,33 @@ export const PROMPT_PRESETS: Record<string, (prompt: string) => PromptScene> = {
       },
     ],
   }),
+
+  macromedia: (prompt) => ({
+    id: `scene-${Date.now()}`,
+    prompt,
+    title: 'Flash Engine',
+    description: 'Authentic 1990s Flash starburst rays assemble and laser light beam sweep.',
+    stage: {
+      width: '100%',
+      height: 400,
+      color: '#070b14',
+    },
+    elements: [
+      {
+        id: 'macromedia-1',
+        type: 'macromedia',
+        x: 50,
+        y: 50,
+        scale: 1,
+        props: { color: '#4C979C' },
+        animation: {
+          actionScript: 'macromedia',
+          delay: 0,
+          duration: 2.2,
+        },
+      },
+    ],
+  }),
 };
 
 /**
@@ -160,6 +187,10 @@ export function parsePrompt(prompt: string): PromptScene {
   const p = prompt.toLowerCase();
 
   // Match keyword intents
+  if (p.includes('macromedia')) {
+    return PROMPT_PRESETS.macromedia(prompt);
+  }
+
   if (p.includes('lightning') || p.includes('bolt') || p.includes('storm') || p.includes('electric')) {
     return PROMPT_PRESETS.lightningStorm(prompt);
   }

@@ -7,6 +7,7 @@ import twistActionScript from './twist';
 import flipInXActionScript from './flip';
 import dealActionScript from './deal';
 import lightningActionScript from './lightning';
+import macromediaActionScript from './macromedia';
 import { blackjackActionScript } from '../MovieClips/Blackjack';
 import type { ActionScriptFactory, BuiltinMovie } from '../types';
 
@@ -29,6 +30,7 @@ export { flipInXActionScript, flipInX } from './flip';
 export type { FlipInXOptions } from './flip';
 export { dealActionScript } from './deal';
 export { lightningActionScript } from './lightning';
+export { macromediaActionScript } from './macromedia';
 
 const builtinRegistry: Record<string, ActionScriptFactory> = {
   pingpong: pingpongActionScript,
@@ -45,6 +47,7 @@ const builtinRegistry: Record<string, ActionScriptFactory> = {
   flipInX: flipInXActionScript as unknown as ActionScriptFactory,
   deal: dealActionScript,
   lightning: lightningActionScript,
+  macromedia: macromediaActionScript,
 };
 
 const customRegistry = new Map<string, ActionScriptFactory>();
