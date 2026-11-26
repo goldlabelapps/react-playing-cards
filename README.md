@@ -1,33 +1,97 @@
-# React Playing Cards
+# React Playing Cards // Flash SVG Animation Studio
 
-Open-source vector graphics and animation engine based on the Flash concept.
+Open-source SVG vector graphics, GSAP ActionScript choreography, and prompt-driven animation studio inspired by the classic Flash programming model.
 
-## Flash
+---
 
-A lightweight React + TypeScript library inspired by the classic Flash programming model.
+## Overview
 
-This repository is intentionally being built in small steps rather than as a full port all at once. The current package is a minimal, buildable library foundation with a public Flash component, a simple stage wrapper, and a few example movie clips and GSAP-driven movie definitions.
+React Playing Cards provides an SVG-based animation engine and prompt studio designed to operate across both Next.js applications and WordPress installations:
 
-### Current Status
+- **Prompt-to-SVG Studio**: Generates animated vector scenes directly from natural language chat directives.
+- **Stage & MovieClip Architecture**: Pure SVG rendering surface supporting modular playing cards, typography, character sprites, and procedural effects.
+- **ActionScript Engine**: GSAP timeline choreographer featuring corkscrew spins, 3D card flips, elastic twists, and ball rallies.
+- **Docker Harness**: Universal containerised development environment serving the studio on port `3800` and compiling dual distribution bundles.
+- **Dual-Ecosystem Support**: Single source of truth serving ESM modules to Next.js and standalone browser bundles to WordPress `mwp-flash`.
 
-The library foundation incorporates:
+---
 
-- A minimal Flash public component
-- A Stage rendering surface
-- A presentational Pingpongball MovieClip
-- A minimal Logo MovieClip
-- GSAP-backed ActionScript definitions for pingpong and logo
-- ActionScript lookup via a lightweight registry
-- A ref-based playback API (play, pause, restart)
-- An optional TraceMC debug overlay
-- Strict TypeScript and a working build pipeline
+## Quick Start (Docker Harness)
 
-This is not yet a full Flash runtime, but the package is ready to be published to npm as a buildable foundation that reflects the incremental direction described in the project goals.
+The quickest way to run the prompt studio is using the Docker harness:
 
-## Agentic Control Surface
+```bash
+# Start the animation studio service
+docker compose up -d
 
-This repository operates under an autonomous agentic control surface to enable deterministic collaboration with coding agents:
+# Open in your browser
+open http://localhost:3800
+```
 
-- [Agent Directives](AGENTS.md): Operational contracts, code quality gates, and surgical edit protocols.
-- [Control Surface Documentation](docs/agentic-control-surface.md): Architectural specification of baseline agent controls and verification tooling.
-- [Machine Discovery (`/llms.txt`)](llms.txt): Machine discovery manifest for LLMs and agent crawlers.
+---
+
+## Local Development & Build
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start local development server
+pnpm dev
+
+# Compile distribution bundles (ESM library + standalone browser bundle)
+pnpm build && pnpm build:bundle
+
+# Run type check and hygiene gate
+pnpm type-check
+python3 scripts/verify-hygiene.py
+```
+
+---
+
+## Dual Integration
+
+### Next.js World
+
+Install as a dependency:
+
+```bash
+pnpm add react-playing-cards gsap
+```
+
+Render prompt-driven or movie-based scenes:
+
+```tsx
+'use client';
+
+import { Flash, parsePrompt } from 'react-playing-cards';
+
+export default function CardHero() {
+  const scene = parsePrompt('Deal Ace of Spades with a 3D flip on dark slate stage');
+  return <Flash scene={scene} loop={true} autoPlay={true} />;
+}
+```
+
+### WordPress World (mwp-flash)
+
+Enqueue `dist/flash-bundle.min.js` and render stage containers with declarative attributes:
+
+```html
+<div
+  class="mwp-flash-stage"
+  data-prompt="Electric lightning surge with glowing title"
+  data-loop="true"
+  data-speed="1.0"
+  style="width: 100%; min-height: 380px;"
+></div>
+```
+
+---
+
+## Documentation
+
+- [Docker Harness Specification](docs/docker-harness.md): Container architecture, port configuration, and operational commands.
+- [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step guides for Next.js and WordPress setups.
+- [Agentic Control Surface](docs/agentic-control-surface.md): Quality gates and verification tooling.
+- [Agent Directives](AGENTS.md): Operating directives and code quality standards.
+- [Machine Discovery (`/llms.txt`)](llms.txt): Machine discovery index for coding agents and LLMs.
