@@ -1,6 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Flash } from '../../src/Flash';
 import type { FlashHandle } from '../../src/types';
+import {
+  unlockAudioContext,
+  isFighterAudioMuted,
+  setFighterAudioMuted,
+  playFighterZoomSound,
+} from '../../src/Sound';
 
 interface LandingPageProps {
   onNavigate?: (path: string) => void;
@@ -9,6 +15,7 @@ interface LandingPageProps {
 export function LandingPage({ onNavigate }: LandingPageProps) {
   const [speed, setSpeed] = useState(1);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(() => isFighterAudioMuted());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const flashRef = useRef<FlashHandle>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -24,7 +31,18 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isDialogOpen]);
 
+  const handleToggleAudio = () => {
+    unlockAudioContext();
+    const nextMuted = !isMuted;
+    setFighterAudioMuted(nextMuted);
+    setIsMuted(nextMuted);
+    if (!nextMuted) {
+      playFighterZoomSound(0.4);
+    }
+  };
+
   const handlePlayToggle = () => {
+    unlockAudioContext();
     if (isPlaying) {
       flashRef.current?.pause();
       setIsPlaying(false);
@@ -35,6 +53,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
   };
 
   const handleRestart = () => {
+    unlockAudioContext();
     flashRef.current?.restart();
     setIsPlaying(true);
   };
@@ -65,8 +84,51 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
         userSelect: 'none',
       }}
     >
+      {/* Cockpit HUD Audio Control Button */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          zIndex: 100,
+        }}
+      >
+        <button
+          onClick={handleToggleAudio}
+          aria-label={isMuted ? 'Unmute cockpit audio' : 'Mute cockpit audio'}
+          style={{
+            background: isMuted ? 'rgba(15, 23, 42, 0.85)' : '#15868F',
+            color: '#FFFFFF',
+            border: '2px solid #2A2A2A',
+            boxShadow: '3px 3px 0px 0px #2A2A2A',
+            borderRadius: 6,
+            padding: '8px 14px',
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: '0.08em',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            userSelect: 'none',
+            outline: 'none',
+            transition: 'transform 0.1s ease',
+          }}
+          onMouseDown={(e) => {
+            e.currentTarget.style.transform = 'scale(0.96)';
+          }}
+          onMouseUp={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          <span>{isMuted ? '🔇' : '⚡'}</span>
+          <span>{isMuted ? 'AUDIO: OFF' : 'HUD AUDIO: ON'}</span>
+        </button>
+      </div>
+
       {/* Front & Center: Full-Bleed Flash Animation Stage */}
       <main
+        onClick={() => unlockAudioContext()}
         style={{
           width: '100%',
           height: '100%',
