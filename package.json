@@ -25,8 +25,10 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "build": "pnpm run build:lib && pnpm run build:bundle && pnpm run build:studio",
+    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json",
     "build:bundle": "vite build --config vite.bundle.config.ts",
+    "build:studio": "vite build --config vite.config.ts",
     "type-check": "tsc --noEmit",
     "test": "python3 scripts/verify-hygiene.py",
     "studio": "vite --port 3800 --host"
