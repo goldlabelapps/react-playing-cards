@@ -164,6 +164,40 @@ export function playTargetingLockBeep(freq: number = 1320): void {
 }
 
 /**
+ * Plays an authentic twin-laser cannon fire blast.
+ * Downward frequency chirp sweep with resonant low-pass filter decay.
+ */
+export function playLaserShootSound(): void {
+  const ctx = getAudioContext();
+  if (!ctx || !masterGain || isMuted) return;
+
+  const now = ctx.currentTime;
+  const duration = 0.16;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
+
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(920, now);
+  osc.frequency.exponentialRampToValueAtTime(75, now + duration);
+
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(2400, now);
+  filter.frequency.exponentialRampToValueAtTime(260, now + duration);
+
+  gain.gain.setValueAtTime(0.55, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  osc.connect(filter);
+  filter.connect(gain);
+  gain.connect(masterGain);
+
+  osc.start(now);
+  osc.stop(now + duration);
+}
+
+/**
  * Starts continuous low cockpit ambient rumble.
  */
 export function startCockpitAmbient(): void {
