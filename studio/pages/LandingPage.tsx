@@ -7,11 +7,10 @@ interface LandingPageProps {
   showFab?: boolean;
 }
 
-export function LandingPage({ onNavigate, showFab = false }: LandingPageProps) {
+export function LandingPage({ onNavigate }: LandingPageProps) {
   const [speed, setSpeed] = useState(1);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isFabVisible] = useState(showFab);
   const flashRef = useRef<FlashHandle>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -103,78 +102,7 @@ export function LandingPage({ onNavigate, showFab = false }: LandingPageProps) {
         </div>
       </main>
 
-      {/* Horizontally Centred Floating Action Button (FAB) Toggle (Hidden by default for cinematic cut screen) */}
-      {isFabVisible && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 24,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 100,
-          }}
-        >
-          <button
-            onClick={() => setIsDialogOpen((prev) => !prev)}
-            aria-label={isDialogOpen ? 'Close info menu' : 'Open info menu'}
-            aria-expanded={isDialogOpen}
-            style={{
-              width: 54,
-              height: 54,
-              borderRadius: 27,
-              background: isDialogOpen ? '#0f172a' : '#15868F',
-              color: '#FFFFFF',
-              border: '2px solid #2A2A2A',
-              boxShadow: '3px 3px 0px 0px #2A2A2A',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'transform 0.15s ease, background 0.15s ease',
-              outline: 'none',
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'scale(0.95)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            {isDialogOpen ? (
-              /* Close 'X' icon when open */
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#FFFFFF"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            ) : (
-              /* Classic Hamburger Menu icon when closed */
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#FFFFFF"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="4" y1="7" x2="20" y2="7" />
-                <line x1="4" y1="12" x2="20" y2="12" />
-                <line x1="4" y1="17" x2="20" y2="17" />
-              </svg>
-            )}
-          </button>
-        </div>
-      )}
+      {/* Horizontally Centred Floating Action Button (FAB) Toggle hidden for cinematic cut screen */}
 
       {/* Popover Dialog Backdrop */}
       {isDialogOpen && (
