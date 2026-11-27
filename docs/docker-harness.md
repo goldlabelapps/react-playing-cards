@@ -1,5 +1,9 @@
 # Docker Harness Specification
 
+> **Developer Level**: Level 2 : Application Engineer & Tooling  
+> **Technical Depth**: Intermediate (Multi-container orchestration and local workflows)  
+> **Audience**: Developers running local multi-service development harnesses.
+
 The Docker harness provides a containerised development environment and dual-distribution build runner for the Flash SVG animation engine.
 
 ---
@@ -180,7 +184,8 @@ Modern Flash co-exists on the shared Google Cloud production host (`wp-lab-live`
 ### Host Ingress Routing
 The production Caddy ingress router manages subdomains dynamically:
 - `flash.modern-wordpress.pro`: Serves the WordPress Flash stage site at `/var/www/html/flash`.
-- `app.modern-flash.pro`: Reverse proxies directly to `localhost:3830` (Next.js flagship showcase).
+- `modern-flash.pro` (and `www.modern-flash.pro`): Reverse proxies directly to `127.0.0.1:3830` (Next.js flagship showcase).
+- `app.34.16.50.74.sslip.io`: Production fallback ingress for direct IP routing.
 
 ### Release Pipeline Integration
 The deployment engine in Modern WordPress (`bin/deploy`) automates artifact deployment for the WordPress vector:

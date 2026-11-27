@@ -1,7 +1,14 @@
-import { useEffect, useRef, useCallback, type CSSProperties } from 'react';
-import { gsap } from 'gsap';
-import { LightningBolt } from '../LightningBolt';
+import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { flashStoryActionScript } from '../../ActionScript/flashStory';
+import { AgentText } from '../Typography/AgentText';
+
+export interface StoryTaskItem {
+  id: string;
+  title: string;
+  duration: number; // in seconds
+  status: 'active' | 'completed';
+  startTime: number;
+}
 
 export interface FlashStoryProps {
   width?: string | number;
@@ -15,6 +22,34 @@ export interface FlashStoryProps {
   frontColor?: string;
   backColor?: string;
   strokeColor?: string;
+  children?: ReactNode;
+  /** Counter formatting style ('short' or 'verbose'). Default: 'verbose'. */
+  counterStyle?: 'short' | 'verbose';
+  /** Horizontal alignment on the stage ('left' | 'center' | 'right'). Default: 'left'. */
+  align?: 'left' | 'center' | 'right';
+  /** Maximum number of stacked tasks to retain on stage (default: 12). */
+  maxItems?: number;
+  /** Sequence of messages to cycle through. */
+  messages?: string[];
+  /** On message transition callback. */
+  onMessageChange?: (message: string, durationSeconds: number) => void;
+  /** Completion callback when all messages in the pool have executed (when loop is false). */
+  onComplete?: () => void;
+}
+
+export const DEFAULT_STORY_MESSAGES: string[] = [
+  'Thinking ...',
+  'Errrr, hello?',
+  'Yeh, we\'ve got a live one, over',
+  'What country are they connecting from?',
+  'Running fingerprint check...',
+];
+
+/**
+ * Returns a random duration in seconds between min and max (inclusive).
+ */
+function getRandomDuration(min: number = 1, max: number = 3): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function FlashStory({
@@ -23,48 +58,40 @@ export function FlashStory({
   className,
   style,
   autoPlay = true,
-  loop = true,
+  loop = false,
   speed = 1,
-  frontColor = '#15868F',
-  backColor = '#070b14',
-  strokeColor = '#ffffff',
+  children,
+  counterStyle = 'verbose',
+  align = 'left',
+  maxItems = 12,
+  messages = DEFAULT_STORY_MESSAGES,
+  onMessageChange,
+  onComplete,
 }: FlashStoryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const boltContainerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  // Electric strike impulse on interaction
-  const triggerElectricSurge = useCallback(() => {
-    if (!boltContainerRef.current) return;
+  // Stack of sequential tasks:
+  // Starts directly with the first message and cycles through with random 5-10s durations,
+  // adding each new instance as the previous completes.
+  const [tasks, setTasks] = useState<StoryTaskItem[]>(() => {
+    const firstTitle = messages[0] ?? 'Thinking ...';
+    const firstDur = getRandomDuration();
+    return [
+      {
+        id: 'task-0',
+        title: firstTitle,
+        duration: firstDur,
+        status: 'active',
+        startTime: Date.now(),
+      },
+    ];
+  });
+  const [step, setStep] = useState<number>(0);
 
-    const target = boltContainerRef.current;
-    const tl = gsap.timeline();
-
-    tl.to(target, {
-      scale: 1.08,
-      filter: `drop-shadow(0 0 35px #ffffff) drop-shadow(0 0 60px ${frontColor})`,
-      duration: 0.08,
-      ease: 'power4.out',
-    })
-      .to(target, {
-        scale: 0.96,
-        filter: `drop-shadow(0 0 15px ${frontColor})`,
-        duration: 0.06,
-      })
-      .to(target, {
-        scale: 1.03,
-        duration: 0.08,
-      })
-      .to(target, {
-        scale: 1,
-        filter: `drop-shadow(0 0 25px ${frontColor})`,
-        duration: 0.25,
-        ease: 'power2.out',
-      });
-  }, [frontColor]);
-
-  // Ambient lightning ActionScript timeline loop
+  // ActionScript timeline loop
   useEffect(() => {
-    const target = boltContainerRef.current;
+    const target = contentRef.current;
     if (!target) return;
 
     if (!autoPlay) return;
@@ -80,6 +107,63 @@ export function FlashStory({
     };
   }, [autoPlay, loop, speed]);
 
+  // Handle message cycling sequence and instance stacking
+  useEffect(() => {
+    if (!autoPlay) return;
+
+    const activeTask = tasks[tasks.length - 1];
+    if (!activeTask || activeTask.status !== 'active') return;
+
+    const delayMs = (activeTask.duration * 1000) / Math.max(0.1, speed);
+
+    const timer = setTimeout(() => {
+      // Once we reach the end of the list and loop is false, complete the final task and stop
+      if (!loop && step >= messages.length - 1) {
+        setTasks((prev) =>
+          prev.map((t, idx) => (idx === prev.length - 1 ? { ...t, status: 'completed' as const } : t))
+        );
+        if (onComplete) {
+          onComplete();
+        }
+        return;
+      }
+
+      const nextStep = step + 1;
+      const nextMsgIndex = nextStep % messages.length;
+      const nextTitle = messages[nextMsgIndex];
+      const nextDur = getRandomDuration();
+      const nextTask: StoryTaskItem = {
+        id: `task-${nextStep}`,
+        title: nextTitle,
+        duration: nextDur,
+        status: 'active',
+        startTime: Date.now(),
+      };
+
+      setStep(nextStep);
+      setTasks((prev) => {
+        // Mark previous active task completed
+        const updated = prev.map((t, idx) =>
+          idx === prev.length - 1 ? { ...t, status: 'completed' as const } : t
+        );
+        const nextList = [...updated, nextTask];
+        return nextList.length > maxItems ? nextList.slice(nextList.length - maxItems) : nextList;
+      });
+
+      if (onMessageChange) {
+        onMessageChange(nextTitle, nextDur);
+      }
+    }, delayMs);
+
+    return () => clearTimeout(timer);
+  }, [autoPlay, loop, speed, step, tasks, messages, maxItems, onMessageChange]);
+
+  const justifyMap = {
+    left: 'flex-start',
+    center: 'center',
+    right: 'flex-end',
+  } as const;
+
   return (
     <div
       ref={containerRef}
@@ -89,36 +173,46 @@ export function FlashStory({
         width,
         height,
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'flex-start',
+        justifyContent: justifyMap[align] ?? 'flex-start',
+        padding:
+          align === 'left'
+            ? 'clamp(24px, 4vw, 40px) clamp(16px, 3vw, 32px)'
+            : align === 'right'
+              ? 'clamp(24px, 4vw, 40px) clamp(16px, 3vw, 32px)'
+              : 'clamp(24px, 4vw, 40px) 0',
         boxSizing: 'border-box',
         overflow: 'hidden',
         ...style,
       }}
     >
       <div
-        ref={boltContainerRef}
-        onClick={triggerElectricSurge}
+        ref={contentRef}
         style={{
           position: 'relative',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          filter: `drop-shadow(0 0 24px ${frontColor})`,
-          transition: 'filter 0.4s ease',
-          transformOrigin: 'center center',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          gap: '8px',
+          width: '100%',
+          maxWidth: '850px',
+          transformOrigin: align === 'left' ? 'left top' : 'center top',
         }}
-        title="Lightning Bolt"
       >
-        <LightningBolt
-          width="145px"
-          height="260px"
-          frontColor={frontColor}
-          backColor={backColor}
-          strokeColor={strokeColor}
-          style={{ display: 'block' }}
-        />
+        {children ??
+          tasks.map((task) => (
+            <AgentText
+              key={task.id}
+              title={task.title}
+              status={task.status}
+              active={task.status === 'active' && autoPlay}
+              elapsedSeconds={task.status === 'completed' ? task.duration : undefined}
+              startTime={task.status === 'active' ? task.startTime : undefined}
+              counterStyle={counterStyle}
+              speed={speed}
+            />
+          ))}
       </div>
     </div>
   );

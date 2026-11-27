@@ -60,6 +60,12 @@ When building or testing TypeScript packages:
 - Run targeted linting or type checking before declaring work complete.
 - Verify zero security warnings or broken internal references.
 
+## Full-Screen & Anti-Scrolling Viewport Invariant (Zero-Scroll Canvas Contract)
+
+Flash is inherently an anti-scrolling medium designed to eliminate passive doom-scrolling chod. Modern Flash runtimes enforce:
+- **Edge-to-Edge Geometry**: 0px padding, 0px margin, 0px border-radius, occupying `100vw` by `100dvh` (or `100%`).
+- **Absolute Scroll Suppression**: Hard lockout on document scrolling (`overflow: hidden`, `overscroll-behavior: none`). Progression happens through timelines, frames, and interactive state transitions on the bounded stage, never via spatial scrolling.
+
 ## Defensive Security & Supply Chain Baselines
 
 - Government Standard GS-AI-DATA-02: Never commit API credentials, tokens, private cryptographic keys, or database connection strings.

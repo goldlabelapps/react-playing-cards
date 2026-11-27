@@ -61,9 +61,12 @@ export type BuiltinMovie =
   | 'lightning'
   | 'macromedia'
   | 'flash-story'
-  | 'FlashStory';
+  | 'FlashStory'
+  | 'agent-text'
+  | 'AgentText';
 
 export type { FlashStoryProps } from './MovieClips/FlashStory';
+export type { AgentTextProps } from './MovieClips/Typography';
 
 /**
  * Props for the `<Blackjack />` MovieClip component.

@@ -9,6 +9,7 @@ import dealActionScript from './deal';
 import lightningActionScript from './lightning';
 import macromediaActionScript from './macromedia';
 import flashStoryActionScript from './flashStory';
+import agentTextActionScript from './agentText';
 import { blackjackActionScript } from '../MovieClips/Blackjack';
 import type { ActionScriptFactory, BuiltinMovie } from '../types';
 
@@ -33,6 +34,7 @@ export { dealActionScript } from './deal';
 export { lightningActionScript } from './lightning';
 export { macromediaActionScript } from './macromedia';
 export { flashStoryActionScript } from './flashStory';
+export { agentTextActionScript } from './agentText';
 
 const builtinRegistry: Record<string, ActionScriptFactory> = {
   pingpong: pingpongActionScript,
@@ -52,6 +54,8 @@ const builtinRegistry: Record<string, ActionScriptFactory> = {
   macromedia: macromediaActionScript,
   'flash-story': flashStoryActionScript,
   FlashStory: flashStoryActionScript,
+  'agent-text': agentTextActionScript,
+  AgentText: agentTextActionScript,
 };
 
 const customRegistry = new Map<string, ActionScriptFactory>();

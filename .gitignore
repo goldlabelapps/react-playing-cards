@@ -32,3 +32,9 @@ Thumbs.db
 .pytest_cache/
 coverage/
 *.tsbuildinfo
+
+# PWA service worker and workbox artifacts
+public/sw.js*
+public/workbox-*.js*
+nextjs/public/sw.js*
+nextjs/public/workbox-*.js*

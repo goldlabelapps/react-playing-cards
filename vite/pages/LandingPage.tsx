@@ -93,7 +93,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
           <Flash
             ref={flashRef}
             movie="FlashStory"
-            loop={true}
+            loop={false}
             autoPlay={true}
             width="100%"
             height="100%"

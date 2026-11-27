@@ -1,5 +1,9 @@
 # Hybrid Package Architecture
 
+> **Developer Level**: Level 3 : Systems & Infrastructure ("Geek Tier")  
+> **Technical Depth**: Advanced Architecture (Dual-ecosystem single-repo mechanics)  
+> **Audience**: Platform architects and core maintainers managing NPM and WordPress packaging.
+
 This manual specifies the single-repository architecture enabling Modern Flash to distribute as both a modern JavaScript/React package and a native WordPress plugin.
 
 ---

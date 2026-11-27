@@ -1,6 +1,6 @@
 {
   "name": "nextjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3830",
@@ -15,6 +15,7 @@
     "modern-flash": "workspace:*",
     "mysql2": "^3.12.0",
     "next": "^15.1.0",
+    "next-pwa": "^5.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

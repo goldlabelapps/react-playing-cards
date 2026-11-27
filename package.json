@@ -1,6 +1,6 @@
 {
   "name": "modern-flash",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SVG-based Flash animation engine and prompt-driven animation studio for Next.js and WordPress.",
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "docs"
   ],
   "scripts": {
+    "bump": "node ./scripts/bump-version.mjs",
     "dev": "vite",
     "build": "pnpm run build:lib && pnpm run build:bundle && pnpm run build:vite",
     "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json",

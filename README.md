@@ -1,6 +1,6 @@
 # Modern Flash
 
-Pure SVG Flash animation engine, GSAP ActionScript choreography, and natural language animation studio for React, Next.js, and WordPress.
+SVG Flash animation engine, GSAP ActionScript choreography, and natural language animation studio for React, Next.js, and WordPress.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue.svg)](https://www.typescriptlang.org/)
@@ -30,7 +30,7 @@ Pure SVG Flash animation engine, GSAP ActionScript choreography, and natural lan
 
 ## Overview
 
-Modern Flash recreates the classic Macromedia Flash authoring model using modern web standards. Instead of binary SWF files, animations run as pure vector SVG graphics driven by GreenSock (GSAP) timelines.
+Modern Flash recreates the classic Macromedia Flash authoring model using modern web standards. Instead of binary SWF files, animations run as vector SVG graphics driven by GreenSock (GSAP) timelines.
 
 The library operates across two distinct environments from a single codebase:
 1. **Modern React and Next.js**: Tree-shakeable ESM package exporting components, types, and hooks.
@@ -40,12 +40,22 @@ The library operates across two distinct environments from a single codebase:
 
 ## Key Features
 
-- **Pure Vector SVG Rendering**: Sharp vector graphics that scale infinitely to any screen resolution without raster artifacts or canvas pixelation.
+- **Vector SVG Rendering**: Sharp vector graphics that scale infinitely to any screen resolution without raster artifacts or canvas pixelation.
 - **ActionScript Timeline Architecture**: GSAP-powered motion choreographies including 3D card flips, corkscrew spins, card dealing arcs, and elastic collisions.
 - **Natural Language Prompt Studio**: Chat interface that parses plain-text prompts (for example, *"Deal Ace of Spades with a 3D flip on dark stage"*) directly into animated SVG scenes.
 - **Dual-Ecosystem Distribution**: ESM modules for modern bundlers alongside a zero-dependency pre-compiled browser script for WordPress and standalone HTML embeds.
+- **Zero-Scroll Viewport Geometry**: Anti-scrolling architecture fitting the available viewport edge-to-edge (100vw by 100dvh) with zero padding, zero margin, and zero border-radius.
 - **Audio Synthesis Engine**: Web Audio API integration providing retro synthesised clicks, card slides, deals, and authentic Flash MX boot sounds without external audio assets.
 - **Containerised Docker Harness**: Production-aligned Docker Compose environment serving the animation studio on port `3800`.
+
+---
+
+## Live Production Showcases
+
+Experience Modern Flash running in production:
+
+- **Flagship Web Showcase (Next.js 15)**: [https://modern-flash.pro](https://modern-flash.pro)
+- **WordPress Theme Stage (FSE Block Theme)**: [https://flash.modern-wordpress.pro](https://flash.modern-wordpress.pro)
 
 ---
 
@@ -357,24 +367,26 @@ registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) 
 
 ```
 modern-flash/
-├── apps/                    # Monorepo workspace applications
-│   └── web/                 # Flagship public Next.js web application (:3830)
-├── modern-flash.php         # WordPress plugin bootstrap and lifecycle
-├── composer.json            # PSR-4 package manifest for PHP
 ├── assets/                  # Brand iconography and vector graphics
 ├── docs/                    # Technical manuals and architectural specifications
 │   ├── agentic-control-surface.md
+│   ├── docker-distribution.md
 │   ├── docker-harness.md
 │   ├── dual-ecosystem-integration.md
 │   ├── flagship-web-app.md
-│   └── hybrid-package-architecture.md
+│   ├── hybrid-package-architecture.md
+│   └── vm-deployment.md
+├── nextjs/                  # Flagship Next.js 15 showcase application (:3830)
 ├── php/                     # Modern WordPress PHP classes (PSR-4)
 │   ├── Plugin.php           # Core plugin orchestrator and asset enqueue
 │   ├── Shortcode.php        # [modern_flash] declarative stage renderer
 │   └── Admin/
 │       └── SettingsController.php # Two-column settings interface
-├── scripts/                 # Security verification runners and git hooks
+├── public/                  # Public assets, web manifests, and service worker
+├── scripts/                 # Operational scripts, security verification, and git hooks
+│   ├── bump-version.mjs
 │   ├── setup-hooks.sh
+│   ├── test-flash.py
 │   └── verify-hygiene.py
 ├── src/                     # Core library implementation
 │   ├── ActionScript/        # GSAP timeline factories
@@ -386,8 +398,7 @@ modern-flash/
 │   ├── bundle-entry.ts      # WordPress standalone bundle entrypoint
 │   ├── index.ts             # Library exports
 │   └── types.ts             # TypeScript definitions
-├── nextjs/                  # Flagship Next.js 15 showcase application
-├── vite/                    # Interactive Vite studio application
+├── vite/                    # Interactive Vite studio application (:3800)
 ├── AGENTS.md                # Autonomous agent operating directives
 ├── compose.yaml             # Docker Compose specification (Studio :3800 + WordPress :3880)
 ├── Dockerfile               # Production container build
@@ -400,15 +411,25 @@ modern-flash/
 
 ## Documentation Index
 
-- [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and community distribution.
-- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, Google Cloud VM deployment, and Firebase suite integration.
-- [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
-- [Docker Harness Specification](docs/docker-harness.md): Container architecture, port bindings, and operational commands.
+Documentation is categorised into developer levels based on technical depth and operational domain:
+
+### Level 1: Integrator & Consumer (Zero Geek Required)
 - [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step setup guides for Next.js and WordPress environments.
+- [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and zero-dependency container execution.
+
+### Level 2: Application Engineer (Practical Web Architecture)
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, zero-scroll viewport geometry, Google Cloud VM deployment, and Firebase suite integration.
+- [Docker Harness Specification](docs/docker-harness.md): Container harness, port bindings (`:3800`, `:3830`, `:3880`), and local operational commands.
+
+### Level 3: Systems & Deep Infrastructure ("The Geek Tier")
+- [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
+- [Virtual Machine Deployment Architecture](docs/vm-deployment.md): Google Cloud VM topology, Caddy reverse proxy, systemd services, Unix domain sockets, and MariaDB routing.
 - [Agentic Control Surface](docs/agentic-control-surface.md): Quality gates, secret scans, and verification tooling.
-- [Agent Directives](AGENTS.md): Wolfpack operating directives and code quality standards.
+- [Agent Directives](AGENTS.md): Wolfpack operating directives, code quality standards, and verification contracts.
+
+### Discovery & Machine Interfaces
 - [Machine Discovery Index](llms.txt): Machine discovery index for coding agents and LLMs.
-- [Complete Documentation Corpus](llms-full.txt): Concatenated documentation corpus.
+- [Complete Documentation Corpus](llms-full.txt): Complete concatenated technical documentation corpus.
 
 ---
 
@@ -416,7 +437,7 @@ modern-flash/
 
 Contributions are welcome. Please ensure that all contributions follow the repository standards:
 
-1. Maintain pure vector SVG graphics without external raster assets.
+1. Maintain vector SVG graphics without external raster assets.
 2. Adhere to British English spelling and grammar across code comments and documentation.
 3. Write targeted tests or verification steps for modified files.
 4. Pass the repository hygiene and security gate before submitting pull requests:

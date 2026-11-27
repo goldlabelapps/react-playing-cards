@@ -9,21 +9,19 @@ const DynamicInteractiveStage = dynamic(
     loading: () => (
       <div
         style={{
-          width: '100%',
-          height: 420,
-          background: '#070b14',
-          borderRadius: 8,
-          border: '2px solid #2A2A2A',
-          boxShadow: '3px 3px 0 0 #2A2A2A',
+          width: '100vw',
+          height: '100dvh',
+          backgroundColor: '#070b14',
+          margin: 0,
+          padding: 0,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#64748b',
+          color: '#94a3b8',
           fontSize: 14,
-          fontWeight: 600,
         }}
       >
-        Initialising Vector Stage Surface...
+        Modern Flash
       </div>
     ),
   }

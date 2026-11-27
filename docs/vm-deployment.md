@@ -1,5 +1,9 @@
 # Virtual Machine Deployment and Testing Architecture
 
+> **Developer Level**: Level 3 : Systems & Infrastructure ("Geek Tier")  
+> **Technical Depth**: Deep Linux Systems & DevOps (Reverse proxies, systemd, sockets)  
+> **Audience**: Systems engineers and DevOps operators managing the Google Cloud production VM.
+
 This guide documents the end-to-end testing, artifact staging, and deployment protocols for both the `modern-flash` and `modern-wordpress` projects on the Google Cloud Compute Engine virtual machine (`wp-lab-live`: `34.16.50.74`).
 
 ---
@@ -17,7 +21,8 @@ PHP Runtime Engine    : PHP 8.3 FPM (Unix Socket: /run/php/php8.3-fpm.sock)
 Node.js Runtime       : Node.js 22.23.5 LTS (Systemd: modern-flash-nextjs)
 
 Active Public Endpoints:
-1. Modern Flash Next.js    : https://app.34.16.50.74.sslip.io (Port 3830)
+1. Modern Flash Next.js    : https://modern-flash.pro (Port 3830)
+   (Fallback Sslip)         : https://app.34.16.50.74.sslip.io
 2. Modern WordPress Flash  : https://flash.modern-wordpress.pro (PHP / Theme)
 3. Modern WordPress Main   : https://modern-wordpress.pro
 4. Government Baseline     : https://ed-tech.co
@@ -158,7 +163,7 @@ To point a custom domain (e.g. `modern-flash.pro` or `app.yourdomain.com`) to th
 2. **Caddy Virtual Host Configuration**:
    Edit `/etc/caddy/Caddyfile` on the VM:
    ```caddy
-   your-domain.com, app.34.16.50.74.sslip.io {
+   modern-flash.pro, www.modern-flash.pro, app.34.16.50.74.sslip.io {
        reverse_proxy 127.0.0.1:3830
        encode gzip zstd
 

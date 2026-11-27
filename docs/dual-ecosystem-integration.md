@@ -1,5 +1,9 @@
 # Dual-Ecosystem Integration Manual
 
+> **Developer Level**: Level 1 : Integrator & Consumer  
+> **Technical Depth**: Practical (Zero deep infrastructure or systems knowledge required)  
+> **Audience**: Frontend engineers and WordPress site builders integrating animations.
+
 This document details how to integrate the compiled Flash SVG animation engine into Next.js and WordPress environments.
 
 ---
