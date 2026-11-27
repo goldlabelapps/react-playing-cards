@@ -52,6 +52,7 @@ The library operates across two distinct environments from a single codebase:
 - **ActionScript Timeline Architecture**: GSAP-powered motion choreographies including 3D card flips, corkscrew spins, card dealing arcs, and elastic collisions.
 - **Natural Language Prompt Studio**: Chat interface that parses plain-text prompts (for example, *"Deal Ace of Spades with a 3D flip on dark stage"*) directly into animated SVG scenes.
 - **Dual-Ecosystem Distribution**: ESM modules for modern bundlers alongside a zero-dependency pre-compiled browser script for WordPress and standalone HTML embeds.
+- **Zero-Scroll Viewport Geometry**: Anti-scrolling architecture fitting the available viewport edge-to-edge (100vw by 100dvh) with zero padding, zero margin, and zero border-radius.
 - **Audio Synthesis Engine**: Web Audio API integration providing retro synthesised clicks, card slides, deals, and authentic Flash MX boot sounds without external audio assets.
 - **Containerised Docker Harness**: Production-aligned Docker Compose environment serving the animation studio on port `3800`.
 
@@ -374,24 +375,26 @@ registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) 
 
 ```
 modern-flash/
-├── apps/                    # Monorepo workspace applications
-│   └── web/                 # Flagship public Next.js web application (:3830)
-├── modern-flash.php         # WordPress plugin bootstrap and lifecycle
-├── composer.json            # PSR-4 package manifest for PHP
 ├── assets/                  # Brand iconography and vector graphics
 ├── docs/                    # Technical manuals and architectural specifications
 │   ├── agentic-control-surface.md
+│   ├── docker-distribution.md
 │   ├── docker-harness.md
 │   ├── dual-ecosystem-integration.md
 │   ├── flagship-web-app.md
-│   └── hybrid-package-architecture.md
+│   ├── hybrid-package-architecture.md
+│   └── vm-deployment.md
+├── nextjs/                  # Flagship Next.js 15 showcase application (:3830)
 ├── php/                     # Modern WordPress PHP classes (PSR-4)
 │   ├── Plugin.php           # Core plugin orchestrator and asset enqueue
 │   ├── Shortcode.php        # [modern_flash] declarative stage renderer
 │   └── Admin/
 │       └── SettingsController.php # Two-column settings interface
-├── scripts/                 # Security verification runners and git hooks
+├── public/                  # Public assets, web manifests, and service worker
+├── scripts/                 # Operational scripts, security verification, and git hooks
+│   ├── bump-version.mjs
 │   ├── setup-hooks.sh
+│   ├── test-flash.py
 │   └── verify-hygiene.py
 ├── src/                     # Core library implementation
 │   ├── ActionScript/        # GSAP timeline factories
@@ -403,8 +406,7 @@ modern-flash/
 │   ├── bundle-entry.ts      # WordPress standalone bundle entrypoint
 │   ├── index.ts             # Library exports
 │   └── types.ts             # TypeScript definitions
-├── nextjs/                  # Flagship Next.js 15 showcase application
-├── vite/                    # Interactive Vite studio application
+├── vite/                    # Interactive Vite studio application (:3800)
 ├── AGENTS.md                # Autonomous agent operating directives
 ├── compose.yaml             # Docker Compose specification (Studio :3800 + WordPress :3880)
 ├── Dockerfile               # Production container build
@@ -424,7 +426,7 @@ Documentation is categorised into developer levels based on technical depth and 
 - [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and zero-dependency container execution.
 
 ### Level 2: Application Engineer (Practical Web Architecture)
-- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, Google Cloud VM deployment, and Firebase suite integration.
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, zero-scroll viewport geometry, Google Cloud VM deployment, and Firebase suite integration.
 - [Docker Harness Specification](docs/docker-harness.md): Container harness, port bindings (`:3800`, `:3830`, `:3880`), and local operational commands.
 
 ### Level 3: Systems & Deep Infrastructure ("The Geek Tier")
@@ -524,6 +526,12 @@ When building or testing TypeScript packages:
 - Prefer targeted test runs for touched components.
 - Run targeted linting or type checking before declaring work complete.
 - Verify zero security warnings or broken internal references.
+
+## Full-Screen & Anti-Scrolling Viewport Invariant (Zero-Scroll Canvas Contract)
+
+Flash is inherently an anti-scrolling medium designed to eliminate passive doom-scrolling chod. Modern Flash runtimes enforce:
+- **Edge-to-Edge Geometry**: 0px padding, 0px margin, 0px border-radius, occupying `100vw` by `100dvh` (or `100%`).
+- **Absolute Scroll Suppression**: Hard lockout on document scrolling (`overflow: hidden`, `overscroll-behavior: none`). Progression happens through timelines, frames, and interactive state transitions on the bounded stage, never via spatial scrolling.
 
 ## Defensive Security & Supply Chain Baselines
 
@@ -805,11 +813,11 @@ The Next.js application demonstrates production consumption of the `modern-flash
 ```text
 nextjs/
 ├── app/
-│   ├── layout.tsx         # Semantic HTML landmarks, skip links, and dark theme
-│   ├── page.tsx           # Public showcase landing page (ISR revalidate: 60s)
+│   ├── layout.tsx         # Edge-to-edge viewport lock (100dvh), skip link, and dark theme
+│   ├── page.tsx           # Full-viewport stage container (zero-scroll)
 │   └── actions.ts         # Server actions managing scene persistence
 ├── components/
-│   ├── InteractiveStage.tsx # Client component managing prompt form and GSAP controls
+│   ├── InteractiveStage.tsx # Client component managing 100vw x 100dvh vector canvas
 │   └── StageWrapper.tsx   # Dynamic client boundary isolating vector canvas from SSR
 ├── lib/
 │   ├── db.ts              # Scene persistence interface with defensive fallback
@@ -861,11 +869,44 @@ Modern Flash uses GreenSock (GSAP) timelines and Web Audio APIs. Evaluating thes
 To enforce clean isolation:
 1. `nextjs/components/StageWrapper.tsx` wraps `InteractiveStage` using `next/dynamic` with `{ ssr: false }`.
 2. A client mounting guard (`mounted` state check) ensures vector DOM nodes are only initialised once the browser window is active.
-3. Next.js statically renders page scaffolding, semantic headers, and copy instantly while client bundles hydrate in the background.
+3. Next.js statically renders page scaffolding and root landmarks instantly while client bundles hydrate in the background.
 
 ---
 
-## 5. Google Cloud VM Deployment and Caddy Ingress
+## 5. Viewport Geometry and the Anti-Scrolling Contract
+
+### The Anti-Scrolling Doctrine
+
+The contemporary web is saturated with vertical feed chod and passive doom-scrolling. Modern Flash is built on the opposite architectural principle: a finite, intentional, bounded stage (analogous to an arcade cabinet screen or cinema projection).
+
+In Modern Flash, progression occurs through temporal timelines, interactive state transitions, and responsive coordinate scaling rather than spatial document scrolling.
+
+### Viewport Geometry Invariants
+
+To enforce the zero-scroll canvas contract across all viewports:
+
+1. **Edge-to-Edge Surface**:
+   The stage occupies the entire available display area (`100vw` by `100dvh` or `100%`). Inset card containers, desktop max-width constraints (e.g. `960px`), and page gutters are eliminated.
+2. **Zero Inset Chod**:
+   The canvas operates with 0px padding, 0px margin, and 0px border-radius right up to the display boundaries. Decorative layout headers and footers are omitted from the stage runtime.
+3. **Hard Scroll Lockout**:
+   Document scrolling is suppressed at the root level in `app/layout.tsx`:
+   ```css
+   html, body {
+     width: 100%;
+     height: 100%;
+     height: 100dvh;
+     margin: 0;
+     padding: 0;
+     overflow: hidden;
+     overscroll-behavior: none;
+   }
+   ```
+   This prevents mouse wheel panning, touch drag displacement, and mobile browser address bar bounce from disrupting stage interactions.
+
+---
+
+## 6. Google Cloud VM Deployment and Caddy Ingress
 
 The application is deployed as a containerised service running on the shared Google Cloud VM (`wp-lab-live`: `34.16.50.74`).
 

@@ -8,7 +8,7 @@
 - [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and community distribution.
 
 ## Level 2: Application Engineer
-- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web app, Google Cloud VM deployment, and Firebase suite integration.
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web app, zero-scroll viewport geometry, Google Cloud VM deployment, and Firebase suite integration.
 - [Docker Harness Specification](docs/docker-harness.md): Container architecture, port configuration, and operational commands.
 
 ## Level 3: Systems & Deep Infrastructure ("The Geek Tier")

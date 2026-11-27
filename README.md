@@ -44,6 +44,7 @@ The library operates across two distinct environments from a single codebase:
 - **ActionScript Timeline Architecture**: GSAP-powered motion choreographies including 3D card flips, corkscrew spins, card dealing arcs, and elastic collisions.
 - **Natural Language Prompt Studio**: Chat interface that parses plain-text prompts (for example, *"Deal Ace of Spades with a 3D flip on dark stage"*) directly into animated SVG scenes.
 - **Dual-Ecosystem Distribution**: ESM modules for modern bundlers alongside a zero-dependency pre-compiled browser script for WordPress and standalone HTML embeds.
+- **Zero-Scroll Viewport Geometry**: Anti-scrolling architecture fitting the available viewport edge-to-edge (100vw by 100dvh) with zero padding, zero margin, and zero border-radius.
 - **Audio Synthesis Engine**: Web Audio API integration providing retro synthesised clicks, card slides, deals, and authentic Flash MX boot sounds without external audio assets.
 - **Containerised Docker Harness**: Production-aligned Docker Compose environment serving the animation studio on port `3800`.
 
@@ -366,24 +367,26 @@ registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) 
 
 ```
 modern-flash/
-├── apps/                    # Monorepo workspace applications
-│   └── web/                 # Flagship public Next.js web application (:3830)
-├── modern-flash.php         # WordPress plugin bootstrap and lifecycle
-├── composer.json            # PSR-4 package manifest for PHP
 ├── assets/                  # Brand iconography and vector graphics
 ├── docs/                    # Technical manuals and architectural specifications
 │   ├── agentic-control-surface.md
+│   ├── docker-distribution.md
 │   ├── docker-harness.md
 │   ├── dual-ecosystem-integration.md
 │   ├── flagship-web-app.md
-│   └── hybrid-package-architecture.md
+│   ├── hybrid-package-architecture.md
+│   └── vm-deployment.md
+├── nextjs/                  # Flagship Next.js 15 showcase application (:3830)
 ├── php/                     # Modern WordPress PHP classes (PSR-4)
 │   ├── Plugin.php           # Core plugin orchestrator and asset enqueue
 │   ├── Shortcode.php        # [modern_flash] declarative stage renderer
 │   └── Admin/
 │       └── SettingsController.php # Two-column settings interface
-├── scripts/                 # Security verification runners and git hooks
+├── public/                  # Public assets, web manifests, and service worker
+├── scripts/                 # Operational scripts, security verification, and git hooks
+│   ├── bump-version.mjs
 │   ├── setup-hooks.sh
+│   ├── test-flash.py
 │   └── verify-hygiene.py
 ├── src/                     # Core library implementation
 │   ├── ActionScript/        # GSAP timeline factories
@@ -395,8 +398,7 @@ modern-flash/
 │   ├── bundle-entry.ts      # WordPress standalone bundle entrypoint
 │   ├── index.ts             # Library exports
 │   └── types.ts             # TypeScript definitions
-├── nextjs/                  # Flagship Next.js 15 showcase application
-├── vite/                    # Interactive Vite studio application
+├── vite/                    # Interactive Vite studio application (:3800)
 ├── AGENTS.md                # Autonomous agent operating directives
 ├── compose.yaml             # Docker Compose specification (Studio :3800 + WordPress :3880)
 ├── Dockerfile               # Production container build
@@ -416,7 +418,7 @@ Documentation is categorised into developer levels based on technical depth and 
 - [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and zero-dependency container execution.
 
 ### Level 2: Application Engineer (Practical Web Architecture)
-- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, Google Cloud VM deployment, and Firebase suite integration.
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, zero-scroll viewport geometry, Google Cloud VM deployment, and Firebase suite integration.
 - [Docker Harness Specification](docs/docker-harness.md): Container harness, port bindings (`:3800`, `:3830`, `:3880`), and local operational commands.
 
 ### Level 3: Systems & Deep Infrastructure ("The Geek Tier")

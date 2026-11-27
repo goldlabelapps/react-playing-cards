@@ -23,11 +23,11 @@ The Next.js application demonstrates production consumption of the `modern-flash
 ```text
 nextjs/
 ├── app/
-│   ├── layout.tsx         # Semantic HTML landmarks, skip links, and dark theme
-│   ├── page.tsx           # Public showcase landing page (ISR revalidate: 60s)
+│   ├── layout.tsx         # Edge-to-edge viewport lock (100dvh), skip link, and dark theme
+│   ├── page.tsx           # Full-viewport stage container (zero-scroll)
 │   └── actions.ts         # Server actions managing scene persistence
 ├── components/
-│   ├── InteractiveStage.tsx # Client component managing prompt form and GSAP controls
+│   ├── InteractiveStage.tsx # Client component managing 100vw x 100dvh vector canvas
 │   └── StageWrapper.tsx   # Dynamic client boundary isolating vector canvas from SSR
 ├── lib/
 │   ├── db.ts              # Scene persistence interface with defensive fallback
@@ -79,11 +79,44 @@ Modern Flash uses GreenSock (GSAP) timelines and Web Audio APIs. Evaluating thes
 To enforce clean isolation:
 1. `nextjs/components/StageWrapper.tsx` wraps `InteractiveStage` using `next/dynamic` with `{ ssr: false }`.
 2. A client mounting guard (`mounted` state check) ensures vector DOM nodes are only initialised once the browser window is active.
-3. Next.js statically renders page scaffolding, semantic headers, and copy instantly while client bundles hydrate in the background.
+3. Next.js statically renders page scaffolding and root landmarks instantly while client bundles hydrate in the background.
 
 ---
 
-## 5. Google Cloud VM Deployment and Caddy Ingress
+## 5. Viewport Geometry and the Anti-Scrolling Contract
+
+### The Anti-Scrolling Doctrine
+
+The contemporary web is saturated with vertical feed chod and passive doom-scrolling. Modern Flash is built on the opposite architectural principle: a finite, intentional, bounded stage (analogous to an arcade cabinet screen or cinema projection).
+
+In Modern Flash, progression occurs through temporal timelines, interactive state transitions, and responsive coordinate scaling rather than spatial document scrolling.
+
+### Viewport Geometry Invariants
+
+To enforce the zero-scroll canvas contract across all viewports:
+
+1. **Edge-to-Edge Surface**:
+   The stage occupies the entire available display area (`100vw` by `100dvh` or `100%`). Inset card containers, desktop max-width constraints (e.g. `960px`), and page gutters are eliminated.
+2. **Zero Inset Chod**:
+   The canvas operates with 0px padding, 0px margin, and 0px border-radius right up to the display boundaries. Decorative layout headers and footers are omitted from the stage runtime.
+3. **Hard Scroll Lockout**:
+   Document scrolling is suppressed at the root level in `app/layout.tsx`:
+   ```css
+   html, body {
+     width: 100%;
+     height: 100%;
+     height: 100dvh;
+     margin: 0;
+     padding: 0;
+     overflow: hidden;
+     overscroll-behavior: none;
+   }
+   ```
+   This prevents mouse wheel panning, touch drag displacement, and mobile browser address bar bounce from disrupting stage interactions.
+
+---
+
+## 6. Google Cloud VM Deployment and Caddy Ingress
 
 The application is deployed as a containerised service running on the shared Google Cloud VM (`wp-lab-live`: `34.16.50.74`).
 

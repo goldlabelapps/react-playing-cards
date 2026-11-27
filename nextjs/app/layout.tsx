@@ -40,12 +40,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           * {
             box-sizing: border-box;
           }
-          body {
+          html, body {
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
             margin: 0;
             padding: 0;
+            overflow: hidden;
+            overscroll-behavior: none;
+            background-color: #070b14;
+            color: #ffffff;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #ffffff;
-            color: #111827;
             line-height: 1.5;
           }
           .skip-link {
@@ -69,11 +74,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
-        <div style={{ maxWidth: 960, margin: '0 auto', padding: '24px 16px' }}>
-          <main id="main-content">
-            {children}
-          </main>
-        </div>
+        <main id="main-content" style={{ width: '100vw', height: '100dvh', overflow: 'hidden' }}>
+          {children}
+        </main>
       </body>
     </html>
   );
