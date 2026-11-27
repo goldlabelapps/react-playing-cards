@@ -60,8 +60,10 @@ export function autoMount() {
     const loop = el.getAttribute('data-loop') !== 'false';
     const autoPlay = el.getAttribute('data-autoplay') !== 'false';
     const speed = parseFloat(el.getAttribute('data-speed') || '1');
+    const width = el.getAttribute('data-width') || el.style.width || undefined;
+    const height = el.getAttribute('data-height') || el.style.minHeight || el.style.height || undefined;
 
-    mount(el, { movie, prompt, color, loop, autoPlay, speed });
+    mount(el, { movie, prompt, color, loop, autoPlay, speed, width, height });
   });
 }
 

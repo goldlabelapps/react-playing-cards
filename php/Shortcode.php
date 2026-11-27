@@ -31,7 +31,7 @@ final class Shortcode
                 'autoplay' => 'true',
                 'speed'    => '1',
                 'width'    => '100%',
-                'height'   => '360px',
+                'height'   => '480px',
                 'class'    => '',
             ],
             is_array($atts) ? $atts : [],
@@ -51,7 +51,7 @@ final class Shortcode
         $classes = 'mwp-flash-stage' . ($customClass !== '' ? ' ' . $customClass : '');
 
         return sprintf(
-            '<div class="%s" data-flash-stage="true" data-movie="%s" data-prompt="%s" data-color="%s" data-loop="%s" data-autoplay="%s" data-speed="%s" style="width:%s;min-height:%s;position:relative;"></div>',
+            '<div class="%s" data-flash-stage="true" data-movie="%s" data-prompt="%s" data-color="%s" data-loop="%s" data-autoplay="%s" data-speed="%s" data-width="%s" data-height="%s" style="width:%s;min-height:%s;position:relative;"></div>',
             $classes,
             $movie,
             $prompt,
@@ -59,6 +59,8 @@ final class Shortcode
             $loop,
             $autoplay,
             $speed,
+            $width,
+            $height,
             $width,
             $height
         );

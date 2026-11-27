@@ -3,27 +3,34 @@ import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'Modern Flash',
-  description: 'Pure SVG Flash animation engine and natural language animation studio for Next.js, React, and WordPress.',
+  description: 'Pure SVG Flash animation engine and ActionScript runtime for WordPress and Next.js.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en-GB">
+      <head>
+        <style>{`
+          @media (max-width: 860px) {
+            .mwp-layout-grid {
+              grid-template-columns: 1fr !important;
+            }
+          }
+        `}</style>
+      </head>
       <body
         style={{
           margin: 0,
           padding: 0,
           width: '100%',
           minHeight: '100vh',
-          backgroundColor: '#050a14',
-          color: '#f8fafc',
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+          backgroundColor: '#f0f0f1',
+          color: '#1e293b',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
           lineHeight: 1.6,
           boxSizing: 'border-box',
-          overflowX: 'hidden',
         }}
       >
-        {/* Accessible Skip Link */}
         <a
           href="#main-content"
           style={{
@@ -42,8 +49,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           Skip to main content
         </a>
-
-        {children}
+        <main id="main-content">
+          {children}
+        </main>
       </body>
     </html>
   );

@@ -192,8 +192,8 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
       case 'flash-story':
       case 'story':
         return (
-          <div key={el.id} data-element-id={el.id} style={commonStyle}>
-            <FlashStory />
+          <div key={el.id} data-element-id={el.id} style={{ width: '100%', height: '100%', position: 'relative' }}>
+            <FlashStory loop={loop} autoPlay={autoPlay} speed={speed} />
           </div>
         );
       default:
