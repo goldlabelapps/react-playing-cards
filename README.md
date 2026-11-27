@@ -377,7 +377,8 @@ modern-flash/
 │   ├── bundle-entry.ts      # WordPress standalone bundle entrypoint
 │   ├── index.ts             # Library exports
 │   └── types.ts             # TypeScript definitions
-├── studio/                  # Interactive studio application
+├── nextjs/                  # Flagship Next.js 15 showcase application
+├── vite/                    # Interactive Vite studio application
 ├── AGENTS.md                # Autonomous agent operating directives
 ├── compose.yaml             # Docker Compose specification (Studio :3800 + WordPress :3880)
 ├── Dockerfile               # Production container build

@@ -1,14 +1,14 @@
 # Flagship Web Application Architecture
 
-This document specifies the architecture, deployment contracts, and persistence patterns for the Modern Flash public-facing web application located in `apps/web`.
+This document specifies the architecture, deployment contracts, and persistence patterns for the Modern Flash public-facing web application located in `nextjs`.
 
 ---
 
 ## 1. Role and Strategic Context
 
 Modern Flash ships two distinct JavaScript environments from a single repository:
-1. **Developer Animation Studio (`studio/` via Vite on `:3800`)**: A lightweight client-only lab designed for rapid local canvas iteration, ActionScript timeline debugging, and audio synthesis testing.
-2. **Flagship Public Web Application (`apps/web` via Next.js on `:3830`)**: The official public-facing showcase and community hub deployed to Vercel alongside the GitHub repository.
+1. **Developer Animation Studio (`vite/` via Vite on `:3800`)**: A lightweight client-only lab designed for rapid local canvas iteration, ActionScript timeline debugging, and audio synthesis testing.
+2. **Flagship Public Web Application (`nextjs/` via Next.js on `:3830`)**: The official public-facing showcase and community hub deployed to Vercel alongside the GitHub repository.
 
 The Next.js application demonstrates production consumption of the `modern-flash` package, offering real-time natural language prompt synthesis, interactive vector stages, and shared persistent scene storage.
 
@@ -17,7 +17,7 @@ The Next.js application demonstrates production consumption of the `modern-flash
 ## 2. Directory Hierarchy and Boundaries
 
 ```text
-apps/web/
+nextjs/
 ├── app/
 │   ├── layout.tsx         # Semantic HTML landmarks, skip links, and dark theme
 │   ├── page.tsx           # Public showcase landing page (ISR revalidate: 60s)
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS flash_scenes (
 Modern Flash uses GreenSock (GSAP) timelines and Web Audio APIs. Evaluating these modules during Node.js server-side pre-rendering causes hydration mismatches and window-reference exceptions.
 
 To enforce clean isolation:
-1. `apps/web/components/StageWrapper.tsx` wraps `InteractiveStage` using `next/dynamic` with `{ ssr: false }`.
+1. `nextjs/components/StageWrapper.tsx` wraps `InteractiveStage` using `next/dynamic` with `{ ssr: false }`.
 2. A client mounting guard (`mounted` state check) ensures vector DOM nodes are only initialised once the browser window is active.
 3. Next.js statically renders page scaffolding, semantic headers, and copy instantly while client bundles hydrate seamlessly in the background.
 
@@ -77,7 +77,7 @@ To enforce clean isolation:
 
 ## 5. Vercel Deployment Configuration
 
-In accordance with monorepo deployment standards, `apps/web` declares its own scoped configuration:
+In accordance with monorepo deployment standards, `nextjs` declares its own scoped configuration:
 
 ```json
 {
@@ -87,6 +87,6 @@ In accordance with monorepo deployment standards, `apps/web` declares its own sc
 ```
 
 To deploy via the Vercel CLI or Git integration:
-- **Root Directory**: `apps/web`
+- **Root Directory**: `nextjs`
 - **Build Command**: `pnpm run build`
 - **Install Command**: `pnpm install`

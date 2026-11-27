@@ -40,7 +40,7 @@ services:
   nextjs:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      dockerfile: nextjs/Dockerfile
     image: modern-flash-nextjs:latest
     container_name: nextjs
     ports:
@@ -56,8 +56,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - /app/apps/web/node_modules
-      - /app/apps/web/.next
+      - /app/nextjs/node_modules
+      - /app/nextjs/.next
     depends_on:
       wordpress_db:
         condition: service_healthy
