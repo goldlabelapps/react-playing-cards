@@ -44,7 +44,7 @@ The library operates across two distinct environments from a single codebase:
 - **ActionScript Timeline Architecture**: GSAP-powered motion choreographies including 3D card flips, corkscrew spins, card dealing arcs, and elastic collisions.
 - **Natural Language Prompt Studio**: Chat interface that parses plain-text prompts (for example, *"Deal Ace of Spades with a 3D flip on dark stage"*) directly into animated SVG scenes.
 - **Dual-Ecosystem Distribution**: ESM modules for modern bundlers alongside a zero-dependency pre-compiled browser script for WordPress and standalone HTML embeds.
-- **Audio Synthesis Engine**: Web Audio API integration providing retro synthesized clicks, card slides, deals, and authentic Flash MX boot sounds without external audio assets.
+- **Audio Synthesis Engine**: Web Audio API integration providing retro synthesised clicks, card slides, deals, and authentic Flash MX boot sounds without external audio assets.
 - **Containerised Docker Harness**: Production-aligned Docker Compose environment serving the animation studio on port `3800`.
 
 ---
@@ -304,7 +304,7 @@ ActionScripts are GreenSock timeline choreographies registered in the engine:
 | `lightning` | High-frequency discharge with opacity flickering and filter displacement. |
 | `loading` | Authentic Flash progress bar with percentage counter and spinning loader. |
 | `logo` | Elastic scale entrance with spring damping. |
-| `macromedia` | Complete Flash MX boot sequence with sound synchronization. |
+| `macromedia` | Complete Flash MX boot sequence with sound synchronisation. |
 | `pingpong` | High-speed ball bounce with elastic wall collisions. |
 | `sprite` | Frame-by-frame sprite sheet stepper and walk cycles. |
 | `twist` | Elastic coordinate shearing and 2D bounce oscillation. |
@@ -391,7 +391,7 @@ modern-flash/
 
 ## Documentation Index
 
-- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture and Vercel deployment.
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, Google Cloud VM deployment, and Firebase suite integration.
 - [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
 - [Docker Harness Specification](docs/docker-harness.md): Container architecture, port bindings, and operational commands.
 - [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step setup guides for Next.js and WordPress environments.

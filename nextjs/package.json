@@ -9,8 +9,10 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "modern-flash": "workspace:*",
+    "firebase": "^13.4.0",
+    "firebase-admin": "^14.5.1",
     "gsap": "^3.12.5",
+    "modern-flash": "workspace:*",
     "mysql2": "^3.12.0",
     "next": "^15.1.0",
     "react": "^19.0.0",

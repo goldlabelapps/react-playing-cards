@@ -8,9 +8,9 @@ This document specifies the architecture, deployment contracts, and persistence 
 
 Modern Flash ships two distinct JavaScript environments from a single repository:
 1. **Developer Animation Studio (`vite/` via Vite on `:3800`)**: A lightweight client-only lab designed for rapid local canvas iteration, ActionScript timeline debugging, and audio synthesis testing.
-2. **Flagship Public Web Application (`nextjs/` via Next.js on `:3830`)**: The official public-facing showcase and community hub deployed to Vercel alongside the GitHub repository.
+2. **Flagship Public Web Application (`nextjs/` via Next.js on `:3830`)**: The official public-facing showcase and collaborative community hub hosted on the Google Cloud Compute Engine VM (`wp-lab-live`: `34.16.50.74`) alongside the Modern WordPress multi-site fleet.
 
-The Next.js application demonstrates production consumption of the `modern-flash` package, offering real-time natural language prompt synthesis, interactive vector stages, and shared persistent scene storage.
+The Next.js application demonstrates production consumption of the `modern-flash` package, offering real-time natural language prompt synthesis, interactive vector stages, and collaborative cloud scene storage.
 
 ---
 
@@ -21,46 +21,50 @@ nextjs/
 ├── app/
 │   ├── layout.tsx         # Semantic HTML landmarks, skip links, and dark theme
 │   ├── page.tsx           # Public showcase landing page (ISR revalidate: 60s)
-│   └── actions.ts         # Server actions persisting scenes to database
+│   └── actions.ts         # Server actions managing scene persistence
 ├── components/
 │   ├── InteractiveStage.tsx # Client component managing prompt form and GSAP controls
 │   └── StageWrapper.tsx   # Dynamic client boundary isolating vector canvas from SSR
 ├── lib/
-│   └── db.ts              # MariaDB connection pool with defensive serverless fallback
+│   ├── db.ts              # Scene persistence interface with defensive fallback
+│   ├── firebase.ts        # Client-side Firebase SDK initialisation (Auth, Firestore, Storage)
+│   └── firebase-admin.ts  # Privileged Server Actions SDK for token verification
 ├── Dockerfile             # Multi-stage container definition for port 3830
 ├── next.config.ts         # Package transpilation and external server packages
 ├── package.json           # Workspace manifest referencing "modern-flash": "workspace:*"
-├── tsconfig.json          # Strict TypeScript App Router configuration
-└── vercel.json            # Scoped Vercel deployment descriptor
+└── tsconfig.json          # Strict TypeScript App Router configuration
 ```
 
 ---
 
-## 3. Serverless Deployment and Defensive Persistence
+## 3. Google Cloud and Firebase Suite Integration
 
-### The Problem
+### Strategic Infrastructure Convergence
 
-In local Docker environments, Next.js connects to MariaDB via the internal network (`wordpress_db:3306`). When deployed to Vercel, the application runs inside serverless edge or lambda runtimes without direct access to local Docker containers.
+Modern Flash consolidates hosting, persistence, and intelligence under a single Google Cloud Platform (GCP) and Firebase project perimeter. This eliminates third-party platform fragmentation, cold starts, and connection-pooling bottlenecks.
 
-### The Solution: Environment-Aware Persistence
+### Core Services
 
-The database client (`lib/db.ts`) implements defensive persistence:
-- **Local Docker / Cloud Database**: When `DATABASE_HOST` or `DATABASE_URL` is defined, `mysql2/promise` opens a connection pool to persist scenes to the `flash_scenes` table.
-- **Vercel Previews / Zero-Config Deployments**: When database environment variables are unset or unreachable, the module automatically falls back to an in-memory seed dataset.
-- **Outcome**: The public application compiles and deploys to Vercel without throwing 500 connection errors, even before a production database is linked.
+1. **Cloud Firestore**:
+   - Stores prompt-generated scene definitions, timeline parameters, and author metadata in the `flash_scenes` collection.
+   - Replaces traditional relational SQL connections with scalable document persistence.
+   - Supports real-time snapshot listeners (`onSnapshot`) to enable live multi-user stage collaboration and synchronised playback across connected clients.
 
-### Database Schema
+2. **Firebase Authentication**:
+   - Provides anonymous authentication out of the box, allowing visitors to design and run vector scenes immediately without registration hurdles.
+   - Supports account linking to Google Sign-In to claim ownership of persistent scenes and custom MovieClips.
+   - Enforces secure session tokens validated server-side in Next.js Server Actions using `firebase-admin/auth`.
 
-```sql
-CREATE TABLE IF NOT EXISTS flash_scenes (
-  id VARCHAR(64) PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  prompt TEXT NOT NULL,
-  movie VARCHAR(64) DEFAULT 'logo',
-  speed FLOAT DEFAULT 1.0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-```
+3. **Cloud Storage for Firebase**:
+   - Offloads binary assets, exported SVG vectors, audio stems, and rendered canvas video clips directly to high-capacity object storage.
+   - Protects local VM disk capacity whilst serving media through Google Cloud global edge distribution.
+
+4. **Firebase Cloud Messaging (FCM)**:
+   - Delivers web push notifications to users when background video renders, multi-frame sprite sheets, or complex prompt syntheses finish processing.
+
+5. **Gemini API Integration**:
+   - Powers the natural language Prompt Engine (`src/PromptEngine/`).
+   - Translates descriptive user input into strictly typed JSON scene choreography consumed directly by GSAP ActionScript runners.
 
 ---
 
@@ -71,22 +75,44 @@ Modern Flash uses GreenSock (GSAP) timelines and Web Audio APIs. Evaluating thes
 To enforce clean isolation:
 1. `nextjs/components/StageWrapper.tsx` wraps `InteractiveStage` using `next/dynamic` with `{ ssr: false }`.
 2. A client mounting guard (`mounted` state check) ensures vector DOM nodes are only initialised once the browser window is active.
-3. Next.js statically renders page scaffolding, semantic headers, and copy instantly while client bundles hydrate seamlessly in the background.
+3. Next.js statically renders page scaffolding, semantic headers, and copy instantly while client bundles hydrate in the background.
 
 ---
 
-## 5. Vercel Deployment Configuration
+## 5. Google Cloud VM Deployment and Caddy Ingress
 
-In accordance with monorepo deployment standards, `nextjs` declares its own scoped configuration:
+The application is deployed as a containerised service running on the shared Google Cloud VM (`wp-lab-live`: `34.16.50.74`).
 
-```json
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs"
+### Container Orchestration
+The multi-stage container (`nextjs/Dockerfile`) builds the standalone Next.js server and exposes port `3830`. It is managed via Docker Compose with automatic restart policies:
+
+```yaml
+nextjs:
+  build:
+    context: .
+    dockerfile: nextjs/Dockerfile
+  image: modern-flash-nextjs:latest
+  container_name: nextjs
+  ports:
+    - "3830:3830"
+  restart: unless-stopped
+```
+
+### Edge Caddy Reverse Proxy
+Edge TLS termination on ports `80` and `443` is handled by Caddy. Traffic for the showcase subdomain is routed directly to the Next.js container:
+
+```caddy
+app.modern-flash.pro {
+    reverse_proxy localhost:3830
+    encode zstd gzip
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
 }
 ```
 
-To deploy via the Vercel CLI or Git integration:
-- **Root Directory**: `nextjs`
-- **Build Command**: `pnpm run build`
-- **Install Command**: `pnpm install`
+This guarantees uniform SSL certificates, zero port clashes with WordPress sibling containers, and direct integration with the VM deployment pipeline.

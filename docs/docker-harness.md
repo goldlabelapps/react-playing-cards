@@ -10,7 +10,7 @@ The harness acts as the universal bridge between two divergent runtime environme
 - **Next.js World**: Modern React 18/19 applications consuming modular ESM packages.
 - **WordPress World**: PHP 8.2+ environments running Gutenberg blocks and classic templates with pre-compiled browser scripts.
 
-Running the studio inside Docker ensures that both ecosystems receive identical SVG vector assets, GSAP ActionScript choreography, and prompt-parsing behavior without local node or dependency conflicts.
+Running the studio inside Docker ensures that both ecosystems receive identical SVG vector assets, GSAP ActionScript choreography, and prompt-parsing behaviour without local node or dependency conflicts.
 
 ---
 
@@ -143,3 +143,35 @@ The container compiles two distinct output formats into `dist/`:
    Tree-shakeable ESM module for Next.js, Vite, and npm consumers. Externalises `react`, `react-dom`, and `gsap`.
 2. **`dist/flash-bundle.min.js`**:
    Self-contained browser bundle for WordPress `mwp-flash`. Bundles the runtime and attaches to `window.mwpFlash` with auto-mounting capabilities on `.mwp-flash-stage` elements.
+
+---
+
+## Co-Location Topology (Google Cloud VM: 34.16.50.74)
+
+Modern Flash co-exists on the shared Google Cloud production host (`wp-lab-live`: `34.16.50.74`) alongside the Modern WordPress multi-tenant architecture with zero port collisions or network contention.
+
+### Service Port Map
+
+| System | Container Name | Port Mapping | Role |
+| :--- | :--- | :---: | :--- |
+| **Modern WordPress** | `modern-wordpress-prod-caddy` | `80`, `443` | Edge TLS reverse proxy and static portal |
+| **Modern WordPress** | `wordpress` (Learn) | `8080:80` | Primary educational lesson archive |
+| **Modern WordPress** | `wordpress_government` | `8081:80` | Baseline public-sector evaluation site |
+| **Modern WordPress** | `wordpress_nhtfs` | `8082:80` | Cyber-noir brutalist fiction laboratory |
+| **Modern WordPress** | `wordpress_flash` | `8083:80` | Dedicated Flash stage site (`/var/www/html/flash`) |
+| **Modern WordPress** | `wordpress_books` | `8084:80` | Digital publishing platform |
+| **Modern WordPress** | `db` (MariaDB) | `3307:3306` | Centralised relational database service |
+| **Modern Flash** | `modern-flash-vite` | `3800:3800` | Developer animation studio and canvas debugger |
+| **Modern Flash** | `modern-flash-nextjs` | `3830:3830` | Flagship App Router showcase |
+| **Modern Flash** | `modern-flash-wordpress`| `3880:80` | Isolated local plugin development container |
+
+### Host Ingress Routing
+The production Caddy ingress router manages subdomains dynamically:
+- `flash.modern-wordpress.pro`: Serves the WordPress Flash stage site at `/var/www/html/flash`.
+- `app.modern-flash.pro`: Reverse proxies directly to `localhost:3830` (Next.js flagship showcase).
+
+### Release Pipeline Integration
+The deployment engine in Modern WordPress (`bin/deploy`) automates artifact deployment for the WordPress vector:
+1. Compiles the standalone browser bundle via `pnpm run build:bundle`.
+2. Copies `dist/flash-bundle.min.js` and plugin files directly to `/var/www/html/flash/wp-content/plugins/modern-flash`.
+3. Activates the `mwp_flash` theme and flushes rewrite rules on the live VM.
