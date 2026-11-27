@@ -16,7 +16,7 @@ Running the studio inside Docker ensures that both ecosystems receive identical 
 
 ## Configuration & Ports
 
-The container exposes port `3800` for the interactive Flash Animation Studio, alongside dedicated port `3880` for the containerised WordPress environment:
+The container exposes port `3800` for the interactive Flash Animation Studio, port `3830` for the flagship Next.js web application, alongside dedicated port `3880` for the containerised WordPress environment:
 
 ```yaml
 name: modern-flash
@@ -35,6 +35,32 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    restart: unless-stopped
+
+  nextjs:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    image: modern-flash-nextjs:latest
+    container_name: nextjs
+    ports:
+      - "3830:3830"
+    environment:
+      - NODE_ENV=development
+      - PORT=3830
+      - DATABASE_HOST=wordpress_db
+      - DATABASE_PORT=3306
+      - DATABASE_USER=wpuser
+      - DATABASE_PASSWORD=wppassword
+      - DATABASE_NAME=modern_flash_dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/web/node_modules
+      - /app/apps/web/.next
+    depends_on:
+      wordpress_db:
+        condition: service_healthy
     restart: unless-stopped
 
   wordpress:
@@ -83,13 +109,14 @@ volumes:
 ## Operational Commands
 
 ### Launch Composite Environment
-Start both the animation studio and WordPress runtime:
+Start the full development stack:
 
 ```bash
 docker compose up -d
 ```
 
-- Studio: `http://localhost:3800`
+- Vite Studio: `http://localhost:3800`
+- Next.js Web App: `http://localhost:3830`
 - WordPress: `http://localhost:3880`
 
 ### Build Distribution Artifacts
