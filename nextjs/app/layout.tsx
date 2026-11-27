@@ -1,10 +1,35 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://modern-flash.pro'),
   title: 'Modern Flash for Next.js',
   description: 'SVG Flash animation engine and ActionScript runtime for Next.js and React.',
+  manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Modern Flash',
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#052841',
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -45,15 +70,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to main content
         </a>
         <div style={{ maxWidth: 960, margin: '0 auto', padding: '24px 16px' }}>
-          <header role="banner" style={{ marginBottom: 24 }}>
-            <h1 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 6px' }}>
-              Modern Flash for Next.js
-            </h1>
-            <p style={{ margin: 0, color: '#4b5563', fontSize: 14 }}>
-              SVG vector animation engine and ActionScript runtime
-            </p>
-          </header>
-
           <main id="main-content">
             {children}
           </main>
