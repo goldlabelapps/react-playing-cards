@@ -1,8 +1,7 @@
 {
-  "name": "web",
+  "name": "nextjs",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev --port 3830",
     "build": "next build",

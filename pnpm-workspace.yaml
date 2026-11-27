@@ -1,6 +1,6 @@
 packages:
   - '.'
-  - 'apps/*'
+  - 'nextjs'
 
 allowBuilds:
   esbuild: true

@@ -4,6 +4,7 @@
 
 ## Core Documentation
 - [Project Overview](README.md): Flash animation engine and prompt studio scope.
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web app, Vercel deployment, and MariaDB persistence.
 - [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository dual-target architecture for NPM and WordPress.
 - [Docker Harness Specification](docs/docker-harness.md): Container architecture, port configuration, and operational commands.
 - [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step guides for Next.js and WordPress setups.

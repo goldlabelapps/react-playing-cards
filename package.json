@@ -30,16 +30,21 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "pnpm run build:lib && pnpm run build:bundle && pnpm run build:studio",
+    "build": "pnpm run build:lib && pnpm run build:bundle && pnpm run build:vite",
     "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json",
     "build:bundle": "vite build --config vite.bundle.config.ts",
+    "build:vite": "vite build --config vite.config.ts",
     "build:studio": "vite build --config vite.config.ts",
-    "build:web": "pnpm --filter web build",
+    "build:nextjs": "pnpm --filter nextjs build",
+    "build:web": "pnpm --filter nextjs build",
     "build:wp": "pnpm run build:bundle",
     "type-check": "tsc --noEmit",
     "test": "python3 scripts/verify-hygiene.py",
+    "test:flash": "python3 scripts/test-flash.py",
+    "vite": "vite --port 3800 --host",
     "studio": "vite --port 3800 --host",
-    "web": "pnpm --filter web dev"
+    "nextjs": "pnpm --filter nextjs dev",
+    "web": "pnpm --filter nextjs dev"
   },
   "dependencies": {
     "gsap": "^3.12.5",

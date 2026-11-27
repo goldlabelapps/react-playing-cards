@@ -56,11 +56,14 @@ The library operates across two distinct environments from a single codebase:
 Run the containerised studio and live WordPress environment without installing local dependencies:
 
 ```bash
-# Start both studio and WordPress containers
+# Start studio, Next.js web app, and WordPress containers
 docker compose up -d
 
 # Studio interface (Vite + React)
 open http://localhost:3800
+
+# Flagship public web application (Next.js 15)
+open http://localhost:3830
 
 # WordPress environment with modern-flash plugin mounted
 open http://localhost:3880
@@ -345,6 +348,8 @@ registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) 
 
 ```
 modern-flash/
+├── apps/                    # Monorepo workspace applications
+│   └── web/                 # Flagship public Next.js web application (:3830)
 ├── modern-flash.php         # WordPress plugin bootstrap and lifecycle
 ├── composer.json            # PSR-4 package manifest for PHP
 ├── assets/                  # Brand iconography and vector graphics
@@ -352,6 +357,7 @@ modern-flash/
 │   ├── agentic-control-surface.md
 │   ├── docker-harness.md
 │   ├── dual-ecosystem-integration.md
+│   ├── flagship-web-app.md
 │   └── hybrid-package-architecture.md
 ├── php/                     # Modern WordPress PHP classes (PSR-4)
 │   ├── Plugin.php           # Core plugin orchestrator and asset enqueue
@@ -371,7 +377,8 @@ modern-flash/
 │   ├── bundle-entry.ts      # WordPress standalone bundle entrypoint
 │   ├── index.ts             # Library exports
 │   └── types.ts             # TypeScript definitions
-├── studio/                  # Interactive studio application
+├── nextjs/                  # Flagship Next.js 15 showcase application
+├── vite/                    # Interactive Vite studio application
 ├── AGENTS.md                # Autonomous agent operating directives
 ├── compose.yaml             # Docker Compose specification (Studio :3800 + WordPress :3880)
 ├── Dockerfile               # Production container build
@@ -384,6 +391,7 @@ modern-flash/
 
 ## Documentation Index
 
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture and Vercel deployment.
 - [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
 - [Docker Harness Specification](docs/docker-harness.md): Container architecture, port bindings, and operational commands.
 - [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step setup guides for Next.js and WordPress environments.

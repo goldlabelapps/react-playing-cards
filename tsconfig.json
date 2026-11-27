@@ -20,6 +20,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "studio"],
+  "include": ["src", "vite"],
   "references": []
 }
