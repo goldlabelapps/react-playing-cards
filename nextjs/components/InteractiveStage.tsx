@@ -34,6 +34,9 @@ export function InteractiveStage() {
           width="100%"
           height="100%"
           color="transparent"
+          onNavigate={(path) => {
+            window.location.href = path;
+          }}
         />
       ) : (
         <div style={{ color: '#94a3b8', fontSize: 14 }}>

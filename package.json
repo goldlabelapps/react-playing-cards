@@ -41,6 +41,7 @@
     "build:wp": "pnpm run build:bundle",
     "type-check": "tsc --noEmit",
     "sfx:curate": "python3 scripts/curate-sound-library.py",
+    "deploy": "bash scripts/deploy.sh",
     "test": "python3 scripts/verify-hygiene.py",
     "test:flash": "python3 scripts/test-flash.py",
     "vite": "vite --port 3800 --host",
