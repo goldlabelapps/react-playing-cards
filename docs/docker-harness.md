@@ -1,5 +1,9 @@
 # Docker Harness Specification
 
+> **Developer Level**: Level 2 : Application Engineer & Tooling  
+> **Technical Depth**: Intermediate (Multi-container orchestration and local workflows)  
+> **Audience**: Developers running local multi-service development harnesses.
+
 The Docker harness provides a containerised development environment and dual-distribution build runner for the Flash SVG animation engine.
 
 ---

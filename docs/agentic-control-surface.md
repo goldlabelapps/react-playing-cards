@@ -1,5 +1,9 @@
 # Baseline Agentic Control Surface
 
+> **Developer Level**: Level 3 : Systems & Infrastructure ("Geek Tier")  
+> **Technical Depth**: Deep Systems (Autonomous agent pairing contracts and quality gates)  
+> **Audience**: Agentic engineers and maintainers configuring autonomous tooling.
+
 This document defines the agentic control surface configured for this repository. It establishes predictable collaboration between developers, coding agents, and autonomous tooling.
 
 ## Architectural Objectives

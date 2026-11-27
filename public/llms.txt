@@ -1,0 +1,21 @@
+# Modern Flash
+
+> SVG-based Flash animation engine, GSAP ActionScript choreography, and prompt-driven animation studio for Next.js and WordPress.
+
+## Level 1: Integrator & Consumer
+- [Project Overview](README.md): Flash animation engine and prompt studio scope.
+- [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step guides for Next.js and WordPress setups.
+- [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and community distribution.
+
+## Level 2: Application Engineer
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web app, Google Cloud VM deployment, and Firebase suite integration.
+- [Docker Harness Specification](docs/docker-harness.md): Container architecture, port configuration, and operational commands.
+
+## Level 3: Systems & Deep Infrastructure ("The Geek Tier")
+- [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository dual-target architecture for NPM and WordPress.
+- [Virtual Machine Deployment](docs/vm-deployment.md): Google Cloud VM topology, Caddy reverse proxy, systemd services, Unix domain sockets, and MariaDB routing.
+- [Agentic Control Surface](docs/agentic-control-surface.md): Baseline agentic controls and verification tooling.
+- [Agent Directives](AGENTS.md): Autonomous agent pairing contracts and verification baselines.
+
+## Deep Dive Context
+- [Full Documentation](llms-full.txt): Complete concatenated technical corpus.

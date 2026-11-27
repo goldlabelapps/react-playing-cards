@@ -1,5 +1,9 @@
 # Flagship Web Application Architecture
 
+> **Developer Level**: Level 2 : Application Engineer  
+> **Technical Depth**: Intermediate (Full-stack Next.js 15 App Router architecture)  
+> **Audience**: Application engineers contributing to the web showcase and cloud persistence.
+
 This document specifies the architecture, deployment contracts, and persistence patterns for the Modern Flash public-facing web application located in `nextjs`.
 
 ---

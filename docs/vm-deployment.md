@@ -1,5 +1,9 @@
 # Virtual Machine Deployment and Testing Architecture
 
+> **Developer Level**: Level 3 : Systems & Infrastructure ("Geek Tier")  
+> **Technical Depth**: Deep Linux Systems & DevOps (Reverse proxies, systemd, sockets)  
+> **Audience**: Systems engineers and DevOps operators managing the Google Cloud production VM.
+
 This guide documents the end-to-end testing, artifact staging, and deployment protocols for both the `modern-flash` and `modern-wordpress` projects on the Google Cloud Compute Engine virtual machine (`wp-lab-live`: `34.16.50.74`).
 
 ---

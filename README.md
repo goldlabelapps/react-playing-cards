@@ -400,15 +400,25 @@ modern-flash/
 
 ## Documentation Index
 
-- [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and community distribution.
-- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, Google Cloud VM deployment, and Firebase suite integration.
-- [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
-- [Docker Harness Specification](docs/docker-harness.md): Container architecture, port bindings, and operational commands.
+Documentation is categorised into developer levels based on technical depth and operational domain:
+
+### Level 1: Integrator & Consumer (Zero Geek Required)
 - [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step setup guides for Next.js and WordPress environments.
+- [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and zero-dependency container execution.
+
+### Level 2: Application Engineer (Practical Web Architecture)
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, Google Cloud VM deployment, and Firebase suite integration.
+- [Docker Harness Specification](docs/docker-harness.md): Container harness, port bindings (`:3800`, `:3830`, `:3880`), and local operational commands.
+
+### Level 3: Systems & Deep Infrastructure ("The Geek Tier")
+- [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
+- [Virtual Machine Deployment Architecture](docs/vm-deployment.md): Google Cloud VM topology, Caddy reverse proxy, systemd services, Unix domain sockets, and MariaDB routing.
 - [Agentic Control Surface](docs/agentic-control-surface.md): Quality gates, secret scans, and verification tooling.
-- [Agent Directives](AGENTS.md): Wolfpack operating directives and code quality standards.
+- [Agent Directives](AGENTS.md): Wolfpack operating directives, code quality standards, and verification contracts.
+
+### Discovery & Machine Interfaces
 - [Machine Discovery Index](llms.txt): Machine discovery index for coding agents and LLMs.
-- [Complete Documentation Corpus](llms-full.txt): Concatenated documentation corpus.
+- [Complete Documentation Corpus](llms-full.txt): Complete concatenated technical documentation corpus.
 
 ---
 

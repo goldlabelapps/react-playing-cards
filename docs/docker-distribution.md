@@ -1,5 +1,9 @@
 # Docker Distribution Specification
 
+> **Developer Level**: Level 1 : Integrator & Consumer  
+> **Technical Depth**: Practical (Container execution without local build tooling)  
+> **Audience**: Developers, evaluators, and contributors running pre-compiled studio images.
+
 This document details the public distribution pipeline, registry configuration, and multi-architecture build procedures for the Modern Flash containerised runtime on Docker Hub.
 
 ---
