@@ -1,3 +1,5 @@
 export { TitleText, type TitleTextProps } from './TitleText';
 export { CleverText, type CleverTextProps, type CleverTextOptions } from './CleverText';
 export { BlingText, type BlingTextProps } from './BlingText';
+export { AgentText, type AgentTextProps, type AgentTextHandle } from './AgentText';
+

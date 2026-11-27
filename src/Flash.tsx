@@ -7,7 +7,7 @@ import { SpriteMC } from './MovieClips/Sprite';
 import { Blackjack } from './MovieClips/Blackjack';
 import { LightningBolt } from './MovieClips/LightningBolt';
 import { Base, Rank, Suit } from './MovieClips/PlayingCards';
-import { TitleText } from './MovieClips/Typography';
+import { TitleText, AgentText } from './MovieClips/Typography';
 import { Macromedia } from './MovieClips/Macromedia';
 import { FlashStory } from './MovieClips/FlashStory';
 import { getActionScript, corkScrew } from './ActionScript';
@@ -234,6 +234,9 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
         return <LightningBolt />;
       case 'macromedia':
         return <Macromedia />;
+      case 'agent-text':
+      case 'AgentText':
+        return <AgentText />;
       case 'flash-story':
       case 'FlashStory':
         return <FlashStory loop={loop} autoPlay={autoPlay} speed={speed} />;

@@ -37,7 +37,7 @@ export function InteractiveStage() {
         />
       ) : (
         <div style={{ color: '#94a3b8', fontSize: 14 }}>
-          Initialising vector stage surface...
+          Modern Flash
         </div>
       )}
     </figure>
