@@ -1,0 +1,24 @@
+{
+  "name": "goldlabelapps/modern-flash",
+  "description": "SVG-based Flash vector animation engine, ActionScript runtime, and prompt-driven animation studio for WordPress and Next.js.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Goldlabel°",
+      "homepage": "https://github.com/goldlabelapps"
+    }
+  ],
+  "require": {
+    "php": ">=8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "ModernFlash\\": "php/"
+    }
+  },
+  "scripts": {
+    "build": "pnpm run build",
+    "build:bundle": "pnpm run build:bundle"
+  }
+}

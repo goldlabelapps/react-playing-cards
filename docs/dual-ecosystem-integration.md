@@ -61,32 +61,29 @@ export default function InteractivePlayer() {
 
 ---
 
-## 2. WordPress (mwp-flash) Integration
+## 2. WordPress Integration
 
-In Modern WordPress environments running the `mwp-flash` plugin, the compiled bundle replaces fragmented front-end scripts with a single high-assurance vector runtime.
+Modern Flash functions as a native WordPress plugin directly from this repository (see [Hybrid Package Architecture](hybrid-package-architecture.md)), as well as supporting standalone asset enqueuing in custom themes.
 
-### Enqueueing the Universal Bundle
+### Native Plugin Activation
 
-In `mwp-flash.php` or `FlashService.php`:
+Clone or symlink the repository into `wp-content/plugins/modern-flash` and compile the vector bundle:
 
-```php
-wp_enqueue_script(
-    'mwp-flash-runtime',
-    plugins_url('assets/js/flash-bundle.min.js', __FILE__),
-    array(),
-    '1.0.0',
-    true
-);
+```bash
+pnpm run build:bundle
 ```
 
-### Declarative Stage HTML / Shortcode Output
+Activate "Modern Flash" from `wp-admin/plugins.php`. The plugin automatically registers the runtime script, styles, and shortcodes.
+
+### Declarative Stage HTML and Shortcode Output
 
 Render stage containers with data attributes that `window.mwpFlash.autoMount()` discovers automatically:
 
 ```html
-<!-- Rendered via shortcode [mwp_flash prompt="Deal King of Hearts" loop="true"] -->
+<!-- Rendered via shortcode [modern_flash prompt="Deal King of Hearts" loop="true"] -->
 <div
   class="mwp-flash-stage"
+  data-flash-stage="true"
   data-prompt="Deal King of Hearts with 3D flip on dark stage"
   data-loop="true"
   data-autoplay="true"

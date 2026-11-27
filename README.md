@@ -53,14 +53,17 @@ The library operates across two distinct environments from a single codebase:
 
 ### Option 1: Docker Harness (Recommended)
 
-Run the containerised animation studio without installing local Node dependencies:
+Run the containerised studio and live WordPress environment without installing local dependencies:
 
 ```bash
-# Start the studio container
+# Start both studio and WordPress containers
 docker compose up -d
 
-# Open the studio in your browser
+# Studio interface (Vite + React)
 open http://localhost:3800
+
+# WordPress environment with modern-flash plugin mounted
+open http://localhost:3880
 ```
 
 ### Option 2: Local Development
@@ -98,18 +101,21 @@ npm install modern-flash gsap
 yarn add modern-flash gsap
 ```
 
-### For WordPress and Static HTML
+### For WordPress
 
-Download `dist/flash-bundle.min.js` or compile it locally via `pnpm build:bundle`. Enqueue the script in your WordPress theme or plugin:
+Modern Flash operates directly as a native WordPress plugin. Clone or symlink this repository into your WordPress plugins directory:
 
-```php
-wp_enqueue_script(
-    'mwp-flash-runtime',
-    plugins_url('assets/js/flash-bundle.min.js', __FILE__),
-    array(),
-    '1.0.0',
-    true
-);
+```bash
+cd wp-content/plugins
+git clone https://github.com/goldlabelapps/modern-flash.git
+cd modern-flash
+pnpm run build:bundle
+```
+
+Activate "Modern Flash" in WordPress Admin (`wp-admin/plugins.php`) and embed vector stages using the shortcode:
+
+```text
+[modern_flash prompt="Deal Ace of Spades with a 3D flip on dark slate stage" speed="1.2" loop="true"]
 ```
 
 ---
@@ -339,11 +345,19 @@ registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) 
 
 ```
 modern-flash/
+├── modern-flash.php         # WordPress plugin bootstrap and lifecycle
+├── composer.json            # PSR-4 package manifest for PHP
 ├── assets/                  # Brand iconography and vector graphics
 ├── docs/                    # Technical manuals and architectural specifications
 │   ├── agentic-control-surface.md
 │   ├── docker-harness.md
-│   └── dual-ecosystem-integration.md
+│   ├── dual-ecosystem-integration.md
+│   └── hybrid-package-architecture.md
+├── php/                     # Modern WordPress PHP classes (PSR-4)
+│   ├── Plugin.php           # Core plugin orchestrator and asset enqueue
+│   ├── Shortcode.php        # [modern_flash] declarative stage renderer
+│   └── Admin/
+│       └── SettingsController.php # Two-column settings interface
 ├── scripts/                 # Security verification runners and git hooks
 │   ├── setup-hooks.sh
 │   └── verify-hygiene.py
@@ -359,7 +373,7 @@ modern-flash/
 │   └── types.ts             # TypeScript definitions
 ├── studio/                  # Interactive studio application
 ├── AGENTS.md                # Autonomous agent operating directives
-├── compose.yaml             # Docker Compose specification for port 3800
+├── compose.yaml             # Docker Compose specification (Studio :3800 + WordPress :3880)
 ├── Dockerfile               # Production container build
 ├── llms.txt                 # Machine discovery index for coding agents
 ├── llms-full.txt            # Complete concatenated technical documentation
@@ -370,6 +384,7 @@ modern-flash/
 
 ## Documentation Index
 
+- [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
 - [Docker Harness Specification](docs/docker-harness.md): Container architecture, port bindings, and operational commands.
 - [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step setup guides for Next.js and WordPress environments.
 - [Agentic Control Surface](docs/agentic-control-surface.md): Quality gates, secret scans, and verification tooling.

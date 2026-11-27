@@ -1,5 +1,6 @@
 # Dependencies and build outputs
 node_modules/
+vendor/
 dist/
 dist-studio/
 build/

@@ -34,9 +34,12 @@
     "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json",
     "build:bundle": "vite build --config vite.bundle.config.ts",
     "build:studio": "vite build --config vite.config.ts",
+    "build:web": "pnpm --filter web build",
+    "build:wp": "pnpm run build:bundle",
     "type-check": "tsc --noEmit",
     "test": "python3 scripts/verify-hygiene.py",
-    "studio": "vite --port 3800 --host"
+    "studio": "vite --port 3800 --host",
+    "web": "pnpm --filter web dev"
   },
   "dependencies": {
     "gsap": "^3.12.5",
