@@ -19,12 +19,15 @@ Running the studio inside Docker ensures that both ecosystems receive identical 
 The container exposes port `3800` for the interactive Flash Animation Studio:
 
 ```yaml
+name: modern-flash
+
 services:
-  flash-studio:
+  modern-flash-studio:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flash-animation-studio
+    image: modern-flash-studio:latest
+    container_name: modern-flash-studio
     ports:
       - "3800:3800"
     environment:
@@ -50,14 +53,14 @@ docker compose up -d
 Compile both the ESM library bundle and the standalone WordPress bundle:
 
 ```bash
-docker compose run --rm flash-studio pnpm build && pnpm build:bundle
+docker compose run --rm modern-flash-studio pnpm build && pnpm build:bundle
 ```
 
 ### Container Shell Access
 Open an interactive shell inside the container environment:
 
 ```bash
-docker compose exec flash-studio sh
+docker compose exec modern-flash-studio sh
 ```
 
 ---

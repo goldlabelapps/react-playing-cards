@@ -1,9 +1,12 @@
+name: modern-flash
+
 services:
-  flash-studio:
+  modern-flash-studio:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flash-animation-studio
+    image: modern-flash-studio:latest
+    container_name: modern-flash-studio
     ports:
       - "3800:3800"
     environment:
