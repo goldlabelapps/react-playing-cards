@@ -317,8 +317,8 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
             </div>
           </div>
 
-          {/* Primary Navigation CTA to /examples */}
-          <div>
+          {/* Primary Navigation CTAs */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <button
               onClick={handleOpenExamples}
               style={{
@@ -340,6 +340,33 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
               }}
             >
               Open Studio & Prompt Exporter →
+            </button>
+
+            <button
+              onClick={() => {
+                setIsDialogOpen(false);
+                if (onNavigate) onNavigate('/sounds');
+                else window.location.pathname = '/sounds';
+              }}
+              style={{
+                width: '100%',
+                background: '#0d1527',
+                color: '#38bdf8',
+                border: '2px solid #2A2A2A',
+                boxShadow: '3px 3px 0px 0px #2A2A2A',
+                padding: '10px 18px',
+                fontSize: 13,
+                fontWeight: 700,
+                borderRadius: 6,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                minHeight: 44,
+              }}
+            >
+              🔊 Explore Sound Library (108 SFX) →
             </button>
           </div>
 

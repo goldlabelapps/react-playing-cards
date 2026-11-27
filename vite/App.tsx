@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { LandingPage } from './pages/LandingPage';
 import { ExamplesPage } from './pages/ExamplesPage';
+import { SoundboardPage } from './pages/SoundboardPage';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(() => {
@@ -27,6 +28,11 @@ export default function App() {
       setCurrentPath(path);
     }
   };
+
+  // Match /sounds or /soundboard routes
+  if (currentPath.startsWith('/sounds') || currentPath.startsWith('/soundboard')) {
+    return <SoundboardPage onNavigate={navigate} />;
+  }
 
   // Match /examples and /examples/* routes
   const isExamplesRoute = currentPath.startsWith('/examples');

@@ -6,6 +6,7 @@ import { parsePrompt } from './PromptEngine';
 import { actionScripts, registerActionScript, getActionScript, corkScrew, asMovieClip } from './ActionScript';
 import * as PlayingCards from './MovieClips/PlayingCards';
 import { FlashStory } from './MovieClips/FlashStory';
+import { soundManager, FlashSound, playSound, SOUND_MANIFEST, SOUND_CATALOG } from './Sound';
 import type { MovieName, PromptScene } from './types';
 
 interface MountOptions {
@@ -89,7 +90,28 @@ if (typeof window !== 'undefined') {
     corkScrew,
     asMovieClip,
     PlayingCards,
+    sound: soundManager,
+    Sound: FlashSound,
+    playSound,
+    soundCatalog: SOUND_CATALOG,
+    soundManifest: SOUND_MANIFEST,
   };
 }
 
-export { Flash, Stage, FlashStory, parsePrompt, actionScripts, registerActionScript, getActionScript, corkScrew, asMovieClip, PlayingCards };
+export {
+  Flash,
+  Stage,
+  FlashStory,
+  parsePrompt,
+  actionScripts,
+  registerActionScript,
+  getActionScript,
+  corkScrew,
+  asMovieClip,
+  PlayingCards,
+  soundManager,
+  FlashSound,
+  playSound,
+  SOUND_CATALOG,
+  SOUND_MANIFEST,
+};
