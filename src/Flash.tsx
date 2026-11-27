@@ -10,6 +10,7 @@ import { Base, Rank, Suit } from './MovieClips/PlayingCards';
 import { TitleText, AgentText } from './MovieClips/Typography';
 import { Macromedia } from './MovieClips/Macromedia';
 import { FlashStory } from './MovieClips/FlashStory';
+import { GameMenu } from './MovieClips/GameMenu';
 import { getActionScript, corkScrew } from './ActionScript';
 import type { FlashHandle, FlashProps, PromptSceneElement } from './types';
 
@@ -28,6 +29,7 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
     className,
     style,
     onComplete,
+    onNavigate,
   },
   ref,
 ) {
@@ -237,11 +239,30 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
       case 'agent-text':
       case 'AgentText':
         return <AgentText />;
+      case 'game-menu':
+      case 'GameMenu':
+        return <GameMenu onNavigate={onNavigate} />;
       case 'flash-story':
       case 'FlashStory':
-        return <FlashStory loop={loop} autoPlay={autoPlay} speed={speed} />;
+        return (
+          <FlashStory
+            loop={loop}
+            autoPlay={autoPlay}
+            speed={speed}
+            onComplete={onComplete}
+            onNavigate={onNavigate}
+          />
+        );
       default:
-        return <FlashStory loop={loop} autoPlay={autoPlay} speed={speed} />;
+        return (
+          <FlashStory
+            loop={loop}
+            autoPlay={autoPlay}
+            speed={speed}
+            onComplete={onComplete}
+            onNavigate={onNavigate}
+          />
+        );
     }
   };
 

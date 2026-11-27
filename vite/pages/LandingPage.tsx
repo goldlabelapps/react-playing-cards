@@ -98,6 +98,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
             width="100%"
             height="100%"
             color="transparent"
+            onNavigate={onNavigate}
           />
         </div>
       </main>

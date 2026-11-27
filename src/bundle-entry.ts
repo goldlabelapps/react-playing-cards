@@ -6,6 +6,7 @@ import { parsePrompt } from './PromptEngine';
 import { actionScripts, registerActionScript, getActionScript, corkScrew, asMovieClip } from './ActionScript';
 import * as PlayingCards from './MovieClips/PlayingCards';
 import { FlashStory } from './MovieClips/FlashStory';
+import { GameMenu } from './MovieClips/GameMenu';
 import { soundManager, FlashSound, playSound, SOUND_MANIFEST, SOUND_CATALOG } from './Sound';
 import type { MovieName, PromptScene } from './types';
 
@@ -83,6 +84,7 @@ if (typeof window !== 'undefined') {
     Flash,
     Stage,
     FlashStory,
+    GameMenu,
     parsePrompt,
     actionScripts,
     registerActionScript,
@@ -102,6 +104,7 @@ export {
   Flash,
   Stage,
   FlashStory,
+  GameMenu,
   parsePrompt,
   actionScripts,
   registerActionScript,

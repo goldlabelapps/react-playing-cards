@@ -63,10 +63,13 @@ export type BuiltinMovie =
   | 'flash-story'
   | 'FlashStory'
   | 'agent-text'
-  | 'AgentText';
+  | 'AgentText'
+  | 'game-menu'
+  | 'GameMenu';
 
 export type { FlashStoryProps } from './MovieClips/FlashStory';
 export type { AgentTextProps } from './MovieClips/Typography';
+export type { GameMenuProps, GameMenuItem } from './MovieClips/GameMenu';
 
 /**
  * Props for the `<Blackjack />` MovieClip component.
@@ -134,6 +137,8 @@ export interface FlashProps {
   style?: CSSProperties;
   /** Callback fired when the timeline completes. */
   onComplete?: () => void;
+  /** Navigation callback for external routing. */
+  onNavigate?: (path: string) => void;
 }
 
 /**

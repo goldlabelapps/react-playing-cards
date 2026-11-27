@@ -7,4 +7,5 @@ export * from './Sprite';
 export * from './Blackjack';
 export * from './Macromedia';
 export * from './FlashStory';
+export * from './GameMenu';
 

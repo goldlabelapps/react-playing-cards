@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { flashStoryActionScript } from '../../ActionScript/flashStory';
 import { AgentText } from '../Typography/AgentText';
+import { GameMenu } from '../GameMenu';
 
 export interface StoryTaskItem {
   id: string;
@@ -35,14 +36,15 @@ export interface FlashStoryProps {
   onMessageChange?: (message: string, durationSeconds: number) => void;
   /** Completion callback when all messages in the pool have executed (when loop is false). */
   onComplete?: () => void;
+  /** Whether to automatically show the GameMenu when the story sequence has finished (default: true). */
+  showGameMenu?: boolean;
+  /** Navigation callback passed down to GameMenu. */
+  onNavigate?: (path: string) => void;
 }
 
 export const DEFAULT_STORY_MESSAGES: string[] = [
   'Thinking ...',
-  'Errrr, hello?',
-  'Yeh, we\'ve got a live one, over',
-  'What country are they connecting from?',
-  'Running fingerprint check...',
+  'Starting Game Menu',
 ];
 
 /**
@@ -67,9 +69,12 @@ export function FlashStory({
   messages = DEFAULT_STORY_MESSAGES,
   onMessageChange,
   onComplete,
+  showGameMenu = true,
+  onNavigate,
 }: FlashStoryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [isStoryComplete, setIsStoryComplete] = useState<boolean>(false);
 
   // Stack of sequential tasks:
   // Starts directly with the first message and cycles through with random 5-10s durations,
@@ -122,6 +127,7 @@ export function FlashStory({
         setTasks((prev) =>
           prev.map((t, idx) => (idx === prev.length - 1 ? { ...t, status: 'completed' as const } : t))
         );
+        setIsStoryComplete(true);
         if (onComplete) {
           onComplete();
         }
@@ -157,6 +163,35 @@ export function FlashStory({
 
     return () => clearTimeout(timer);
   }, [autoPlay, loop, speed, step, tasks, messages, maxItems, onMessageChange]);
+
+  const handleReplayStory = () => {
+    setIsStoryComplete(false);
+    setStep(0);
+    const firstTitle = messages[0] ?? 'Thinking ...';
+    const firstDur = getRandomDuration();
+    setTasks([
+      {
+        id: `task-${Date.now()}`,
+        title: firstTitle,
+        duration: firstDur,
+        status: 'active',
+        startTime: Date.now(),
+      },
+    ]);
+  };
+
+  if (isStoryComplete && showGameMenu) {
+    return (
+      <GameMenu
+        onNavigate={onNavigate}
+        onReplayStory={handleReplayStory}
+        width={width}
+        height={height}
+        className={className}
+        style={style}
+      />
+    );
+  }
 
   const justifyMap = {
     left: 'flex-start',
