@@ -21,7 +21,7 @@ const DynamicInteractiveStage = dynamic(
           fontSize: 14,
         }}
       >
-        Initialising vector stage surface...
+        Modern Flash
       </div>
     ),
   }

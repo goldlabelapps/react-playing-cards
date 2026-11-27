@@ -2,6 +2,14 @@ import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from 
 import { flashStoryActionScript } from '../../ActionScript/flashStory';
 import { AgentText } from '../Typography/AgentText';
 
+export interface StoryTaskItem {
+  id: string;
+  title: string;
+  duration: number; // in seconds
+  status: 'active' | 'completed';
+  startTime: number;
+}
+
 export interface FlashStoryProps {
   width?: string | number;
   height?: string | number;
@@ -19,7 +27,9 @@ export interface FlashStoryProps {
   counterStyle?: 'short' | 'verbose';
   /** Horizontal alignment on the stage ('left' | 'center' | 'right'). Default: 'left'. */
   align?: 'left' | 'center' | 'right';
-  /** Sequence of messages to cycle through after 'Hello world'. */
+  /** Maximum number of stacked tasks to retain on stage (default: 12). */
+  maxItems?: number;
+  /** Sequence of messages to cycle through. */
   messages?: string[];
   /** On message transition callback. */
   onMessageChange?: (message: string, durationSeconds: number) => void;
@@ -27,15 +37,10 @@ export interface FlashStoryProps {
 
 export const DEFAULT_STORY_MESSAGES: string[] = [
   'Thinking ...',
-  'Running check apps/web contents`',
+  'Running check apps/web contents',
   'Inspecting src/MovieClips/FlashStory/FlashStory.tsx',
   'Synthesising vector stage choreographies',
   'Running verify-hygiene.py',
-  'Compiling dist/flash-bundle.min.js',
-  'Verifying type safety across workspace',
-  'Analysing antigravity_thinking.mov telemetry',
-  'Synchronising GreenSock timeline keyframes',
-  'Executing next build static export pass',
 ];
 
 /**
@@ -56,19 +61,30 @@ export function FlashStory({
   children,
   counterStyle = 'verbose',
   align = 'left',
+  maxItems = 12,
   messages = DEFAULT_STORY_MESSAGES,
   onMessageChange,
 }: FlashStoryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Message sequence state:
-  // Step 0: "Hello world" for 5 seconds
-  // Step 1+: Sequence of different messages with random 5-10s durations
+  // Stack of sequential tasks:
+  // Starts directly with the first message and cycles through with random 5-10s durations,
+  // adding each new instance as the previous completes.
+  const [tasks, setTasks] = useState<StoryTaskItem[]>(() => {
+    const firstTitle = messages[0] ?? 'Thinking ...';
+    const firstDur = getRandomDuration(5, 10);
+    return [
+      {
+        id: 'task-0',
+        title: firstTitle,
+        duration: firstDur,
+        status: 'active',
+        startTime: Date.now(),
+      },
+    ];
+  });
   const [step, setStep] = useState<number>(0);
-  const [currentTitle, setCurrentTitle] = useState<string>('Hello world');
-  const [currentDuration, setCurrentDuration] = useState<number>(5);
-  const [startTime, setStartTime] = useState<number>(() => Date.now());
 
   // ActionScript timeline loop
   useEffect(() => {
@@ -88,26 +104,44 @@ export function FlashStory({
     };
   }, [autoPlay, loop, speed]);
 
-  // Handle message cycling sequence
+  // Handle message cycling sequence and instance stacking
   useEffect(() => {
     if (!autoPlay) return;
 
-    const delayMs = (currentDuration * 1000) / Math.max(0.1, speed);
+    const activeTask = tasks[tasks.length - 1];
+    if (!activeTask || activeTask.status !== 'active') return;
+
+    const delayMs = (activeTask.duration * 1000) / Math.max(0.1, speed);
 
     const timer = setTimeout(() => {
       if (!loop && step >= messages.length) {
+        setTasks((prev) =>
+          prev.map((t, idx) => (idx === prev.length - 1 ? { ...t, status: 'completed' } : t))
+        );
         return;
       }
 
       const nextStep = step + 1;
-      const nextMsgIndex = (nextStep - 1) % messages.length;
+      const nextMsgIndex = nextStep % messages.length;
       const nextTitle = messages[nextMsgIndex];
       const nextDur = getRandomDuration(5, 10);
+      const nextTask: StoryTaskItem = {
+        id: `task-${nextStep}`,
+        title: nextTitle,
+        duration: nextDur,
+        status: 'active',
+        startTime: Date.now(),
+      };
 
       setStep(nextStep);
-      setCurrentTitle(nextTitle);
-      setCurrentDuration(nextDur);
-      setStartTime(Date.now());
+      setTasks((prev) => {
+        // Mark previous active task completed
+        const updated = prev.map((t, idx) =>
+          idx === prev.length - 1 ? { ...t, status: 'completed' as const } : t
+        );
+        const nextList = [...updated, nextTask];
+        return nextList.length > maxItems ? nextList.slice(nextList.length - maxItems) : nextList;
+      });
 
       if (onMessageChange) {
         onMessageChange(nextTitle, nextDur);
@@ -115,7 +149,7 @@ export function FlashStory({
     }, delayMs);
 
     return () => clearTimeout(timer);
-  }, [autoPlay, loop, speed, step, currentDuration, messages, onMessageChange]);
+  }, [autoPlay, loop, speed, step, tasks, messages, maxItems, onMessageChange]);
 
   const justifyMap = {
     left: 'flex-start',
@@ -132,9 +166,14 @@ export function FlashStory({
         width,
         height,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: justifyMap[align] ?? 'flex-start',
-        padding: align === 'left' ? '0 clamp(16px, 3vw, 28px)' : align === 'right' ? '0 clamp(16px, 3vw, 28px)' : 0,
+        padding:
+          align === 'left'
+            ? 'clamp(24px, 4vw, 40px) clamp(16px, 3vw, 32px)'
+            : align === 'right'
+              ? 'clamp(24px, 4vw, 40px) clamp(16px, 3vw, 32px)'
+              : 'clamp(24px, 4vw, 40px) 0',
         boxSizing: 'border-box',
         overflow: 'hidden',
         ...style,
@@ -145,21 +184,28 @@ export function FlashStory({
         style={{
           position: 'relative',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: justifyMap[align] ?? 'flex-start',
-          transformOrigin: align === 'left' ? 'left center' : 'center center',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          gap: '8px',
+          width: '100%',
+          maxWidth: '850px',
+          transformOrigin: align === 'left' ? 'left top' : 'center top',
         }}
       >
-        {children ?? (
-          <AgentText
-            key={step}
-            title={currentTitle}
-            startTime={startTime}
-            counterStyle={counterStyle}
-            speed={speed}
-            active={autoPlay}
-          />
-        )}
+        {children ??
+          tasks.map((task) => (
+            <AgentText
+              key={task.id}
+              title={task.title}
+              status={task.status}
+              active={task.status === 'active' && autoPlay}
+              elapsedSeconds={task.status === 'completed' ? task.duration : undefined}
+              startTime={task.status === 'active' ? task.startTime : undefined}
+              counterStyle={counterStyle}
+              speed={speed}
+            />
+          ))}
       </div>
     </div>
   );

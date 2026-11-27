@@ -23,6 +23,8 @@ export interface AgentTextProps {
   counterStyle?: 'short' | 'verbose';
   /** Custom formatter function for elapsed seconds. */
   formatCounter?: (seconds: number) => string;
+  /** Current status of the agent task: 'active' (in-progress), 'completed' (finished), or 'idle'. */
+  status?: 'active' | 'completed' | 'idle';
   /** Whether the counter and animation are actively running (default: true). */
   active?: boolean;
   /** Whether the sheen animation loops while running (default: true). */
@@ -111,6 +113,7 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
   {
     title,
     text,
+    status,
     elapsedSeconds: controlledSeconds,
     startTime: initialStartTime,
     counterStyle = 'short',
@@ -147,6 +150,9 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
     },
   }));
 
+  const isTaskActive = status !== undefined ? status === 'active' : active;
+  const isSheenActive = isTaskActive && loop !== false;
+
   // Track live elapsed time counter
   useEffect(() => {
     if (initialStartTime !== undefined) {
@@ -161,7 +167,7 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
       return;
     }
 
-    if (!active) return;
+    if (!isTaskActive) return;
 
     // Immediately calculate initial offset
     const calc = () => Math.max(0, Math.floor((Date.now() - internalStart) / 1000));
@@ -172,7 +178,7 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [controlledSeconds, active, internalStart]);
+  }, [controlledSeconds, isTaskActive, internalStart]);
 
   // Fast text entrance reveal on mount or title change
   useEffect(() => {
@@ -190,7 +196,7 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
   useEffect(() => {
     const target = containerRef.current;
     if (!target) return;
-    if (!active) return;
+    if (!isSheenActive) return;
 
     const timeline = agentTextActionScript({
       target,
@@ -202,7 +208,7 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
     return () => {
       timeline.kill();
     };
-  }, [active, loop, speed, onComplete]);
+  }, [isSheenActive, loop, speed, onComplete]);
 
   const formattedTime = formatCounter
     ? formatCounter(elapsed)
@@ -235,19 +241,30 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
         ref={titleContainerRef}
         data-agent-sheen="true"
         data-agent-title="true"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '6px',
-          fontWeight: 450,
-          background: `linear-gradient(90deg, ${textColor} 0%, ${textColor} 32%, ${sheenColor} 50%, ${textColor} 68%, ${textColor} 100%)`,
-          backgroundSize: '250% 100%',
-          WebkitBackgroundClip: 'text',
-          backgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          color: 'transparent',
-          willChange: 'background-position',
-        }}
+        style={
+          isSheenActive
+            ? {
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: 450,
+                background: `linear-gradient(90deg, ${textColor} 0%, ${textColor} 32%, ${sheenColor} 50%, ${textColor} 68%, ${textColor} 100%)`,
+                backgroundSize: '250% 100%',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                color: 'transparent',
+                willChange: 'background-position',
+              }
+            : {
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: 450,
+                color: textColor,
+                opacity: status === 'completed' ? 0.75 : 0.9,
+              }
+        }
       >
         {renderInlineMarkdown(displayTitle)}
       </span>
@@ -270,7 +287,7 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
               style={{
                 fontVariantNumeric: 'tabular-nums',
                 color: textColor,
-                opacity: 0.9,
+                opacity: isTaskActive ? 0.9 : 0.65,
               }}
             >
               {formattedTime}
@@ -289,7 +306,7 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
               strokeLinejoin="round"
               style={{
                 display: 'inline-block',
-                opacity: 0.75,
+                opacity: isTaskActive ? 0.75 : 0.45,
                 transform: 'translateY(0.5px)',
               }}
               aria-hidden="true"
