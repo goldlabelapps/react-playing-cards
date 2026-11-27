@@ -33,6 +33,8 @@ export interface FlashStoryProps {
   messages?: string[];
   /** On message transition callback. */
   onMessageChange?: (message: string, durationSeconds: number) => void;
+  /** Completion callback when all messages in the pool have executed (when loop is false). */
+  onComplete?: () => void;
 }
 
 export const DEFAULT_STORY_MESSAGES: string[] = [
@@ -56,7 +58,7 @@ export function FlashStory({
   className,
   style,
   autoPlay = true,
-  loop = true,
+  loop = false,
   speed = 1,
   children,
   counterStyle = 'verbose',
@@ -64,6 +66,7 @@ export function FlashStory({
   maxItems = 12,
   messages = DEFAULT_STORY_MESSAGES,
   onMessageChange,
+  onComplete,
 }: FlashStoryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -73,7 +76,7 @@ export function FlashStory({
   // adding each new instance as the previous completes.
   const [tasks, setTasks] = useState<StoryTaskItem[]>(() => {
     const firstTitle = messages[0] ?? 'Thinking ...';
-    const firstDur = getRandomDuration(5, 10);
+    const firstDur = getRandomDuration();
     return [
       {
         id: 'task-0',
@@ -114,17 +117,21 @@ export function FlashStory({
     const delayMs = (activeTask.duration * 1000) / Math.max(0.1, speed);
 
     const timer = setTimeout(() => {
-      if (!loop && step >= messages.length) {
+      // Once we reach the end of the list and loop is false, complete the final task and stop
+      if (!loop && step >= messages.length - 1) {
         setTasks((prev) =>
-          prev.map((t, idx) => (idx === prev.length - 1 ? { ...t, status: 'completed' } : t))
+          prev.map((t, idx) => (idx === prev.length - 1 ? { ...t, status: 'completed' as const } : t))
         );
+        if (onComplete) {
+          onComplete();
+        }
         return;
       }
 
       const nextStep = step + 1;
       const nextMsgIndex = nextStep % messages.length;
       const nextTitle = messages[nextMsgIndex];
-      const nextDur = getRandomDuration(5, 10);
+      const nextDur = getRandomDuration();
       const nextTask: StoryTaskItem = {
         id: `task-${nextStep}`,
         title: nextTitle,

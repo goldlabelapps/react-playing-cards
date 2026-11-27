@@ -29,7 +29,7 @@ export function InteractiveStage() {
         <Flash
           movie="FlashStory"
           speed={1}
-          loop={true}
+          loop={false}
           autoPlay={true}
           width="100%"
           height="100%"
