@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Modern Flash // Pure Vector SVG Animation Engine',
+  title: 'Modern Flash',
   description: 'Pure SVG Flash animation engine and natural language animation studio for Next.js, React, and WordPress.',
 };
 

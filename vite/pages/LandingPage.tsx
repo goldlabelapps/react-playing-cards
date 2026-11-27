@@ -92,7 +92,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
         >
           <Flash
             ref={flashRef}
-            movie="macromedia"
+            movie="FlashStory"
             loop={true}
             autoPlay={true}
             width="100%"
@@ -160,7 +160,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <img
                 src="/favicon.svg"
-                alt="Flash logo"
+                alt="Modern Flash logo"
                 style={{ width: 22, height: 22, borderRadius: 5 }}
               />
               <div>
@@ -174,7 +174,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                     margin: 0,
                   }}
                 >
-                  Flash Animation Engine
+                  Modern Flash
                 </h2>
                 <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
                   <span
