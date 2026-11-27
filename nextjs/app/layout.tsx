@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://modern-flash.pro'),
   title: 'Modern Flash',
   description: 'Pure SVG Flash animation engine and ActionScript runtime for WordPress and Next.js.',
 };

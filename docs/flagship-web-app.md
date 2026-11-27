@@ -116,6 +116,7 @@ your-domain.com, app.34.16.50.74.sslip.io {
 ```
 
 The application is live and accessible at:
+- `https://modern-flash.pro`
 - `https://app.34.16.50.74.sslip.io`
 
 To attach any custom domain or TLD:

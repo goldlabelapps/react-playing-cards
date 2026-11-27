@@ -17,7 +17,8 @@ PHP Runtime Engine    : PHP 8.3 FPM (Unix Socket: /run/php/php8.3-fpm.sock)
 Node.js Runtime       : Node.js 22.23.5 LTS (Systemd: modern-flash-nextjs)
 
 Active Public Endpoints:
-1. Modern Flash Next.js    : https://app.34.16.50.74.sslip.io (Port 3830)
+1. Modern Flash Next.js    : https://modern-flash.pro (Port 3830)
+   (Fallback Sslip)         : https://app.34.16.50.74.sslip.io
 2. Modern WordPress Flash  : https://flash.modern-wordpress.pro (PHP / Theme)
 3. Modern WordPress Main   : https://modern-wordpress.pro
 4. Government Baseline     : https://ed-tech.co
