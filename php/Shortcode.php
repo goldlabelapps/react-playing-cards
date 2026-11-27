@@ -25,7 +25,7 @@ final class Shortcode
         $attributes = shortcode_atts(
             [
                 'prompt'   => '',
-                'movie'    => 'logo',
+                'movie'    => 'FlashStory',
                 'color'    => 'transparent',
                 'loop'     => 'true',
                 'autoplay' => 'true',

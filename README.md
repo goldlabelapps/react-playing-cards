@@ -51,9 +51,18 @@ The library operates across two distinct environments from a single codebase:
 
 ## Quick Start
 
-### Option 1: Docker Harness (Recommended)
+### Option 1: Instant Studio via Docker Hub (Fastest)
 
-Run the containerised studio and live WordPress environment without installing local dependencies:
+Launch the interactive animation studio with a single command without cloning the repository or installing local Node/pnpm tooling:
+
+```bash
+docker run -d --name modern-flash-studio -p 3800:3800 goldlabel2027/modern-flash-studio:latest
+open http://localhost:3800
+```
+
+### Option 2: Docker Compose Harness (Full Stack)
+
+Run the full containerised studio, Next.js web application, and live WordPress environment:
 
 ```bash
 # Start studio, Next.js web app, and WordPress containers
@@ -69,7 +78,7 @@ open http://localhost:3830
 open http://localhost:3880
 ```
 
-### Option 2: Local Development
+### Option 3: Local Development
 
 Run the studio locally using Node 20+ and pnpm:
 
@@ -391,6 +400,7 @@ modern-flash/
 
 ## Documentation Index
 
+- [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and community distribution.
 - [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, Google Cloud VM deployment, and Firebase suite integration.
 - [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
 - [Docker Harness Specification](docs/docker-harness.md): Container architecture, port bindings, and operational commands.

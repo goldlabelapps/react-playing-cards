@@ -135,6 +135,18 @@ docker compose exec vite sh
 
 ---
 
+## Public Registry & Distribution
+
+Modern Flash publishes pre-compiled, self-contained container images to Docker Hub under the `goldlabel2027` registry. Open-source developers can pull and run the animation studio immediately without local build dependencies:
+
+```bash
+docker run -d --name modern-flash-studio -p 3800:3800 goldlabel2027/modern-flash-studio:latest
+```
+
+For complete multi-architecture build instructions, Buildx configuration, and automated publishing workflows, refer to the [Docker Distribution Specification](docker-distribution.md).
+
+---
+
 ## Artifact Pipeline
 
 The container compiles two distinct output formats into `dist/`:

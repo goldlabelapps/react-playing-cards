@@ -12,8 +12,8 @@ interface InteractiveStageProps {
 
 export function InteractiveStage({ initialScenes }: InteractiveStageProps) {
   const [mounted, setMounted] = useState(false);
-  const [prompt, setPrompt] = useState('Deal Ace of Spades with a 3D flip on dark slate stage');
-  const [activeMovie, setActiveMovie] = useState<MovieName>('logo');
+  const [prompt, setPrompt] = useState('The Story of Flash: Iconic lightning bolt vector animation');
+  const [activeMovie, setActiveMovie] = useState<MovieName>('FlashStory');
   const [speed, setSpeed] = useState(1);
   const [isPlaying, setIsPlaying] = useState(true);
   const [scenes, setScenes] = useState<FlashScene[]>(initialScenes);
@@ -219,6 +219,7 @@ export function InteractiveStage({ initialScenes }: InteractiveStageProps) {
           {/* Preset Buttons */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {[
+              { label: 'Flash Story', p: 'The Story of Flash: Iconic lightning bolt vector animation', m: 'FlashStory' },
               { label: 'Ace Flip', p: 'Deal Ace of Spades with a 3D flip on dark slate stage', m: 'logo' },
               { label: 'Starfighter', p: 'Starfighter hyperspace jump with rotating shield matrix', m: 'starfighter' },
               { label: 'HUD Radar', p: 'Classic vector telemetry HUD radar sweep', m: 'hudMacromedia' },

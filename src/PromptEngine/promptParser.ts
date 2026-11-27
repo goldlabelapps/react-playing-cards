@@ -4,6 +4,33 @@ import type { PromptScene } from '../types';
  * Built-in recipe templates for standard prompt archetypes.
  */
 export const PROMPT_PRESETS: Record<string, (prompt: string) => PromptScene> = {
+  flashStory: (prompt) => ({
+    id: `scene-${Date.now()}`,
+    prompt,
+    title: 'The Story of Flash',
+    description: 'The iconic Flash lightning bolt with suitable vector animation recounting the heritage of Flash.',
+    stage: {
+      width: '100%',
+      height: 440,
+      color: '#070b14',
+    },
+    elements: [
+      {
+        id: 'story-1',
+        type: 'flash-story',
+        x: 50,
+        y: 50,
+        scale: 1,
+        props: {},
+        animation: {
+          actionScript: 'flash-story',
+          delay: 0,
+          duration: 2,
+        },
+      },
+    ],
+  }),
+
   dealCards: (prompt) => ({
     id: `scene-${Date.now()}`,
     prompt,
@@ -187,12 +214,12 @@ export function parsePrompt(prompt: string): PromptScene {
   const p = prompt.toLowerCase();
 
   // Match keyword intents
-  if (p.includes('macromedia')) {
-    return PROMPT_PRESETS.macromedia(prompt);
+  if (p.includes('story') || p.includes('flash') || p.includes('bolt') || p.includes('lightning')) {
+    return PROMPT_PRESETS.flashStory(prompt);
   }
 
-  if (p.includes('lightning') || p.includes('bolt') || p.includes('storm') || p.includes('electric')) {
-    return PROMPT_PRESETS.lightningStorm(prompt);
+  if (p.includes('macromedia')) {
+    return PROMPT_PRESETS.macromedia(prompt);
   }
 
   if (p.includes('ball') || p.includes('pingpong') || p.includes('bounce') || p.includes('rally')) {

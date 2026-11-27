@@ -4,6 +4,7 @@ import { parsePrompt } from '../../src/PromptEngine';
 import type { FlashHandle, PromptScene } from '../../src/types';
 
 const PRESET_PROMPTS = [
+  'The Story of Flash: Iconic lightning bolt vector animation',
   'Flash Engine with 1990s starburst emblem and laser beam',
   'Deal Ace of Spades with a 3D flip on dark slate stage',
   'Electric lightning surge with glowing title text',
@@ -47,8 +48,8 @@ export default function MyAnimation() {
   };
 
   const getWordPressSnippet = () => {
-    return `<!-- In WordPress with mwp-flash plugin installed -->
-[mwp_flash prompt="${activeScene.prompt.replace(/"/g, '&quot;')}" width="100%" height="380px" speed="${speed}" loop="true" autoplay="true"]`;
+    return `<!-- In WordPress with Modern Flash plugin installed -->
+[modern_flash prompt="${activeScene.prompt.replace(/"/g, '&quot;')}" width="100%" height="380px" speed="${speed}" loop="true" autoplay="true"]`;
   };
 
   return (
@@ -80,7 +81,7 @@ export default function MyAnimation() {
                 ← Back to Home
               </button>
               <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.02em', color: '#38bdf8', margin: 0 }}>
-                Flash SVG Animation Studio
+                Modern Flash
               </h1>
             </div>
             <p style={{ color: '#94a3b8', marginTop: 8, fontSize: 14 }}>

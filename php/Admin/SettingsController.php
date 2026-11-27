@@ -182,7 +182,7 @@ final class SettingsController
                     <h3 style="margin-top: 0; font-size: 16px;"><?php esc_html_e('Shortcode Usage Guide', 'modern-flash'); ?></h3>
                     <p style="font-size: 13px; color: #64748b;"><?php esc_html_e('Embed vector animations anywhere using declarative shortcodes:', 'modern-flash'); ?></p>
                     <pre style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; font-size: 12px; overflow-x: auto;"><code>[modern_flash prompt="Deal Ace of Spades with a 3D flip on dark slate stage" speed="1.2" loop="true"]</code></pre>
-                    <pre style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; font-size: 12px; overflow-x: auto;"><code>[modern_flash movie="starfighter" height="420px"]</code></pre>
+                    <pre style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; font-size: 12px; overflow-x: auto;"><code>[modern_flash movie="FlashStory" height="420px"]</code></pre>
                 </div>
 
                 <!-- Secondary Column: Runtime Telemetry -->
@@ -222,7 +222,7 @@ final class SettingsController
                                 </tr>
                                 <tr>
                                     <td><strong><?php esc_html_e('Supported Movies', 'modern-flash'); ?></strong></td>
-                                    <td><code>logo</code>, <code>starfighter</code>, <code>cardFlip</code>, <code>hudMacromedia</code></td>
+                                    <td><code>FlashStory</code>, <code>logo</code>, <code>starfighter</code>, <code>cardFlip</code>, <code>hudMacromedia</code></td>
                                 </tr>
                             </tbody>
                         </table>

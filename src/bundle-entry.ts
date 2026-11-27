@@ -5,6 +5,7 @@ import { Stage } from './Stage';
 import { parsePrompt } from './PromptEngine';
 import { actionScripts, registerActionScript, getActionScript, corkScrew, asMovieClip } from './ActionScript';
 import * as PlayingCards from './MovieClips/PlayingCards';
+import { FlashStory } from './MovieClips/FlashStory';
 import type { MovieName, PromptScene } from './types';
 
 interface MountOptions {
@@ -53,7 +54,7 @@ export function autoMount() {
 
   const containers = document.querySelectorAll<HTMLElement>('.mwp-flash-stage, [data-flash-stage="true"]');
   containers.forEach((el) => {
-    const movie = (el.getAttribute('data-movie') || 'logo') as MovieName;
+    const movie = (el.getAttribute('data-movie') || 'FlashStory') as MovieName;
     const prompt = el.getAttribute('data-prompt') || undefined;
     const color = el.getAttribute('data-color') || undefined;
     const loop = el.getAttribute('data-loop') !== 'false';
@@ -78,6 +79,7 @@ if (typeof window !== 'undefined') {
     autoMount,
     Flash,
     Stage,
+    FlashStory,
     parsePrompt,
     actionScripts,
     registerActionScript,
@@ -88,4 +90,4 @@ if (typeof window !== 'undefined') {
   };
 }
 
-export { Flash, Stage, parsePrompt, actionScripts, registerActionScript, getActionScript, corkScrew, asMovieClip, PlayingCards };
+export { Flash, Stage, FlashStory, parsePrompt, actionScripts, registerActionScript, getActionScript, corkScrew, asMovieClip, PlayingCards };

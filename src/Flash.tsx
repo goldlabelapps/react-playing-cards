@@ -9,6 +9,7 @@ import { LightningBolt } from './MovieClips/LightningBolt';
 import { Base, Rank, Suit } from './MovieClips/PlayingCards';
 import { TitleText } from './MovieClips/Typography';
 import { Macromedia } from './MovieClips/Macromedia';
+import { FlashStory } from './MovieClips/FlashStory';
 import { getActionScript, corkScrew } from './ActionScript';
 import type { FlashHandle, FlashProps, PromptSceneElement } from './types';
 
@@ -188,6 +189,13 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
             <Macromedia color={(el.props.color as string) || '#E5252A'} />
           </div>
         );
+      case 'flash-story':
+      case 'story':
+        return (
+          <div key={el.id} data-element-id={el.id} style={commonStyle}>
+            <FlashStory />
+          </div>
+        );
       default:
         return null;
     }
@@ -226,8 +234,11 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
         return <LightningBolt />;
       case 'macromedia':
         return <Macromedia />;
+      case 'flash-story':
+      case 'FlashStory':
+        return <FlashStory loop={loop} autoPlay={autoPlay} speed={speed} />;
       default:
-        return null;
+        return <FlashStory loop={loop} autoPlay={autoPlay} speed={speed} />;
     }
   };
 

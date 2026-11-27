@@ -1,4 +1,4 @@
-# Modern Flash // Flash SVG Animation Studio: Complete Documentation Corpus
+# Modern Flash: Complete Documentation Corpus
 
 
 ## 1. README.md

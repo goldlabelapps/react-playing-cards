@@ -11,6 +11,14 @@ export interface FlashScene {
 
 const SEED_SCENES: FlashScene[] = [
   {
+    id: 'seed-flash-story',
+    title: 'The Story of Flash',
+    prompt: 'The Story of Flash: Iconic lightning bolt vector animation',
+    movie: 'FlashStory',
+    speed: 1.0,
+    created_at: new Date().toISOString(),
+  },
+  {
     id: 'seed-ace-flip',
     title: 'Ace of Spades 3D Flip',
     prompt: 'Deal Ace of Spades with a 3D flip on dark slate stage',
