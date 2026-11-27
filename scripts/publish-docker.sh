@@ -6,7 +6,7 @@ set -euo pipefail
 
 REPO_USER="goldlabel2027"
 TARGET="${1:-all}"
-VERSION="${2:-1.0.0}"
+VERSION="${2:-1.0.1}"
 BUILDER_NAME="modern-flash-builder"
 
 publish_image() {

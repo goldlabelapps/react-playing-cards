@@ -11,19 +11,16 @@ const DynamicInteractiveStage = dynamic(
         style={{
           width: '100%',
           height: 420,
-          background: '#070b14',
-          borderRadius: 8,
-          border: '2px solid #2A2A2A',
-          boxShadow: '3px 3px 0 0 #2A2A2A',
+          backgroundColor: '#0f172a',
+          borderRadius: 6,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#64748b',
+          color: '#94a3b8',
           fontSize: 14,
-          fontWeight: 600,
         }}
       >
-        Initialising Vector Stage Surface...
+        Initialising vector stage surface...
       </div>
     ),
   }
