@@ -1,6 +1,6 @@
 # Modern Flash
 
-Pure SVG Flash animation engine, GSAP ActionScript choreography, and natural language animation studio for React, Next.js, and WordPress.
+SVG Flash animation engine, GSAP ActionScript choreography, and natural language animation studio for React, Next.js, and WordPress.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue.svg)](https://www.typescriptlang.org/)
@@ -30,7 +30,7 @@ Pure SVG Flash animation engine, GSAP ActionScript choreography, and natural lan
 
 ## Overview
 
-Modern Flash recreates the classic Macromedia Flash authoring model using modern web standards. Instead of binary SWF files, animations run as pure vector SVG graphics driven by GreenSock (GSAP) timelines.
+Modern Flash recreates the classic Macromedia Flash authoring model using modern web standards. Instead of binary SWF files, animations run as vector SVG graphics driven by GreenSock (GSAP) timelines.
 
 The library operates across two distinct environments from a single codebase:
 1. **Modern React and Next.js**: Tree-shakeable ESM package exporting components, types, and hooks.
@@ -40,12 +40,21 @@ The library operates across two distinct environments from a single codebase:
 
 ## Key Features
 
-- **Pure Vector SVG Rendering**: Sharp vector graphics that scale infinitely to any screen resolution without raster artifacts or canvas pixelation.
+- **Vector SVG Rendering**: Sharp vector graphics that scale infinitely to any screen resolution without raster artifacts or canvas pixelation.
 - **ActionScript Timeline Architecture**: GSAP-powered motion choreographies including 3D card flips, corkscrew spins, card dealing arcs, and elastic collisions.
 - **Natural Language Prompt Studio**: Chat interface that parses plain-text prompts (for example, *"Deal Ace of Spades with a 3D flip on dark stage"*) directly into animated SVG scenes.
 - **Dual-Ecosystem Distribution**: ESM modules for modern bundlers alongside a zero-dependency pre-compiled browser script for WordPress and standalone HTML embeds.
 - **Audio Synthesis Engine**: Web Audio API integration providing retro synthesised clicks, card slides, deals, and authentic Flash MX boot sounds without external audio assets.
 - **Containerised Docker Harness**: Production-aligned Docker Compose environment serving the animation studio on port `3800`.
+
+---
+
+## Live Production Showcases
+
+Experience Modern Flash running in production:
+
+- **Flagship Web Showcase (Next.js 15)**: [https://modern-flash.pro](https://modern-flash.pro)
+- **WordPress Theme Stage (FSE Block Theme)**: [https://flash.modern-wordpress.pro](https://flash.modern-wordpress.pro)
 
 ---
 
@@ -426,7 +435,7 @@ Documentation is categorised into developer levels based on technical depth and 
 
 Contributions are welcome. Please ensure that all contributions follow the repository standards:
 
-1. Maintain pure vector SVG graphics without external raster assets.
+1. Maintain vector SVG graphics without external raster assets.
 2. Adhere to British English spelling and grammar across code comments and documentation.
 3. Write targeted tests or verification steps for modified files.
 4. Pass the repository hygiene and security gate before submitting pull requests:

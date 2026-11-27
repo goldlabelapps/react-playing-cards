@@ -163,7 +163,7 @@ To point a custom domain (e.g. `modern-flash.pro` or `app.yourdomain.com`) to th
 2. **Caddy Virtual Host Configuration**:
    Edit `/etc/caddy/Caddyfile` on the VM:
    ```caddy
-   your-domain.com, app.34.16.50.74.sslip.io {
+   modern-flash.pro, www.modern-flash.pro, app.34.16.50.74.sslip.io {
        reverse_proxy 127.0.0.1:3830
        encode gzip zstd
 

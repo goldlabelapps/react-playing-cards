@@ -106,7 +106,7 @@ nextjs:
 Edge TLS termination on ports `80` and `443` is handled by Caddy. Traffic for the application is routed to Next.js on port `3830`:
 
 ```caddy
-your-domain.com, app.34.16.50.74.sslip.io {
+modern-flash.pro, www.modern-flash.pro, app.34.16.50.74.sslip.io {
     reverse_proxy 127.0.0.1:3830
     encode zstd gzip
 
