@@ -27,21 +27,21 @@ export interface FlashStoryProps {
 
 export const DEFAULT_STORY_MESSAGES: string[] = [
   'Thinking ...',
-  'Running `check apps/web contents`',
-  'Inspecting `src/MovieClips/FlashStory/FlashStory.tsx`',
+  'Running check apps/web contents`',
+  'Inspecting src/MovieClips/FlashStory/FlashStory.tsx',
   'Synthesising vector stage choreographies',
-  'Running `verify-hygiene.py`',
-  'Compiling `dist/flash-bundle.min.js`',
+  'Running verify-hygiene.py',
+  'Compiling dist/flash-bundle.min.js',
   'Verifying type safety across workspace',
-  'Analysing `antigravity_thinking.mov` telemetry',
+  'Analysing antigravity_thinking.mov telemetry',
   'Synchronising GreenSock timeline keyframes',
-  'Executing `next build` static export pass',
+  'Executing next build static export pass',
 ];
 
 /**
  * Returns a random duration in seconds between min and max (inclusive).
  */
-function getRandomDuration(min: number = 5, max: number = 10): number {
+function getRandomDuration(min: number = 1, max: number = 3): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
