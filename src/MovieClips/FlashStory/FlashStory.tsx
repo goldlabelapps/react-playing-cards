@@ -37,10 +37,10 @@ export interface FlashStoryProps {
 
 export const DEFAULT_STORY_MESSAGES: string[] = [
   'Thinking ...',
-  'Running check apps/web contents',
-  'Inspecting src/MovieClips/FlashStory/FlashStory.tsx',
-  'Synthesising vector stage choreographies',
-  'Running verify-hygiene.py',
+  'Errrr, hello?',
+  'Yeh, we\'ve got a live one, over',
+  'What country are they connecting from?',
+  'Running fingerprint check...',
 ];
 
 /**
