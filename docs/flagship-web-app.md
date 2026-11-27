@@ -98,12 +98,12 @@ nextjs:
   restart: unless-stopped
 ```
 
-### Edge Caddy Reverse Proxy
-Edge TLS termination on ports `80` and `443` is handled by Caddy. Traffic for the showcase subdomain is routed directly to the Next.js container:
+### Edge Caddy Reverse Proxy and Live Endpoint
+Edge TLS termination on ports `80` and `443` is handled by Caddy. Traffic for the application is routed to Next.js on port `3830`:
 
 ```caddy
-app.modern-flash.pro {
-    reverse_proxy localhost:3830
+your-domain.com, app.34.16.50.74.sslip.io {
+    reverse_proxy 127.0.0.1:3830
     encode zstd gzip
 
     header {
@@ -115,4 +115,10 @@ app.modern-flash.pro {
 }
 ```
 
-This guarantees uniform SSL certificates, zero port clashes with WordPress sibling containers, and direct integration with the VM deployment pipeline.
+The application is live and accessible at:
+- `https://app.34.16.50.74.sslip.io`
+
+To attach any custom domain or TLD:
+1. Create a DNS `A` record pointing to `34.16.50.74`.
+2. Add your domain name to the virtual host declaration in `/etc/caddy/Caddyfile`.
+3. Reload Caddy via `sudo systemctl reload caddy`. Caddy automatically issues Let's Encrypt TLS certificates upon the first request.

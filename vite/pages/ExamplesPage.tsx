@@ -89,6 +89,28 @@ export default function MyAnimation() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <button
+              onClick={() => {
+                if (onNavigate) onNavigate('/sounds');
+                else window.location.pathname = '/sounds';
+              }}
+              style={{
+                background: '#15868F',
+                color: '#ffffff',
+                border: '2px solid #2A2A2A',
+                boxShadow: '2px 2px 0px 0px #2A2A2A',
+                padding: '6px 12px',
+                borderRadius: 4,
+                fontSize: 12,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+              }}
+            >
+              🔊 Soundboard (108)
+            </button>
             <span style={{ fontSize: 12, background: '#1e293b', padding: '6px 10px', borderRadius: 4, color: '#38bdf8', fontWeight: 600 }}>
               ROUTE: /examples
             </span>
