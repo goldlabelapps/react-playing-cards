@@ -32,7 +32,7 @@ export function ExamplesPage({ onNavigate }: ExamplesPageProps) {
 
   const getNextJsSnippet = () => {
     return `// In your Next.js application
-import { Flash } from 'react-playing-cards';
+import { Flash } from 'modern-flash';
 
 export default function MyAnimation() {
   return (

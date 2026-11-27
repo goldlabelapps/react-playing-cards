@@ -1,4 +1,4 @@
-# React Playing Cards // Flash SVG Animation Studio
+# Modern Flash // Flash SVG Animation Studio
 
 > SVG-based Flash animation engine, GSAP ActionScript choreography, and prompt-driven animation studio for Next.js and WordPress.
 

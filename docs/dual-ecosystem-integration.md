@@ -9,7 +9,7 @@ This document details how to integrate the compiled Flash SVG animation engine i
 In Next.js applications, import the canonical package directly:
 
 ```bash
-pnpm add react-playing-cards gsap
+pnpm add modern-flash gsap
 ```
 
 ### Prompt-Driven Scene Usage
@@ -17,7 +17,7 @@ pnpm add react-playing-cards gsap
 ```tsx
 'use client';
 
-import { Flash, parsePrompt } from 'react-playing-cards';
+import { Flash, parsePrompt } from 'modern-flash';
 
 export default function HeroBanner() {
   const scene = parsePrompt('Deal Ace of Spades with a 3D flip on dark slate stage');
@@ -41,7 +41,7 @@ export default function HeroBanner() {
 'use client';
 
 import { useRef } from 'react';
-import { Flash, type FlashHandle } from 'react-playing-cards';
+import { Flash, type FlashHandle } from 'modern-flash';
 
 export default function InteractivePlayer() {
   const flashRef = useRef<FlashHandle>(null);

@@ -12,7 +12,7 @@ This repository enforces the Wolfpack operational standard. All autonomous agent
 
 ## Architecture & Code Organisation
 
-React Playing Cards is an open-source vector graphics and animation library inspired by the classic Flash programming model, built using React and TypeScript.
+Modern Flash is an open-source vector graphics and animation library inspired by the classic Flash programming model, built using React and TypeScript.
 
 - `src/`: Core library implementation (Flash container, Stage rendering surface, MovieClips, ActionScript registry).
 - `scripts/`: Operational scripts and verification runners.

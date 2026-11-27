@@ -1,4 +1,4 @@
-# React Playing Cards
+# Modern Flash
 
 Pure SVG Flash animation engine, GSAP ActionScript choreography, and natural language animation studio for React, Next.js, and WordPress.
 
@@ -30,7 +30,7 @@ Pure SVG Flash animation engine, GSAP ActionScript choreography, and natural lan
 
 ## Overview
 
-React Playing Cards recreates the classic Macromedia Flash authoring model using modern web standards. Instead of binary SWF files, animations run as pure vector SVG graphics driven by GreenSock (GSAP) timelines.
+Modern Flash recreates the classic Macromedia Flash authoring model using modern web standards. Instead of binary SWF files, animations run as pure vector SVG graphics driven by GreenSock (GSAP) timelines.
 
 The library operates across two distinct environments from a single codebase:
 1. **Modern React and Next.js**: Tree-shakeable ESM package exporting components, types, and hooks.
@@ -69,8 +69,8 @@ Run the studio locally using Node 20+ and pnpm:
 
 ```bash
 # Clone the repository
-git clone https://github.com/goldlabelapps/react-playing-cards.git
-cd react-playing-cards
+git clone https://github.com/goldlabelapps/modern-flash.git
+cd modern-flash
 
 # Install dependencies
 pnpm install
@@ -85,17 +85,17 @@ pnpm studio
 
 ### For React and Next.js Projects
 
-Install `react-playing-cards` alongside its peer dependency `gsap`:
+Install `modern-flash` alongside its peer dependency `gsap`:
 
 ```bash
 # Using pnpm
-pnpm add react-playing-cards gsap
+pnpm add modern-flash gsap
 
 # Using npm
-npm install react-playing-cards gsap
+npm install modern-flash gsap
 
 # Using yarn
-yarn add react-playing-cards gsap
+yarn add modern-flash gsap
 ```
 
 ### For WordPress and Static HTML
@@ -124,7 +124,7 @@ Render built-in movie animations directly using the `<Flash />` component:
 'use client';
 
 import React from 'react';
-import { Flash } from 'react-playing-cards';
+import { Flash } from 'modern-flash';
 
 export function CardTable() {
   return (
@@ -150,7 +150,7 @@ Convert natural language prompts into animated scenes using `parsePrompt`:
 'use client';
 
 import React from 'react';
-import { Flash, parsePrompt } from 'react-playing-cards';
+import { Flash, parsePrompt } from 'modern-flash';
 
 export function HeroBanner() {
   const scene = parsePrompt('Deal Ace of Spades with a 3D flip on dark slate stage');
@@ -176,7 +176,7 @@ Control timelines programmatically via `React.useRef` and `FlashHandle`:
 'use client';
 
 import React, { useRef } from 'react';
-import { Flash, type FlashHandle } from 'react-playing-cards';
+import { Flash, type FlashHandle } from 'modern-flash';
 
 export function InteractiveCard() {
   const flashRef = useRef<FlashHandle>(null);
@@ -305,7 +305,7 @@ ActionScripts are GreenSock timeline choreographies registered in the engine:
 Register bespoke timeline animations using `registerActionScript`:
 
 ```typescript
-import { registerActionScript } from 'react-playing-cards';
+import { registerActionScript } from 'modern-flash';
 import { gsap } from 'gsap';
 
 registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) => {
@@ -338,7 +338,7 @@ registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) 
 ## Project Architecture
 
 ```
-react-playing-cards/
+modern-flash/
 ├── assets/                  # Brand iconography and vector graphics
 ├── docs/                    # Technical manuals and architectural specifications
 │   ├── agentic-control-surface.md

@@ -1,7 +1,12 @@
 {
-  "name": "react-playing-cards",
+  "name": "modern-flash",
   "version": "1.0.0",
   "description": "SVG-based Flash animation engine and prompt-driven animation studio for Next.js and WordPress.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goldlabelapps/modern-flash.git"
+  },
+  "homepage": "https://github.com/goldlabelapps/modern-flash#readme",
   "license": "MIT",
   "author": "Goldlabel°",
   "type": "module",
