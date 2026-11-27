@@ -1,206 +1,216 @@
-import { getScenes } from '../lib/db';
 import { StageWrapper } from '../components/StageWrapper';
 
 export const revalidate = 60;
 
-export default async function HomePage() {
-  const scenes = await getScenes();
-
+export default function HomePage() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Masthead Banner */}
-      <header
-        role="banner"
+    <div style={{ maxWidth: 1200, margin: '20px auto', padding: '0 20px', boxSizing: 'border-box' }}>
+      {/* Masthead Banner conforming to WordPress Modern Flash settings */}
+      <div
         style={{
-          borderBottom: '2px solid #1e293b',
-          background: 'rgba(7, 11, 20, 0.85)',
-          backdropFilter: 'blur(10px)',
-          position: 'sticky',
-          top: 0,
-          zIndex: 50,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '18px 24px',
+          background: '#15868F',
+          borderRadius: 8,
+          color: '#ffffff',
+          marginBottom: 24,
+          border: '2px solid #2A2A2A',
+          boxShadow: '3px 3px 0 0 #2A2A2A',
         }}
       >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 6,
+              background: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+              fontSize: 20,
+              color: '#15868F',
+              border: '2px solid #2A2A2A',
+            }}
+          >
+            ⚡
+          </div>
+          <div>
+            <h1 style={{ margin: 0, fontSize: 22, color: '#ffffff', fontWeight: 700, lineHeight: 1.2 }}>
+              Modern Flash
+            </h1>
+            <p style={{ margin: '4px 0 0', fontSize: 13, color: '#e0f2f1' }}>
+              SVG Vector Animation Engine & ActionScript Runtime for WordPress
+            </p>
+          </div>
+        </div>
         <div
           style={{
-            maxWidth: 1200,
-            margin: '0 auto',
-            padding: '14px 24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: 12,
+            background: 'rgba(0, 0, 0, 0.25)',
+            padding: '4px 12px',
+            borderRadius: 999,
+            fontSize: 12,
+            fontWeight: 600,
+            border: '1px solid rgba(255, 255, 255, 0.3)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 8,
-                background: '#15868F',
-                border: '2px solid #2A2A2A',
-                boxShadow: '2px 2px 0 0 #2A2A2A',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 900,
-                color: '#ffffff',
-                fontSize: 18,
-              }}
-            >
-              ⚡
-            </div>
-            <div>
-              <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', color: '#f8fafc' }}>
-                Modern Flash
-              </span>
-              <span style={{ marginLeft: 8, fontSize: 11, color: '#15868F', fontWeight: 700, background: '#0e2433', padding: '2px 8px', borderRadius: 999 }}>
-                v1.0.0
-              </span>
-            </div>
-          </div>
-
-          <nav aria-label="Main Navigation" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <a
-              href="https://github.com/goldlabelapps/modern-flash"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                background: '#15868F',
-                color: '#ffffff',
-                border: '2px solid #2A2A2A',
-                boxShadow: '3px 3px 0 0 #2A2A2A',
-                borderRadius: 6,
-                padding: '8px 16px',
-                fontSize: 13,
-                fontWeight: 600,
-                textDecoration: 'none',
-                minHeight: 40,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              GitHub Repository
-            </a>
-          </nav>
+          v1.0.0
         </div>
-      </header>
+      </div>
 
-      {/* Main Content Landmark */}
-      <main id="main-content" style={{ flex: 1, maxWidth: 1200, margin: '0 auto', padding: '40px 24px', width: '100%', boxSizing: 'border-box' }}>
-        {/* Hero Section */}
-        <div style={{ textAlign: 'center', maxWidth: 840, margin: '0 auto 48px' }}>
-          <h1 style={{ fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: 800, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.15 }}>
-            Pure Vector Animation for React and WordPress
-          </h1>
-          <p style={{ fontSize: 17, color: '#94a3b8', margin: 0, lineHeight: 1.6 }}>
-            The classic Flash authoring model reimagined with modern web standards. Pure SVG graphics driven by GreenSock timelines, available as an npm package and a native WordPress plugin.
-          </p>
-        </div>
-
-        {/* Interactive Flash Stage Surface */}
-        <StageWrapper initialScenes={scenes} />
-
-        {/* Dual-Ecosystem Integration Grid */}
-        <section aria-labelledby="dual-ecosystem-heading" style={{ marginTop: 64 }}>
-          <h2 id="dual-ecosystem-heading" style={{ fontSize: 24, fontWeight: 700, margin: '0 0 24px', color: '#f8fafc' }}>
-            Dual-Ecosystem Integration
-          </h2>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
-            {/* React & Next.js Card */}
-            <div
-              style={{
-                background: '#0d1527',
-                border: '2px solid #2A2A2A',
-                boxShadow: '4px 4px 0 0 #2A2A2A',
-                borderRadius: 12,
-                padding: 24,
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                <span style={{ fontSize: 20 }}>⚛️</span>
-                <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: '#f8fafc' }}>React & Next.js</h3>
-              </div>
-              <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 16 }}>
-                Install via pnpm or npm and import components with full TypeScript support:
-              </p>
-              <pre
-                style={{
-                  background: '#070b14',
-                  border: '1px solid #1e293b',
-                  borderRadius: 6,
-                  padding: 14,
-                  fontSize: 12,
-                  color: '#e2e8f0',
-                  overflowX: 'auto',
-                }}
-              >
-{`import { Flash, parsePrompt } from 'modern-flash';
-
-export function Hero() {
-  const scene = parsePrompt('Deal Ace of Spades');
-  return <Flash scene={scene} loop={true} autoPlay={true} />;
-}`}
-              </pre>
-            </div>
-
-            {/* WordPress Card */}
-            <div
-              style={{
-                background: '#0d1527',
-                border: '2px solid #2A2A2A',
-                boxShadow: '4px 4px 0 0 #2A2A2A',
-                borderRadius: 12,
-                padding: 24,
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                <span style={{ fontSize: 20 }}>🔌</span>
-                <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: '#f8fafc' }}>WordPress Plugin</h3>
-              </div>
-              <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 16 }}>
-                Activate Modern Flash in WordPress and embed declarative stages with shortcodes:
-              </p>
-              <pre
-                style={{
-                  background: '#070b14',
-                  border: '1px solid #1e293b',
-                  borderRadius: 6,
-                  padding: 14,
-                  fontSize: 12,
-                  color: '#e2e8f0',
-                  overflowX: 'auto',
-                }}
-              >
-{`[modern_flash prompt="Deal Ace of Spades with a 3D flip" speed="1.2" loop="true"]
-
-<!-- Automatically mounts in .mwp-flash-stage containers with zero layout shift -->`}
-              </pre>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* Semantic Footer */}
-      <footer
-        role="contentinfo"
+      {/* Responsive Two-Column Layout */}
+      <div
+        className="mwp-layout-grid"
         style={{
-          borderTop: '2px solid #1e293b',
-          background: '#070b14',
-          marginTop: 64,
-          padding: '28px 24px',
-          textAlign: 'center',
-          fontSize: 13,
-          color: '#64748b',
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)',
+          gap: 24,
+          alignItems: 'start',
         }}
       >
-        <p style={{ margin: 0 }}>
-          Modern Flash is an open-source project by Goldlabel°. Distributed under the MIT Licence.
-        </p>
-      </footer>
+        {/* Primary Column: Stage & Settings */}
+        <div
+          className="mwp-col-primary"
+          style={{
+            background: '#ffffff',
+            border: '1px solid #ccd0d4',
+            borderRadius: 8,
+            padding: 24,
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+            color: '#1e293b',
+          }}
+        >
+          <StageWrapper />
+
+          <hr style={{ margin: '24px 0', border: 0, borderTop: '1px solid #e2e8f0' }} />
+
+          <h3 style={{ marginTop: 0, fontSize: 16, color: '#1e293b' }}>
+            Shortcode Usage Guide
+          </h3>
+          <p style={{ fontSize: 13, color: '#64748b' }}>
+            Embed vector animations anywhere using declarative shortcodes:
+          </p>
+          <pre
+            style={{
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              padding: 12,
+              borderRadius: 6,
+              fontSize: 12,
+              overflowX: 'auto',
+              margin: '0 0 10px',
+              color: '#0f172a',
+            }}
+          >
+            <code>[modern_flash prompt="Deal Ace of Spades with a 3D flip on dark slate stage" speed="1.2" loop="true"]</code>
+          </pre>
+          <pre
+            style={{
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              padding: 12,
+              borderRadius: 6,
+              fontSize: 12,
+              overflowX: 'auto',
+              margin: 0,
+              color: '#0f172a',
+            }}
+          >
+            <code>[modern_flash movie="FlashStory" height="420px"]</code>
+          </pre>
+        </div>
+
+        {/* Secondary Column: Runtime Telemetry */}
+        <div className="mwp-col-secondary">
+          <div
+            style={{
+              background: '#ffffff',
+              border: '1px solid #ccd0d4',
+              borderRadius: 8,
+              padding: 20,
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+              color: '#1e293b',
+            }}
+          >
+            <h3
+              style={{
+                marginTop: 0,
+                fontSize: 15,
+                borderBottom: '2px solid #15868F',
+                paddingBottom: 8,
+                color: '#1e293b',
+              }}
+            >
+              Runtime Telemetry
+            </h3>
+
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 12, fontSize: 12, color: '#1e293b' }}>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 4px' }}>
+                    <strong>Bundle Status</strong>
+                  </td>
+                  <td style={{ padding: '8px 4px' }}>
+                    <span style={{ color: '#059669', fontWeight: 'bold' }}>● Compiled</span>
+                  </td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#f8fafc' }}>
+                  <td style={{ padding: '8px 4px' }}>
+                    <strong>Bundle Size</strong>
+                  </td>
+                  <td style={{ padding: '8px 4px' }}>539.0 KB</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 4px' }}>
+                    <strong>Engine Target</strong>
+                  </td>
+                  <td style={{ padding: '8px 4px' }}>React 19 + GSAP 3</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#f8fafc' }}>
+                  <td style={{ padding: '8px 4px' }}>
+                    <strong>Global Handle</strong>
+                  </td>
+                  <td style={{ padding: '8px 4px' }}>
+                    <code>window.mwpFlash</code>
+                  </td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 4px' }}>
+                    <strong>Active Hook</strong>
+                  </td>
+                  <td style={{ padding: '8px 4px' }}>
+                    <code>DOMContentLoaded</code>
+                  </td>
+                </tr>
+                <tr style={{ background: '#f8fafc' }}>
+                  <td style={{ padding: '8px 4px' }}>
+                    <strong>Supported Movies</strong>
+                  </td>
+                  <td style={{ padding: '8px 4px' }}>
+                    <code>FlashStory</code>, <code>logo</code>, <code>starfighter</code>, <code>cardFlip</code>, <code>hudMacromedia</code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div
+              style={{
+                marginTop: 16,
+                padding: 10,
+                background: '#f0fdf4',
+                borderLeft: '4px solid #15868F',
+                fontSize: 11,
+                color: '#166534',
+              }}
+            >
+              The runtime bundle mounts directly into .mwp-flash-stage containers with zero layout shift.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
