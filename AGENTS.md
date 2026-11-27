@@ -12,7 +12,7 @@ This repository enforces the Wolfpack operational standard. All autonomous agent
 
 ## Architecture & Code Organisation
 
-React Playing Cards is an open-source vector graphics and animation library inspired by the classic Flash programming model, built using React and TypeScript.
+Modern Flash is an open-source vector graphics and animation library inspired by the classic Flash programming model, built using React and TypeScript.
 
 - `src/`: Core library implementation (Flash container, Stage rendering surface, MovieClips, ActionScript registry).
 - `scripts/`: Operational scripts and verification runners.
@@ -40,7 +40,20 @@ python3 scripts/verify-hygiene.py
 
 # Staged changes pre-commit scan
 python3 scripts/verify-hygiene.py --staged
+
+# Comprehensive unified test suite across all vectors
+python3 scripts/test-flash.py
 ```
+
+### The "Test Flash" Directive ("test flash")
+
+When instructed with **"test flash"**, run and report on all tests everywhere across the repository:
+1. **Hygiene & Security**: Executes `scripts/verify-hygiene.py` for credentials, tokens, and markdown links.
+2. **Library Types**: Executes `pnpm run type-check` for TypeScript compliance.
+3. **Standalone Bundle**: Compiles `dist/flash-bundle.min.js` via Vite.
+4. **WordPress Runtime**: Syntax lints all plugin PHP classes via `php -l`.
+5. **Next.js Flagship**: Executes `pnpm --filter web build` verifying App Router compilation and static generation.
+6. **Container Health**: Probes active Docker endpoints (:3800, :3830, :3880).
 
 When building or testing TypeScript packages:
 - Prefer targeted test runs for touched components.

@@ -1,5 +1,6 @@
 # Dependencies and build outputs
 node_modules/
+vendor/
 dist/
 dist-studio/
 build/
@@ -12,6 +13,8 @@ Thumbs.db
 # Secrets, keys, and credentials (GS-AI-DATA-02)
 .env
 .env.*
+!.env.example
+!nextjs/.env.example
 *.pem
 *.key
 *.pfx
@@ -28,3 +31,4 @@ Thumbs.db
 .next/
 .pytest_cache/
 coverage/
+*.tsbuildinfo

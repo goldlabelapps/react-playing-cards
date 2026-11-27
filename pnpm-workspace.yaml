@@ -1,2 +1,8 @@
+packages:
+  - '.'
+  - 'nextjs'
+
 allowBuilds:
+  '@firebase/util': true
   esbuild: true
+  protobufjs: true

@@ -40,8 +40,8 @@ export function macromediaActionScript({
   // 1. Center Reticle & Lock All Flight Dynamics at Rest
   if (reticle) {
     gsap.set(reticle, {
-      scale: 0.5,
-      transformOrigin: '320px 180px',
+      scale: 1,
+      transformOrigin: '50% 50%',
       rotation: 0,
       x: 0,
       y: 0,
@@ -49,7 +49,7 @@ export function macromediaActionScript({
   }
   if (pitchLadder) {
     gsap.set(pitchLadder, {
-      transformOrigin: '320px 180px',
+      transformOrigin: '50% 50%',
       rotation: 0,
       y: 0,
     });
@@ -58,7 +58,7 @@ export function macromediaActionScript({
     gsap.set(cornerMarkers, {
       opacity: 0.75,
       scale: 1,
-      transformOrigin: '320px 180px',
+      transformOrigin: '50% 50%',
     });
   }
   if (crosshairs) {
@@ -72,7 +72,7 @@ export function macromediaActionScript({
   }
   if (starfieldStatic) {
     gsap.set(starfieldStatic, {
-      transformOrigin: '320px 180px',
+      transformOrigin: '50% 50%',
       scale: 1,
       rotation: 0,
       x: 0,
@@ -81,7 +81,7 @@ export function macromediaActionScript({
   }
   if (starfieldForward) {
     gsap.set(starfieldForward, {
-      transformOrigin: '320px 180px',
+      transformOrigin: '50% 50%',
       scale: 1,
       rotation: 0,
       x: 0,

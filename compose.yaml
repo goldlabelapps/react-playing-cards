@@ -1,9 +1,13 @@
+name: modern-flash
+
 services:
-  flash-studio:
+  # 1. Interactive Prompt-Driven Animation Studio (JavaScript / Vite Vector)
+  vite:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flash-animation-studio
+    image: modern-flash-vite:latest
+    container_name: vite
     ports:
       - "3800:3800"
     environment:
@@ -12,3 +16,73 @@ services:
       - .:/app
       - /app/node_modules
     restart: unless-stopped
+
+  # 2. Flagship Public Web Application (Next.js 15 App Router + MariaDB Persistence)
+  nextjs:
+    build:
+      context: .
+      dockerfile: nextjs/Dockerfile
+    image: modern-flash-nextjs:latest
+    container_name: nextjs
+    ports:
+      - "3830:3830"
+    environment:
+      - NODE_ENV=development
+      - PORT=3830
+      - DATABASE_HOST=wordpress_db
+      - DATABASE_PORT=3306
+      - DATABASE_USER=wpuser
+      - DATABASE_PASSWORD=wppassword
+      - DATABASE_NAME=modern_flash_dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/nextjs/node_modules
+      - /app/nextjs/.next
+    depends_on:
+      wordpress_db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # 3. WordPress Runtime Environment (PHP / WordPress Vector)
+  wordpress:
+    image: wordpress:php8.2-apache
+    container_name: wordpress
+    ports:
+      - "3880:80"
+    environment:
+      WORDPRESS_DB_HOST: wordpress_db:3306
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppassword
+      WORDPRESS_DB_NAME: modern_flash_dev
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - wp_data:/var/www/html
+      # Mount current repository as live active plugin:
+      - .:/var/www/html/wp-content/plugins/modern-flash
+    depends_on:
+      wordpress_db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # 4. Database Layer for WordPress & Next.js
+  wordpress_db:
+    image: mariadb:10.11
+    container_name: wordpress_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: modern_flash_dev
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppassword
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  wp_data:
+  db_data:

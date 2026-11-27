@@ -10,21 +10,24 @@ The harness acts as the universal bridge between two divergent runtime environme
 - **Next.js World**: Modern React 18/19 applications consuming modular ESM packages.
 - **WordPress World**: PHP 8.2+ environments running Gutenberg blocks and classic templates with pre-compiled browser scripts.
 
-Running the studio inside Docker ensures that both ecosystems receive identical SVG vector assets, GSAP ActionScript choreography, and prompt-parsing behavior without local node or dependency conflicts.
+Running the studio inside Docker ensures that both ecosystems receive identical SVG vector assets, GSAP ActionScript choreography, and prompt-parsing behaviour without local node or dependency conflicts.
 
 ---
 
 ## Configuration & Ports
 
-The container exposes port `3800` for the interactive Flash Animation Studio:
+The container exposes port `3800` for the interactive Flash Animation Studio, port `3830` for the flagship Next.js web application, alongside dedicated port `3880` for the containerised WordPress environment:
 
 ```yaml
+name: modern-flash
+
 services:
-  flash-studio:
+  vite:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flash-animation-studio
+    image: modern-flash-vite:latest
+    container_name: vite
     ports:
       - "3800:3800"
     environment:
@@ -33,31 +36,101 @@ services:
       - .:/app
       - /app/node_modules
     restart: unless-stopped
+
+  nextjs:
+    build:
+      context: .
+      dockerfile: nextjs/Dockerfile
+    image: modern-flash-nextjs:latest
+    container_name: nextjs
+    ports:
+      - "3830:3830"
+    environment:
+      - NODE_ENV=development
+      - PORT=3830
+      - DATABASE_HOST=wordpress_db
+      - DATABASE_PORT=3306
+      - DATABASE_USER=wpuser
+      - DATABASE_PASSWORD=wppassword
+      - DATABASE_NAME=modern_flash_dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/nextjs/node_modules
+      - /app/nextjs/.next
+    depends_on:
+      wordpress_db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  wordpress:
+    image: wordpress:php8.2-apache
+    container_name: wordpress
+    ports:
+      - "3880:80"
+    environment:
+      WORDPRESS_DB_HOST: wordpress_db:3306
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppassword
+      WORDPRESS_DB_NAME: modern_flash_dev
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - wp_data:/var/www/html
+      - .:/var/www/html/wp-content/plugins/modern-flash
+    depends_on:
+      wordpress_db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  wordpress_db:
+    image: mariadb:10.11
+    container_name: wordpress_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: modern_flash_dev
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppassword
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  wp_data:
+  db_data:
 ```
 
 ---
 
 ## Operational Commands
 
-### Launch Studio Service
-Start the interactive prompt-to-SVG animation studio on `http://localhost:3800`:
+### Launch Composite Environment
+Start the full development stack:
 
 ```bash
 docker compose up -d
 ```
 
+- Vite Studio: `http://localhost:3800`
+- Next.js Web App: `http://localhost:3830`
+- WordPress: `http://localhost:3880`
+
 ### Build Distribution Artifacts
 Compile both the ESM library bundle and the standalone WordPress bundle:
 
 ```bash
-docker compose run --rm flash-studio pnpm build && pnpm build:bundle
+docker compose run --rm vite pnpm build && pnpm build:bundle
 ```
 
 ### Container Shell Access
 Open an interactive shell inside the container environment:
 
 ```bash
-docker compose exec flash-studio sh
+docker compose exec vite sh
 ```
 
 ---
@@ -70,3 +143,35 @@ The container compiles two distinct output formats into `dist/`:
    Tree-shakeable ESM module for Next.js, Vite, and npm consumers. Externalises `react`, `react-dom`, and `gsap`.
 2. **`dist/flash-bundle.min.js`**:
    Self-contained browser bundle for WordPress `mwp-flash`. Bundles the runtime and attaches to `window.mwpFlash` with auto-mounting capabilities on `.mwp-flash-stage` elements.
+
+---
+
+## Co-Location Topology (Google Cloud VM: 34.16.50.74)
+
+Modern Flash co-exists on the shared Google Cloud production host (`wp-lab-live`: `34.16.50.74`) alongside the Modern WordPress multi-tenant architecture with zero port collisions or network contention.
+
+### Service Port Map
+
+| System | Container Name | Port Mapping | Role |
+| :--- | :--- | :---: | :--- |
+| **Modern WordPress** | `modern-wordpress-prod-caddy` | `80`, `443` | Edge TLS reverse proxy and static portal |
+| **Modern WordPress** | `wordpress` (Learn) | `8080:80` | Primary educational lesson archive |
+| **Modern WordPress** | `wordpress_government` | `8081:80` | Baseline public-sector evaluation site |
+| **Modern WordPress** | `wordpress_nhtfs` | `8082:80` | Cyber-noir brutalist fiction laboratory |
+| **Modern WordPress** | `wordpress_flash` | `8083:80` | Dedicated Flash stage site (`/var/www/html/flash`) |
+| **Modern WordPress** | `wordpress_books` | `8084:80` | Digital publishing platform |
+| **Modern WordPress** | `db` (MariaDB) | `3307:3306` | Centralised relational database service |
+| **Modern Flash** | `modern-flash-vite` | `3800:3800` | Developer animation studio and canvas debugger |
+| **Modern Flash** | `modern-flash-nextjs` | `3830:3830` | Flagship App Router showcase |
+| **Modern Flash** | `modern-flash-wordpress`| `3880:80` | Isolated local plugin development container |
+
+### Host Ingress Routing
+The production Caddy ingress router manages subdomains dynamically:
+- `flash.modern-wordpress.pro`: Serves the WordPress Flash stage site at `/var/www/html/flash`.
+- `app.modern-flash.pro`: Reverse proxies directly to `localhost:3830` (Next.js flagship showcase).
+
+### Release Pipeline Integration
+The deployment engine in Modern WordPress (`bin/deploy`) automates artifact deployment for the WordPress vector:
+1. Compiles the standalone browser bundle via `pnpm run build:bundle`.
+2. Copies `dist/flash-bundle.min.js` and plugin files directly to `/var/www/html/flash/wp-content/plugins/modern-flash`.
+3. Activates the `mwp_flash` theme and flushes rewrite rules on the live VM.

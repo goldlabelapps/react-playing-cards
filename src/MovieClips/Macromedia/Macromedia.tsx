@@ -55,8 +55,8 @@ export function Macromedia({
       if (bracketLeft && bracketRight) {
         gsap.fromTo(
           [bracketLeft, bracketRight],
-          { scale: 0.78 },
-          { scale: 1, duration: 0.22, ease: 'back.out(2.5)' }
+          { scale: 0.78, transformOrigin: '50% 50%' },
+          { scale: 1, transformOrigin: '50% 50%', duration: 0.22, ease: 'back.out(2.5)' }
         );
       }
     }
@@ -171,6 +171,7 @@ export function Macromedia({
         x: targetX,
         y: targetY,
         rotation: targetRot,
+        transformOrigin: '50% 50%',
         duration: isSteering ? 0.22 : 0.35,
         ease: isSteering ? 'power2.out' : 'sine.out',
       });
@@ -179,6 +180,7 @@ export function Macromedia({
     if (pitchLadderEl) {
       gsap.to(pitchLadderEl, {
         y: ladderShiftY,
+        transformOrigin: '50% 50%',
         duration: isSteering ? 0.22 : 0.35,
         ease: isSteering ? 'power2.out' : 'sine.out',
       });
@@ -187,11 +189,27 @@ export function Macromedia({
     if (starfieldEl) {
       gsap.to(starfieldEl, {
         x: starfieldShiftX,
+        transformOrigin: '50% 50%',
         duration: isSteering ? 0.25 : 0.4,
         ease: isSteering ? 'power2.out' : 'sine.out',
       });
     }
   }, [keys]);
+
+  // Initialise reticle at dead-center rest coordinates on mount
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const reticleEl = containerRef.current.querySelector('[data-part="reticle"]');
+    if (reticleEl) {
+      gsap.set(reticleEl, {
+        scale: 1,
+        transformOrigin: '50% 50%',
+        x: 0,
+        y: 0,
+        rotation: 0,
+      });
+    }
+  }, []);
 
   // Directional button dynamic styling helper
   const getDirectionBtnStyle = (dir: 'up' | 'down' | 'left' | 'right'): CSSProperties => {
@@ -386,14 +404,8 @@ export function Macromedia({
 
         {/* 2. CENTRAL STARFIGHTER HUD RETICLE ASSEMBLY (CENTERED) */}
         <g data-part="hud-assembly">
-          {/* Main Reticle Assembly scaled to half size (0.5x), Centered at 320, 180 */}
-          <g
-            data-part="reticle"
-            style={{
-              transform: 'scale(0.5)',
-              transformOrigin: '320px 180px',
-            }}
-          >
+          {/* Main Reticle Assembly, Centered at 320, 180 */}
+          <g data-part="reticle">
             {/* Axis Alignment Crosshairs */}
             <g data-part="crosshairs" stroke={color} strokeWidth="2.0" opacity="0.75">
               <line x1="320" y1="40" x2="320" y2="76" />
@@ -403,27 +415,36 @@ export function Macromedia({
             </g>
 
             {/* Dynamic Pitch Ladder (Level at rest, centered at 320, 180) */}
-            <g data-part="pitch-ladder" stroke={color} strokeWidth="1.8" opacity="0.75" style={{ transformOrigin: '320px 180px' }}>
-              {/* +10° Climb Ladder Rung & Label */}
+            <g data-part="pitch-ladder" stroke={color} strokeWidth="1.8" opacity="0.75">
+              {/* +10° Climb Ladder Rung & Symmetrical Labels */}
               <path d="M 276,120 L 302,120 L 302,126 M 338,126 L 338,120 L 364,120" fill="none" />
               <text x="268" y="123" textAnchor="end" fontSize="10" fill={color} stroke="none" fontWeight="700">
+                +10
+              </text>
+              <text x="372" y="123" textAnchor="start" fontSize="10" fill={color} stroke="none" fontWeight="700">
                 +10
               </text>
               {/* +5° Climb Tick */}
               <line x1="290" y1="150" x2="304" y2="150" />
               <line x1="336" y1="150" x2="350" y2="150" />
-              {/* 0° Artificial Horizon Bar & Label */}
+              {/* 0° Artificial Horizon Bar & Symmetrical Labels */}
               <line x1="256" y1="180" x2="288" y2="180" strokeDasharray="6 3" />
               <line x1="352" y1="180" x2="384" y2="180" strokeDasharray="6 3" />
               <text x="246" y="184" textAnchor="end" fontSize="10" fill={color} stroke="none" fontWeight="700">
                 00
               </text>
+              <text x="394" y="184" textAnchor="start" fontSize="10" fill={color} stroke="none" fontWeight="700">
+                00
+              </text>
               {/* -5° Dive Tick */}
               <line x1="290" y1="210" x2="304" y2="210" strokeDasharray="3 3" />
               <line x1="336" y1="210" x2="350" y2="210" strokeDasharray="3 3" />
-              {/* -10° Dive Ladder Rung & Label */}
+              {/* -10° Dive Ladder Rung & Symmetrical Labels */}
               <path d="M 276,240 L 302,240 L 302,234 M 338,234 L 338,240 L 364,240" strokeDasharray="4 3" fill="none" />
               <text x="268" y="244" textAnchor="end" fontSize="10" fill={color} stroke="none" fontWeight="700">
+                -10
+              </text>
+              <text x="372" y="244" textAnchor="start" fontSize="10" fill={color} stroke="none" fontWeight="700">
                 -10
               </text>
             </g>
@@ -483,13 +504,11 @@ export function Macromedia({
               <path
                 data-part="bracket-left"
                 d="M 276,160 L 260,160 L 260,200 L 276,200"
-                style={{ transformOrigin: '320px 180px' }}
               />
               {/* Right Bracket */}
               <path
                 data-part="bracket-right"
                 d="M 364,160 L 380,160 L 380,200 L 364,200"
-                style={{ transformOrigin: '320px 180px' }}
               />
             </g>
           </g>

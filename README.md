@@ -1,4 +1,4 @@
-# React Playing Cards
+# Modern Flash
 
 Pure SVG Flash animation engine, GSAP ActionScript choreography, and natural language animation studio for React, Next.js, and WordPress.
 
@@ -30,7 +30,7 @@ Pure SVG Flash animation engine, GSAP ActionScript choreography, and natural lan
 
 ## Overview
 
-React Playing Cards recreates the classic Macromedia Flash authoring model using modern web standards. Instead of binary SWF files, animations run as pure vector SVG graphics driven by GreenSock (GSAP) timelines.
+Modern Flash recreates the classic Macromedia Flash authoring model using modern web standards. Instead of binary SWF files, animations run as pure vector SVG graphics driven by GreenSock (GSAP) timelines.
 
 The library operates across two distinct environments from a single codebase:
 1. **Modern React and Next.js**: Tree-shakeable ESM package exporting components, types, and hooks.
@@ -44,7 +44,7 @@ The library operates across two distinct environments from a single codebase:
 - **ActionScript Timeline Architecture**: GSAP-powered motion choreographies including 3D card flips, corkscrew spins, card dealing arcs, and elastic collisions.
 - **Natural Language Prompt Studio**: Chat interface that parses plain-text prompts (for example, *"Deal Ace of Spades with a 3D flip on dark stage"*) directly into animated SVG scenes.
 - **Dual-Ecosystem Distribution**: ESM modules for modern bundlers alongside a zero-dependency pre-compiled browser script for WordPress and standalone HTML embeds.
-- **Audio Synthesis Engine**: Web Audio API integration providing retro synthesized clicks, card slides, deals, and authentic Flash MX boot sounds without external audio assets.
+- **Audio Synthesis Engine**: Web Audio API integration providing retro synthesised clicks, card slides, deals, and authentic Flash MX boot sounds without external audio assets.
 - **Containerised Docker Harness**: Production-aligned Docker Compose environment serving the animation studio on port `3800`.
 
 ---
@@ -53,14 +53,20 @@ The library operates across two distinct environments from a single codebase:
 
 ### Option 1: Docker Harness (Recommended)
 
-Run the containerised animation studio without installing local Node dependencies:
+Run the containerised studio and live WordPress environment without installing local dependencies:
 
 ```bash
-# Start the studio container
+# Start studio, Next.js web app, and WordPress containers
 docker compose up -d
 
-# Open the studio in your browser
+# Studio interface (Vite + React)
 open http://localhost:3800
+
+# Flagship public web application (Next.js 15)
+open http://localhost:3830
+
+# WordPress environment with modern-flash plugin mounted
+open http://localhost:3880
 ```
 
 ### Option 2: Local Development
@@ -69,8 +75,8 @@ Run the studio locally using Node 20+ and pnpm:
 
 ```bash
 # Clone the repository
-git clone https://github.com/goldlabelapps/react-playing-cards.git
-cd react-playing-cards
+git clone https://github.com/goldlabelapps/modern-flash.git
+cd modern-flash
 
 # Install dependencies
 pnpm install
@@ -85,31 +91,34 @@ pnpm studio
 
 ### For React and Next.js Projects
 
-Install `react-playing-cards` alongside its peer dependency `gsap`:
+Install `modern-flash` alongside its peer dependency `gsap`:
 
 ```bash
 # Using pnpm
-pnpm add react-playing-cards gsap
+pnpm add modern-flash gsap
 
 # Using npm
-npm install react-playing-cards gsap
+npm install modern-flash gsap
 
 # Using yarn
-yarn add react-playing-cards gsap
+yarn add modern-flash gsap
 ```
 
-### For WordPress and Static HTML
+### For WordPress
 
-Download `dist/flash-bundle.min.js` or compile it locally via `pnpm build:bundle`. Enqueue the script in your WordPress theme or plugin:
+Modern Flash operates directly as a native WordPress plugin. Clone or symlink this repository into your WordPress plugins directory:
 
-```php
-wp_enqueue_script(
-    'mwp-flash-runtime',
-    plugins_url('assets/js/flash-bundle.min.js', __FILE__),
-    array(),
-    '1.0.0',
-    true
-);
+```bash
+cd wp-content/plugins
+git clone https://github.com/goldlabelapps/modern-flash.git
+cd modern-flash
+pnpm run build:bundle
+```
+
+Activate "Modern Flash" in WordPress Admin (`wp-admin/plugins.php`) and embed vector stages using the shortcode:
+
+```text
+[modern_flash prompt="Deal Ace of Spades with a 3D flip on dark slate stage" speed="1.2" loop="true"]
 ```
 
 ---
@@ -124,7 +133,7 @@ Render built-in movie animations directly using the `<Flash />` component:
 'use client';
 
 import React from 'react';
-import { Flash } from 'react-playing-cards';
+import { Flash } from 'modern-flash';
 
 export function CardTable() {
   return (
@@ -150,7 +159,7 @@ Convert natural language prompts into animated scenes using `parsePrompt`:
 'use client';
 
 import React from 'react';
-import { Flash, parsePrompt } from 'react-playing-cards';
+import { Flash, parsePrompt } from 'modern-flash';
 
 export function HeroBanner() {
   const scene = parsePrompt('Deal Ace of Spades with a 3D flip on dark slate stage');
@@ -176,7 +185,7 @@ Control timelines programmatically via `React.useRef` and `FlashHandle`:
 'use client';
 
 import React, { useRef } from 'react';
-import { Flash, type FlashHandle } from 'react-playing-cards';
+import { Flash, type FlashHandle } from 'modern-flash';
 
 export function InteractiveCard() {
   const flashRef = useRef<FlashHandle>(null);
@@ -295,7 +304,7 @@ ActionScripts are GreenSock timeline choreographies registered in the engine:
 | `lightning` | High-frequency discharge with opacity flickering and filter displacement. |
 | `loading` | Authentic Flash progress bar with percentage counter and spinning loader. |
 | `logo` | Elastic scale entrance with spring damping. |
-| `macromedia` | Complete Flash MX boot sequence with sound synchronization. |
+| `macromedia` | Complete Flash MX boot sequence with sound synchronisation. |
 | `pingpong` | High-speed ball bounce with elastic wall collisions. |
 | `sprite` | Frame-by-frame sprite sheet stepper and walk cycles. |
 | `twist` | Elastic coordinate shearing and 2D bounce oscillation. |
@@ -305,7 +314,7 @@ ActionScripts are GreenSock timeline choreographies registered in the engine:
 Register bespoke timeline animations using `registerActionScript`:
 
 ```typescript
-import { registerActionScript } from 'react-playing-cards';
+import { registerActionScript } from 'modern-flash';
 import { gsap } from 'gsap';
 
 registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) => {
@@ -338,12 +347,23 @@ registerActionScript('elasticBounce', ({ target, loop, onComplete, speed = 1 }) 
 ## Project Architecture
 
 ```
-react-playing-cards/
+modern-flash/
+├── apps/                    # Monorepo workspace applications
+│   └── web/                 # Flagship public Next.js web application (:3830)
+├── modern-flash.php         # WordPress plugin bootstrap and lifecycle
+├── composer.json            # PSR-4 package manifest for PHP
 ├── assets/                  # Brand iconography and vector graphics
 ├── docs/                    # Technical manuals and architectural specifications
 │   ├── agentic-control-surface.md
 │   ├── docker-harness.md
-│   └── dual-ecosystem-integration.md
+│   ├── dual-ecosystem-integration.md
+│   ├── flagship-web-app.md
+│   └── hybrid-package-architecture.md
+├── php/                     # Modern WordPress PHP classes (PSR-4)
+│   ├── Plugin.php           # Core plugin orchestrator and asset enqueue
+│   ├── Shortcode.php        # [modern_flash] declarative stage renderer
+│   └── Admin/
+│       └── SettingsController.php # Two-column settings interface
 ├── scripts/                 # Security verification runners and git hooks
 │   ├── setup-hooks.sh
 │   └── verify-hygiene.py
@@ -357,9 +377,10 @@ react-playing-cards/
 │   ├── bundle-entry.ts      # WordPress standalone bundle entrypoint
 │   ├── index.ts             # Library exports
 │   └── types.ts             # TypeScript definitions
-├── studio/                  # Interactive studio application
+├── nextjs/                  # Flagship Next.js 15 showcase application
+├── vite/                    # Interactive Vite studio application
 ├── AGENTS.md                # Autonomous agent operating directives
-├── compose.yaml             # Docker Compose specification for port 3800
+├── compose.yaml             # Docker Compose specification (Studio :3800 + WordPress :3880)
 ├── Dockerfile               # Production container build
 ├── llms.txt                 # Machine discovery index for coding agents
 ├── llms-full.txt            # Complete concatenated technical documentation
@@ -370,6 +391,8 @@ react-playing-cards/
 
 ## Documentation Index
 
+- [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, Google Cloud VM deployment, and Firebase suite integration.
+- [Hybrid Package Architecture](docs/hybrid-package-architecture.md): Single-repository architecture bridging NPM and WordPress plugin distribution.
 - [Docker Harness Specification](docs/docker-harness.md): Container architecture, port bindings, and operational commands.
 - [Dual-Ecosystem Integration](docs/dual-ecosystem-integration.md): Step-by-step setup guides for Next.js and WordPress environments.
 - [Agentic Control Surface](docs/agentic-control-surface.md): Quality gates, secret scans, and verification tooling.
