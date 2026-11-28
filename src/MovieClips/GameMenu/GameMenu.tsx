@@ -124,7 +124,7 @@ export function GameMenu({
     {
       id: 'poker-dice',
       label: 'Poker Dice',
-      description: 'Classic 5-die poker hand rolling table',
+      description: 'Single die vector placeholder graphic',
       badge: 'DICE',
       icon: '🎲',
       movie: 'poker-dice',
