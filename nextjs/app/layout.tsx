@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#052841',
+  themeColor: '#000000',
   width: 'device-width',
   initialScale: 1,
 };
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             padding: 0;
             overflow: hidden;
             overscroll-behavior: none;
-            background-color: #070b14;
+            background-color: #000000;
             color: #ffffff;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.5;

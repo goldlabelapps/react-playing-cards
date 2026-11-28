@@ -296,8 +296,8 @@ export const AgentText = forwardRef<AgentTextHandle, AgentTextProps>(function Ag
 
           {showChevron && (
             <svg
-              width="14"
-              height="14"
+              width="1em"
+              height="1em"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

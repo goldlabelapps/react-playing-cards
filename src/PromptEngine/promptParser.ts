@@ -179,11 +179,11 @@ export const PROMPT_PRESETS: Record<string, (prompt: string) => PromptScene> = {
     ],
   }),
 
-  macromedia: (prompt) => ({
+  starwars: (prompt) => ({
     id: `scene-${Date.now()}`,
     prompt,
-    title: 'Flash Engine',
-    description: 'Authentic 1990s Flash starburst rays assemble and laser light beam sweep.',
+    title: 'Star Wars Flight Engine',
+    description: 'Star Wars HUD, fighter cockpit telemetry and laser starfield engine.',
     stage: {
       width: '100%',
       height: 400,
@@ -191,20 +191,21 @@ export const PROMPT_PRESETS: Record<string, (prompt: string) => PromptScene> = {
     },
     elements: [
       {
-        id: 'macromedia-1',
-        type: 'macromedia',
+        id: 'starwars-1',
+        type: 'starwars',
         x: 50,
         y: 50,
         scale: 1,
         props: { color: '#4C979C' },
         animation: {
-          actionScript: 'macromedia',
+          actionScript: 'starwars',
           delay: 0,
           duration: 2.2,
         },
       },
     ],
   }),
+  macromedia: (prompt) => PROMPT_PRESETS.starwars(prompt),
 };
 
 /**
@@ -218,8 +219,8 @@ export function parsePrompt(prompt: string): PromptScene {
     return PROMPT_PRESETS.flashStory(prompt);
   }
 
-  if (p.includes('macromedia')) {
-    return PROMPT_PRESETS.macromedia(prompt);
+  if (p.includes('starwars') || p.includes('star wars') || p.includes('macromedia')) {
+    return PROMPT_PRESETS.starwars(prompt);
   }
 
   if (p.includes('ball') || p.includes('pingpong') || p.includes('bounce') || p.includes('rally')) {

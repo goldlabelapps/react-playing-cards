@@ -24,6 +24,8 @@ export interface FlashStoryProps {
   backColor?: string;
   strokeColor?: string;
   children?: ReactNode;
+  /** Font size for AgentText task items (default: '21px', calibrated for stage balance). */
+  fontSize?: string | number;
   /** Counter formatting style ('short' or 'verbose'). Default: 'verbose'. */
   counterStyle?: 'short' | 'verbose';
   /** Horizontal alignment on the stage ('left' | 'center' | 'right'). Default: 'left'. */
@@ -44,7 +46,6 @@ export interface FlashStoryProps {
 
 export const DEFAULT_STORY_MESSAGES: string[] = [
   'Thinking ...',
-  'Starting Game Menu',
 ];
 
 /**
@@ -62,6 +63,7 @@ export function FlashStory({
   autoPlay = true,
   loop = false,
   speed = 1,
+  fontSize = '21px',
   children,
   counterStyle = 'verbose',
   align = 'left',
@@ -229,7 +231,7 @@ export function FlashStory({
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'flex-start',
-          gap: '8px',
+          gap: '10px',
           width: '100%',
           maxWidth: '850px',
           transformOrigin: align === 'left' ? 'left top' : 'center top',
@@ -241,6 +243,7 @@ export function FlashStory({
               key={task.id}
               title={task.title}
               status={task.status}
+              fontSize={fontSize}
               active={task.status === 'active' && autoPlay}
               elapsedSeconds={task.status === 'completed' ? task.duration : undefined}
               startTime={task.status === 'active' ? task.startTime : undefined}
@@ -254,4 +257,3 @@ export function FlashStory({
 }
 
 export default FlashStory;
-

@@ -50,12 +50,11 @@ The library operates across two distinct environments from a single codebase:
 
 ---
 
-## Live Production Showcases
+## Live Production Showcase
 
 Experience Modern Flash running in production:
 
-- **Flagship Web Showcase (Next.js 15)**: [https://modern-flash.pro](https://modern-flash.pro)
-- **WordPress Theme Stage (FSE Block Theme)**: [https://flash.modern-wordpress.pro](https://flash.modern-wordpress.pro)
+- **Flagship Web Application (Next.js 15)**: [https://modern-flash.pro](https://modern-flash.pro)
 
 ---
 
@@ -213,7 +212,7 @@ export function InteractiveCard() {
     <div>
       <Flash
         ref={flashRef}
-        movie="macromedia"
+        movie="starwars"
         autoPlay={false}
         loop={false}
         width="100%"
@@ -304,7 +303,7 @@ MovieClips are modular vector components rendered inside the `<Stage />`:
 | :--- | :--- |
 | `PlayingCards` | Comprehensive standard card deck with vector suits, ranks, face art, and card backs. |
 | `Blackjack` | Complete felt table layout with dealer tray, shoe, and betting circles. |
-| `Macromedia` | Retro Flash MX interface, loader, and brand assets. |
+| `StarWars` | Star Wars fighter cockpit HUD telemetry, laser fire, and starfield. |
 | `LightningBolt` | Multi-node procedural electric arcs with SVG glow filters. |
 | `Logo` | Scalable Goldlabel brand mark with animated vector strokes. |
 | `Pingpongball` | Vector ball with motion trail and squash-and-stretch geometry. |
@@ -323,7 +322,7 @@ ActionScripts are GreenSock timeline choreographies registered in the engine:
 | `lightning` | High-frequency discharge with opacity flickering and filter displacement. |
 | `loading` | Authentic Flash progress bar with percentage counter and spinning loader. |
 | `logo` | Elastic scale entrance with spring damping. |
-| `macromedia` | Complete Flash MX boot sequence with sound synchronisation. |
+| `starwars` | Star Wars cockpit HUD telemetry and flight dynamic choreography. |
 | `pingpong` | High-speed ball bounce with elastic wall collisions. |
 | `sprite` | Frame-by-frame sprite sheet stepper and walk cycles. |
 | `twist` | Elastic coordinate shearing and 2D bounce oscillation. |

@@ -1,5 +1,5 @@
 import type { LogoProps } from '../../types';
-import { MACROMEDIA_FLASH_PATH } from '../Macromedia/constants';
+import { STARWARS_FLASH_PATH } from '../StarWars/constants';
 
 export type { LogoProps } from '../../types';
 
@@ -30,7 +30,7 @@ export function Logo({
         style={{ overflow: 'visible' }}
       >
         <g fill={color} fillRule="nonzero">
-          <path d={MACROMEDIA_FLASH_PATH} id="flashIconBlack" />
+          <path d={STARWARS_FLASH_PATH} id="flashIconBlack" />
         </g>
       </svg>
       {text && text !== 'Flash' && (

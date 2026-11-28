@@ -5,7 +5,8 @@ export * from './LightningBolt';
 export * from './Typography';
 export * from './Sprite';
 export * from './Blackjack';
-export * from './Macromedia';
+export * from './PokerDice';
+export * from './StarWars';
 export * from './FlashStory';
 export * from './GameMenu';
 

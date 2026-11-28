@@ -1,7 +1,7 @@
 import { gsap } from 'gsap';
 import type { ActionScriptOptions } from '../types';
 
-export function macromediaActionScript({
+export function starWarsActionScript({
   target,
   loop = true,
   onComplete,
@@ -104,4 +104,5 @@ export function macromediaActionScript({
   return tl;
 }
 
-export default macromediaActionScript;
+export const macromediaActionScript = starWarsActionScript;
+export default starWarsActionScript;

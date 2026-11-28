@@ -18,7 +18,7 @@ export function InteractiveStage() {
         position: 'relative',
         width: '100vw',
         height: '100dvh',
-        backgroundColor: '#070b14',
+        backgroundColor: '#000000',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
@@ -38,11 +38,7 @@ export function InteractiveStage() {
             window.location.href = path;
           }}
         />
-      ) : (
-        <div style={{ color: '#94a3b8', fontSize: 14 }}>
-          Modern Flash
-        </div>
-      )}
+      ) : null}
     </figure>
   );
 }
