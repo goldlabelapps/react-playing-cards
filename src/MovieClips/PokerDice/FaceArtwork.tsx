@@ -1,3 +1,5 @@
+import { Jack, King, Queen, Rank, Suit } from '../PlayingCards/graphics';
+import type { CardSuit } from '../PlayingCards/types';
 import type { CubeFaceId, DiceFaceValue } from './types';
 
 interface FaceArtworkProps {
@@ -41,17 +43,81 @@ const PIP_LAYOUTS: Record<1 | 2 | 3 | 4 | 5 | 6, ReadonlyArray<[number, number]>
   ],
 };
 
-const POKER_FACE_STYLE: Record<
-  'A' | 'K' | 'Q' | 'J' | '10' | '9',
-  { accent: string; suit: string; caption: string }
+type PokerRank = 'A' | 'K' | 'Q' | 'J' | '10' | '9';
+
+const POKER_FACE_META: Record<
+  PokerRank,
+  { accent: string; suit: CardSuit }
 > = {
-  A: { accent: '#DC2626', suit: '♠', caption: 'ACE' },
-  K: { accent: '#B45309', suit: '♥', caption: 'KING' },
-  Q: { accent: '#9333EA', suit: '♦', caption: 'QUEEN' },
-  J: { accent: '#1D4ED8', suit: '♣', caption: 'JACK' },
-  '10': { accent: '#0F172A', suit: '♠', caption: 'TEN' },
-  '9': { accent: '#0F172A', suit: '♥', caption: 'NINE' },
+  A: { accent: '#111827', suit: 'S' },
+  K: { accent: '#D9252A', suit: 'H' },
+  Q: { accent: '#D9252A', suit: 'D' },
+  J: { accent: '#111827', suit: 'C' },
+  '10': { accent: '#111827', suit: 'S' },
+  '9': { accent: '#D9252A', suit: 'H' },
 };
+
+const CARD_PIP_POSITIONS: Record<
+  '9' | '10',
+  ReadonlyArray<{ x: number; y: number; invert?: boolean }>
+> = {
+  '9': [
+    { x: 32, y: 17 },
+    { x: 56, y: 17 },
+    { x: 32, y: 34 },
+    { x: 56, y: 34 },
+    { x: 44, y: 44 },
+    { x: 32, y: 54, invert: true },
+    { x: 56, y: 54, invert: true },
+    { x: 32, y: 71, invert: true },
+    { x: 56, y: 71, invert: true },
+  ],
+  '10': [
+    { x: 31, y: 16 },
+    { x: 57, y: 16 },
+    { x: 44, y: 25 },
+    { x: 31, y: 34 },
+    { x: 57, y: 34 },
+    { x: 31, y: 54, invert: true },
+    { x: 57, y: 54, invert: true },
+    { x: 44, y: 63, invert: true },
+    { x: 31, y: 72, invert: true },
+    { x: 57, y: 72, invert: true },
+  ],
+};
+
+function SuitGlyph({
+  suit,
+  color,
+  x,
+  y,
+  size,
+  invert = false,
+}: {
+  suit: CardSuit;
+  color: string;
+  x: number;
+  y: number;
+  size: number;
+  invert?: boolean;
+}) {
+  // The Spade path in PlayingCards/graphics/Suit.tsx points downwards; flip it upright.
+  const shouldFlip = (suit === 'S') !== invert;
+  const cx = x + size / 2;
+  const cy = y + size / 2;
+
+  return (
+    <g transform={shouldFlip ? `rotate(180 ${cx} ${cy})` : undefined}>
+      <Suit
+        card={{ rank: 'A', suit, color }}
+        x={x}
+        y={y}
+        width={size}
+        height={size}
+      />
+    </g>
+  );
+}
 
 /**
  * Renders the vector artwork for a single cube face inside a 100x100 local
@@ -124,17 +190,6 @@ export function FaceArtwork({
 
     return (
       <g>
-        <rect
-          x="7"
-          y="7"
-          width="86"
-          height="86"
-          rx="12"
-          fill="none"
-          stroke="#0F172A"
-          strokeOpacity="0.1"
-          strokeWidth="1.5"
-        />
         {coords.map(([cx, cy], idx) => (
           <g key={idx}>
             <circle cx={cx} cy={cy} r={radius} fill={fill} />
@@ -151,74 +206,76 @@ export function FaceArtwork({
     );
   }
 
-  // Classic Poker Dice ranks (A, K, Q, J, 10, 9)
-  const meta = POKER_FACE_STYLE[value];
+  // Classic Poker Dice ranks (A, K, Q, J, 10, 9) using PlayingCards vector graphics
+  const meta = POKER_FACE_META[value];
   const ink = pipColor ?? meta.accent;
+  const cardData = { rank: value, suit: meta.suit, color: ink };
 
   return (
     <g>
-      {/* Subtle inner border frame */}
+      {/* Subtle playing-card inner border */}
       <rect
-        x="8"
-        y="8"
-        width="84"
-        height="84"
-        rx="10"
+        x="6"
+        y="6"
+        width="88"
+        height="88"
+        rx="8"
         fill="none"
         stroke={ink}
-        strokeOpacity="0.22"
-        strokeWidth="2"
+        strokeOpacity="0.16"
+        strokeWidth="1.5"
       />
 
-      {/* Top-left and bottom-right corner suit pips */}
-      <text
-        x="18"
-        y="26"
-        textAnchor="middle"
-        fill={ink}
-        fontSize="15"
-        fontFamily="system-ui, -apple-system, sans-serif"
-      >
-        {meta.suit}
-      </text>
-      <text
-        x="82"
-        y="84"
-        textAnchor="middle"
-        fill={ink}
-        fontSize="15"
-        fontFamily="system-ui, -apple-system, sans-serif"
-      >
-        {meta.suit}
-      </text>
+      {/* Top-left rank & suit corner index */}
+      <Rank card={cardData} x={10.5} y={10.5} width={10.5} height={16.5} />
+      <SuitGlyph suit={meta.suit} color={ink} x={10.75} y={28.5} size={10} />
 
-      {/* Primary rank glyph */}
-      <text
-        x="50"
-        y="61"
-        textAnchor="middle"
-        fill={ink}
-        fontSize={value === '10' ? '38' : '44'}
-        fontWeight="900"
-        fontFamily="Georgia, 'Times New Roman', serif"
-      >
-        {value}
-      </text>
+      {/* Bottom-right mirrored rank & suit corner index */}
+      <g transform="rotate(180 50 50)">
+        <Rank card={cardData} x={10.5} y={10.5} width={10.5} height={16.5} />
+        <SuitGlyph suit={meta.suit} color={ink} x={10.75} y={28.5} size={10} />
+      </g>
 
-      {/* Rank caption */}
-      <text
-        x="50"
-        y="81"
-        textAnchor="middle"
-        fill={ink}
-        fillOpacity="0.7"
-        fontSize="10"
-        fontWeight="700"
-        letterSpacing="1.6"
-        fontFamily="system-ui, -apple-system, sans-serif"
-      >
-        {meta.caption}
-      </text>
+      {/* Centre artwork */}
+      {value === 'A' && (
+        <SuitGlyph suit={meta.suit} color={ink} x={24} y={24} size={52} />
+      )}
+
+      {(value === 'K' || value === 'Q' || value === 'J') && (
+        <g>
+          <rect
+            x="25"
+            y="14"
+            width="50"
+            height="72"
+            rx="4"
+            fill="#F7F6F1"
+            fillOpacity="0.55"
+            stroke={ink}
+            strokeOpacity="0.22"
+            strokeWidth="1"
+          />
+          {value === 'K' && <King x={28} y={17} width={44} height={66} />}
+          {value === 'Q' && <Queen x={27} y={18} width={46} height={64} />}
+          {value === 'J' && <Jack x={27} y={18} width={46} height={64} />}
+        </g>
+      )}
+
+      {(value === '9' || value === '10') && (
+        <g>
+          {CARD_PIP_POSITIONS[value].map((pip, idx) => (
+            <SuitGlyph
+              key={idx}
+              suit={meta.suit}
+              color={ink}
+              x={pip.x}
+              y={pip.y}
+              size={12}
+              invert={pip.invert}
+            />
+          ))}
+        </g>
+      )}
     </g>
   );
 }

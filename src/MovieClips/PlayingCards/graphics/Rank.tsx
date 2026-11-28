@@ -1,9 +1,9 @@
 import type { ReactElement } from 'react';
 import type { CardGraphicProps } from '../types';
 
-const makeGraphic = (props: CardGraphicProps, svg: ReactElement) => {
+const makeGraphic = ({ card: _card, ...svgProps }: CardGraphicProps, svg: ReactElement) => {
   return (
-    <svg {...props} viewBox="0 0 15 25">
+    <svg {...svgProps} viewBox="0 0 15 25">
       {svg}
     </svg>
   );

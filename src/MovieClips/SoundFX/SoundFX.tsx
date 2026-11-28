@@ -7,8 +7,7 @@ import {
   type SoundId,
   type SoundCategory,
 } from '../../Sound';
-import { Button as AppleButton } from '../../themes/apple';
-import { LightningBolt } from '../LightningBolt';
+import { HomeBtn } from '../../components/HomeBtn';
 import type { SoundFXProps } from './types';
 
 /**
@@ -814,19 +813,9 @@ export function SoundFX({
       {/* Optional Standalone Back Button */}
       {showBackButton && onBack && (
         <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
-          <AppleButton
+          <HomeBtn
             size="md"
             label="Modern Flash"
-            leadingIcon={
-              <LightningBolt
-                width="16px"
-                height="28px"
-                fillColor="#000000"
-                frontColor="#FFFFFF"
-                backColor="#111827"
-                strokeColor="#000000"
-              />
-            }
             onClick={() => {
               stopSequenceRef.current = true;
               soundManager.stopAll();

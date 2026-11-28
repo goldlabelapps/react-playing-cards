@@ -32,6 +32,7 @@ export interface ProjectedFace {
   id: CubeFaceId;
   corners: [Vec2, Vec2, Vec2, Vec2];
   pointsString: string;
+  roundedPath: string;
   center: Vec2;
   depth: number;
   normal: Vec3;
@@ -82,6 +83,7 @@ export interface PokerDiceProps {
   color?: string;
   pipColor?: string;
   strokeColor?: string;
+  cornerRadius?: number;
   faces?: Partial<DiceFaceMap>;
   initialRotation?: Partial<Rotation3D>;
   rotation?: Partial<Rotation3D>;
@@ -95,5 +97,6 @@ export interface PokerDiceProps {
   durationSeconds?: number;
   onRollComplete?: (faceId: CubeFaceId, faceValue: DiceFaceValue) => void;
   onFaceChange?: (faceId: CubeFaceId) => void;
+  onHomeFocusChange?: (focused: boolean) => void;
   onComplete?: () => void;
 }

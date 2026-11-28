@@ -8,6 +8,14 @@ import {
   useState,
 } from 'react';
 import { gsap } from 'gsap';
+import { MACROMEDIA_FLASH_PATH } from '../StarWars/constants';
+import {
+  appleTheme,
+  Button as AppleButton,
+  playSproingHover,
+  playSproingPress,
+  playSproingRest,
+} from '../../themes/apple';
 import {
   DEFAULT_CAMERA,
   FACE_TARGET_ROTATIONS,
@@ -76,7 +84,7 @@ interface EngineState extends Rotation3D {
 }
 
 const VIEWBOX_SIZE = 320;
-const HALF_CUBE_SIZE = 62;
+const HALF_CUBE_SIZE = 58;
 
 /**
  * PokerDice 3D MovieClip
@@ -95,22 +103,32 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
       style,
       color = '#F8FAFC',
       pipColor,
-      strokeColor = '#0F172A',
+      strokeColor,
+      cornerRadius = 12,
       faces,
       initialRotation,
       rotation,
       focalLength = DEFAULT_CAMERA.focalLength,
       cameraDistance = DEFAULT_CAMERA.distance,
-      autoSpin = false,
+      autoSpin = true,
       interactive = true,
       showControls = true,
       onRollComplete,
       onFaceChange,
+      onHomeFocusChange,
+      onComplete,
     },
     ref,
   ) {
     const [facePreset, setFacePreset] = useState<'poker' | 'pips'>('poker');
     const [isAutoSpinning, setIsAutoSpinning] = useState(autoSpin);
+    const [controlsOpen, setControlsOpen] = useState(false);
+    const [triggerHovered, setTriggerHovered] = useState(false);
+    const [focusTarget, setFocusTarget] = useState<'home' | 'settings' | 'roll'>('roll');
+
+    const popoverRef = useRef<HTMLDivElement | null>(null);
+    const triggerRef = useRef<HTMLButtonElement | null>(null);
+    const iconSvgRef = useRef<SVGSVGElement | null>(null);
 
     const activeFaces: DiceFaceMap = useMemo(() => {
       const base = facePreset === 'poker' ? DEFAULT_POKER_FACES : STANDARD_PIP_FACES;
@@ -329,6 +347,136 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
       };
     }, [stopMotion]);
 
+    // GSAP popover entrance and Macromedia clip rotation feedback
+    useEffect(() => {
+      if (iconSvgRef.current) {
+        gsap.to(iconSvgRef.current, {
+          rotation: controlsOpen ? 45 : 0,
+          scale: controlsOpen ? 1.08 : 1,
+          duration: 0.28,
+          ease: 'back.out(1.7)',
+        });
+      }
+
+      if (controlsOpen && popoverRef.current) {
+        gsap.fromTo(
+          popoverRef.current,
+          { xPercent: -50, opacity: 0, y: 12, scale: 0.94 },
+          { xPercent: -50, opacity: 1, y: 0, scale: 1, duration: 0.24, ease: 'power3.out' },
+        );
+      }
+    }, [controlsOpen]);
+
+    // Sync top Modern Flash HomeBtn selected state and Macromedia trigger sproing
+    useEffect(() => {
+      onHomeFocusChange?.(focusTarget === 'home');
+      if (triggerRef.current) {
+        if (focusTarget === 'settings') {
+          playSproingHover(triggerRef.current);
+        } else if (!triggerHovered) {
+          playSproingRest(triggerRef.current);
+        }
+      }
+    }, [focusTarget, onHomeFocusChange, triggerHovered]);
+
+    useEffect(() => {
+      return () => {
+        onHomeFocusChange?.(false);
+      };
+    }, [onHomeFocusChange]);
+
+    // Keyboard navigation: Roll die (initial) <- Macromedia settings <- Modern Flash (top)
+    useEffect(() => {
+      if (!showControls) {
+        return;
+      }
+
+      const handleKeyDown = (event: KeyboardEvent) => {
+        switch (event.key) {
+          case 'ArrowLeft':
+          case 'ArrowUp':
+          case 'Backspace': {
+            event.preventDefault();
+            if (controlsOpen) {
+              setControlsOpen(false);
+              setFocusTarget('settings');
+              return;
+            }
+            if (event.key === 'Backspace' && focusTarget === 'home') {
+              onComplete?.();
+              return;
+            }
+            setFocusTarget((prev) =>
+              prev === 'roll' ? 'settings' : prev === 'settings' ? 'home' : 'roll',
+            );
+            break;
+          }
+          case 'ArrowRight':
+          case 'ArrowDown': {
+            event.preventDefault();
+            if (controlsOpen) {
+              setControlsOpen(false);
+            }
+            setFocusTarget((prev) =>
+              prev === 'home' ? 'settings' : prev === 'settings' ? 'roll' : 'home',
+            );
+            break;
+          }
+          case 'Enter':
+          case ' ': {
+            event.preventDefault();
+            if (focusTarget === 'roll') {
+              setControlsOpen(false);
+              roll();
+            } else if (focusTarget === 'settings') {
+              setControlsOpen((prev) => !prev);
+            } else if (focusTarget === 'home') {
+              setControlsOpen(false);
+              onComplete?.();
+            }
+            break;
+          }
+          case 'Escape': {
+            event.preventDefault();
+            if (controlsOpen) {
+              setControlsOpen(false);
+            } else {
+              onComplete?.();
+            }
+            break;
+          }
+          default:
+            break;
+        }
+      };
+
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [controlsOpen, focusTarget, onComplete, roll, showControls]);
+
+    // Close popover on outside click
+    useEffect(() => {
+      if (!controlsOpen) {
+        return;
+      }
+
+      const handleOutsidePointerDown = (event: PointerEvent) => {
+        const target = event.target as Node | null;
+        if (
+          target &&
+          !popoverRef.current?.contains(target) &&
+          !triggerRef.current?.contains(target)
+        ) {
+          setControlsOpen(false);
+        }
+      };
+
+      window.addEventListener('pointerdown', handleOutsidePointerDown);
+      return () => {
+        window.removeEventListener('pointerdown', handleOutsidePointerDown);
+      };
+    }, [controlsOpen]);
+
     // Pointer drag-to-orbit handler
     const handlePointerDown = (event: React.PointerEvent<SVGSVGElement>) => {
       if (!interactive) {
@@ -372,6 +520,8 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
       }
     };
 
+    const cornerRatio = Math.max(0, Math.min(0.28, (cornerRadius / 12) * 0.14));
+
     const projectedFaces = useMemo(
       () =>
         projectCube({
@@ -384,8 +534,9 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
             cy: VIEWBOX_SIZE / 2 - 12,
           },
           offset: { x: 0, y: renderState.liftY, z: 0 },
+          cornerRatio,
         }),
-      [cameraDistance, focalLength, renderState],
+      [cameraDistance, cornerRatio, focalLength, renderState],
     );
 
     const frontFaceId = useMemo(
@@ -401,29 +552,24 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
       return `${mod}°`;
     };
 
-    const buttonBaseStyle: React.CSSProperties = {
+    const facePillStyle = (isFront: boolean): React.CSSProperties => ({
       minHeight: '36px',
-      padding: '6px 12px',
-      borderRadius: '6px',
-      border: '2px solid #2A2A2A',
-      background: '#FFFFFF',
-      color: '#0F172A',
-      fontSize: '12px',
-      fontWeight: 700,
-      cursor: 'pointer',
-      boxShadow: '2px 2px 0px 0px #2A2A2A',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-    };
-
-    const primaryButtonStyle: React.CSSProperties = {
-      ...buttonBaseStyle,
-      minHeight: '44px',
-      padding: '8px 18px',
-      background: '#15868F',
-      color: '#FFFFFF',
+      padding: '6px 8px',
+      borderRadius: appleTheme.radii.pill,
+      border: isFront
+        ? `1px solid ${appleTheme.palette.primary}`
+        : '1px solid rgba(255, 255, 255, 0.16)',
+      background: isFront
+        ? appleTheme.palette.primary
+        : appleTheme.palette.surfaceFrosted,
+      color: isFront ? appleTheme.palette.textPrimary : '#FFFFFF',
       fontSize: '13px',
-      boxShadow: '3px 3px 0px 0px #2A2A2A',
-    };
+      fontWeight: appleTheme.typography.weights.bold,
+      fontFamily: appleTheme.typography.fontFamily,
+      letterSpacing: '-0.01em',
+      cursor: 'pointer',
+      boxShadow: isFront ? appleTheme.shadows.insetBevel : 'none',
+    });
 
     return (
       <div
@@ -460,7 +606,7 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
           onPointerCancel={handlePointerUp}
           style={{
             maxWidth: '100%',
-            maxHeight: showControls ? '68%' : '100%',
+            maxHeight: '100%',
             touchAction: 'none',
             cursor: interactive ? 'grab' : 'default',
             overflow: 'visible',
@@ -483,7 +629,35 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
             fill="url(#pokerDiceFloorShadow)"
           />
 
-          {/* 3D projected cube faces (back-to-front painter's order) */}
+          {/* Shaded rounded core silhouette back-plate for 3D bevelled corners */}
+          {cornerRadius > 0 && (
+            <g>
+              {projectedFaces.map((face) => {
+                const faceValue: DiceFaceValue = activeFaces[face.id];
+                const baseHex =
+                  typeof faceValue === 'object' && faceValue.background
+                    ? faceValue.background
+                    : color;
+                const bevelFill = shadeHexColor(
+                  baseHex,
+                  Math.max(0.32, face.lightIntensity * 0.8),
+                );
+
+                return (
+                  <polygon
+                    key={`core-${face.id}`}
+                    points={face.pointsString}
+                    fill={bevelFill}
+                    stroke={bevelFill}
+                    strokeWidth={cornerRadius}
+                    strokeLinejoin="round"
+                  />
+                );
+              })}
+            </g>
+          )}
+
+          {/* 3D projected rounded cube faces (back-to-front painter's order) */}
           <g>
             {projectedFaces.map((face) => {
               const faceValue: DiceFaceValue = activeFaces[face.id];
@@ -495,11 +669,11 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
 
               return (
                 <g key={face.id}>
-                  <polygon
-                    points={face.pointsString}
+                  <path
+                    d={face.roundedPath}
                     fill={shadedFill}
-                    stroke={strokeColor}
-                    strokeWidth="3.5"
+                    stroke={strokeColor ?? shadedFill}
+                    strokeWidth={strokeColor ? 2.5 : 0.75}
                     strokeLinejoin="round"
                   />
                   <g transform={face.svgMatrix}>
@@ -517,127 +691,325 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
         </svg>
 
         {showControls && (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '8px',
-              maxWidth: '460px',
-              padding: '0 12px',
-            }}
-          >
-            {/* Primary roll & spin controls */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: '8px',
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => roll()}
-                style={primaryButtonStyle}
-              >
-                Roll Die
-              </button>
-              <button
-                type="button"
-                onClick={() => spinAxis('x', 90)}
-                style={buttonBaseStyle}
-              >
-                Spin X
-              </button>
-              <button
-                type="button"
-                onClick={() => spinAxis('y', 90)}
-                style={buttonBaseStyle}
-              >
-                Spin Y
-              </button>
-              <button
-                type="button"
-                onClick={() => spinAxis('z', 90)}
-                style={buttonBaseStyle}
-              >
-                Spin Z
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsAutoSpinning((prev) => !prev)}
+          <>
+            {/* Apple frosted-glass controls popover centred above the Macromedia trigger */}
+            {controlsOpen && (
+              <div
+                ref={popoverRef}
+                role="dialog"
+                aria-label="3D Poker Dice Controls"
                 style={{
-                  ...buttonBaseStyle,
-                  background: isAutoSpinning ? '#0F172A' : '#FFFFFF',
-                  color: isAutoSpinning ? '#FFFFFF' : '#0F172A',
+                  position: 'absolute',
+                  left: '50%',
+                  bottom: '92px',
+                  zIndex: 25,
+                  width: 'min(360px, calc(100vw - 32px))',
+                  padding: appleTheme.spacing.md,
+                  borderRadius: appleTheme.radii.lg,
+                  border: '1px solid rgba(255, 255, 255, 0.16)',
+                  background: 'rgba(29, 29, 31, 0.88)',
+                  backdropFilter: 'blur(24px)',
+                  WebkitBackdropFilter: 'blur(24px)',
+                  boxShadow: appleTheme.shadows.elevated,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  color: '#FFFFFF',
+                  fontFamily: appleTheme.typography.fontFamily,
                 }}
               >
-                {isAutoSpinning ? 'Stop Spin' : 'Auto Spin'}
-              </button>
-              {!faces && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFacePreset((prev) => (prev === 'poker' ? 'pips' : 'poker'))
-                  }
-                  style={buttonBaseStyle}
+                {/* Popover header */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '8px',
+                    paddingBottom: '10px',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                  }}
                 >
-                  {facePreset === 'poker' ? 'Use Pips (1-6)' : 'Use Poker (A-9)'}
-                </button>
-              )}
-            </div>
-
-            {/* Direct face targeting buttons */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: '6px',
-              }}
-            >
-              {ALL_FACE_IDS.map((faceId) => {
-                const val = activeFaces[faceId];
-                const label =
-                  typeof val === 'object' ? val.label ?? faceId : String(val);
-                const isFront = faceId === frontFaceId;
-
-                return (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="160 32 192 164"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d={MACROMEDIA_FLASH_PATH}
+                        fill={appleTheme.palette.primary}
+                        fillRule="nonzero"
+                      />
+                    </svg>
+                    <span
+                      style={{
+                        fontSize: appleTheme.typography.sizes.sm,
+                        fontWeight: appleTheme.typography.weights.bold,
+                        letterSpacing: '-0.015em',
+                      }}
+                    >
+                      3D Dice Controls
+                    </span>
+                  </div>
                   <button
-                    key={faceId}
                     type="button"
-                    onClick={() => spinTo(FACE_TARGET_ROTATIONS[faceId], 0.65)}
-                    aria-label={`Show ${faceId} face (${label})`}
+                    onClick={() => setControlsOpen(false)}
+                    aria-label="Close 3D Dice Controls"
                     style={{
-                      ...buttonBaseStyle,
-                      minHeight: '32px',
-                      padding: '4px 10px',
-                      fontSize: '11px',
-                      background: isFront ? '#15868F' : '#F8FAFC',
-                      color: isFront ? '#FFFFFF' : '#0F172A',
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: appleTheme.radii.pill,
+                      border: '1px solid rgba(255, 255, 255, 0.18)',
+                      background: appleTheme.palette.surfaceFrosted,
+                      color: '#FFFFFF',
+                      fontSize: '16px',
+                      fontWeight: appleTheme.typography.weights.semibold,
+                      lineHeight: 1,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
-                    {label}
+                    ×
                   </button>
-                );
-              })}
-            </div>
+                </div>
 
-            {/* Engine telemetry readout */}
+                {/* Primary roll & 3-axis spin controls */}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                  }}
+                >
+                  <AppleButton
+                    variant="primary"
+                    size="md"
+                    label="Roll"
+                    onClick={() => roll()}
+                    style={{ width: '100%' }}
+                  />
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      gap: '8px',
+                    }}
+                  >
+                    <AppleButton
+                      variant="secondary"
+                      size="sm"
+                      label="Spin X"
+                      onClick={() => spinAxis('x', 90)}
+                    />
+                    <AppleButton
+                      variant="secondary"
+                      size="sm"
+                      label="Spin Y"
+                      onClick={() => spinAxis('y', 90)}
+                    />
+                    <AppleButton
+                      variant="secondary"
+                      size="sm"
+                      label="Spin Z"
+                      onClick={() => spinAxis('z', 90)}
+                    />
+                  </div>
+                </div>
+
+                {/* Mode toggles */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: !faces ? 'repeat(2, 1fr)' : '1fr',
+                    gap: '8px',
+                  }}
+                >
+                  <AppleButton
+                    variant={isAutoSpinning ? 'primary' : 'secondary'}
+                    size="sm"
+                    label={isAutoSpinning ? 'Stop Spin' : 'Auto Spin'}
+                    onClick={() => setIsAutoSpinning((prev) => !prev)}
+                  />
+                  {!faces && (
+                    <AppleButton
+                      variant="secondary"
+                      size="sm"
+                      label={facePreset === 'poker' ? 'Pips (1-6)' : 'Poker (A-9)'}
+                      onClick={() =>
+                        setFacePreset((prev) => (prev === 'poker' ? 'pips' : 'poker'))
+                      }
+                    />
+                  )}
+                </div>
+
+                {/* Direct face targeting pill buttons */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(6, 1fr)',
+                    gap: '6px',
+                  }}
+                >
+                  {ALL_FACE_IDS.map((faceId) => {
+                    const val = activeFaces[faceId];
+                    const label =
+                      typeof val === 'object' ? val.label ?? faceId : String(val);
+                    const isFront = faceId === frontFaceId;
+
+                    return (
+                      <button
+                        key={faceId}
+                        type="button"
+                        onClick={() => spinTo(FACE_TARGET_ROTATIONS[faceId], 0.65)}
+                        aria-label={`Show ${faceId} face (${label})`}
+                        style={facePillStyle(isFront)}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Engine telemetry readout */}
+                <div
+                  style={{
+                    fontSize: '11px',
+                    fontFamily: appleTheme.typography.monoFontFamily,
+                    color: 'rgba(255, 255, 255, 0.65)',
+                    letterSpacing: '0.02em',
+                    textAlign: 'center',
+                  }}
+                >
+                  X: {normalizeDeg(renderState.rx)} | Y: {normalizeDeg(renderState.ry)} | Z:{' '}
+                  {normalizeDeg(renderState.rz)} | Face: {frontFaceId.toUpperCase()}
+                </div>
+              </div>
+            )}
+
+            {/* Centred Macromedia settings button with Roll button to its right */}
             <div
               style={{
-                fontSize: '11px',
-                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                color: '#94A3B8',
-                letterSpacing: '0.3px',
+                position: 'absolute',
+                left: '50%',
+                bottom: '24px',
+                transform: 'translateX(-50%)',
+                zIndex: 26,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
               }}
             >
-              X: {normalizeDeg(renderState.rx)} | Y: {normalizeDeg(renderState.ry)} | Z:{' '}
-              {normalizeDeg(renderState.rz)} | Face: {frontFaceId.toUpperCase()} (drag to
-              orbit, shift+drag for Z)
+              <button
+                ref={triggerRef}
+                type="button"
+                onClick={() => {
+                  setFocusTarget('settings');
+                  setControlsOpen((prev) => !prev);
+                }}
+                onMouseEnter={() => {
+                  setTriggerHovered(true);
+                  setFocusTarget('settings');
+                  if (triggerRef.current) {
+                    playSproingHover(triggerRef.current);
+                  }
+                }}
+                onMouseLeave={() => {
+                  setTriggerHovered(false);
+                  if (triggerRef.current && focusTarget !== 'settings') {
+                    playSproingRest(triggerRef.current);
+                  }
+                }}
+                onPointerDown={() => {
+                  if (triggerRef.current) {
+                    playSproingPress(triggerRef.current);
+                  }
+                }}
+                onPointerUp={() => {
+                  if (triggerRef.current) {
+                    playSproingRest(triggerRef.current);
+                  }
+                }}
+                aria-label={controlsOpen ? 'Hide 3D Dice Controls' : 'Show 3D Dice Controls'}
+                aria-expanded={controlsOpen}
+                aria-haspopup="dialog"
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  padding: '9px',
+                  borderRadius: appleTheme.radii.pill,
+                  border: `1px solid ${appleTheme.palette.border}`,
+                  background:
+                    controlsOpen || triggerHovered || focusTarget === 'settings'
+                      ? appleTheme.palette.secondary
+                      : appleTheme.palette.primary,
+                  boxShadow:
+                    controlsOpen || triggerHovered || focusTarget === 'settings'
+                      ? `${appleTheme.shadows.glow}, ${appleTheme.shadows.insetBevel}`
+                      : `${appleTheme.shadows.elevated}, ${appleTheme.shadows.insetBevel}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                }}
+              >
+                <svg
+                  ref={iconSvgRef}
+                  width="26"
+                  height="26"
+                  viewBox="160 32 192 164"
+                  aria-hidden="true"
+                  style={{ overflow: 'visible' }}
+                >
+                  <path
+                    d={MACROMEDIA_FLASH_PATH}
+                    fill={appleTheme.palette.textPrimary}
+                    fillRule="nonzero"
+                  />
+                </svg>
+              </button>
+
+              <AppleButton
+                variant="primary"
+                size="md"
+                label="Roll"
+                selected={focusTarget === 'roll'}
+                leadingIcon={
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <rect
+                      x="3"
+                      y="3"
+                      width="18"
+                      height="18"
+                      rx="4"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                    />
+                    <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                    <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" />
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                    <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" />
+                    <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor" />
+                  </svg>
+                }
+                onMouseEnter={() => setFocusTarget('roll')}
+                onClick={() => {
+                  setFocusTarget('roll');
+                  setControlsOpen(false);
+                  roll();
+                }}
+              />
             </div>
-          </div>
+          </>
         )}
       </div>
     );

@@ -14,6 +14,7 @@ import { PokerDice } from '../PokerDice';
 import { SoundFX } from '../SoundFX';
 import { SpriteMC } from '../Sprite';
 import { AgentText } from '../Typography/AgentText';
+import { HomeBtn } from '../../components/HomeBtn';
 import { Button as AppleButton } from '../../themes/apple';
 import type { GameMenuItem, GameMenuProps } from './types';
 
@@ -96,7 +97,7 @@ export function GameMenu({
       if (!soundEnabled) return;
       try {
         if (type === 'blip') {
-          playSound('arcade/beep-01', { volume: 0.35 });
+          playSound('ui/hover-01', { volume: 0.18 });
         } else if (type === 'accept') {
           playSound('pickups/coin-01', { volume: 0.45 });
         } else if (type === 'cancel') {
@@ -151,6 +152,7 @@ export function GameMenu({
   const [navStack, setNavStack] = useState<GameMenuItem[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [activeMovie, setActiveMovie] = useState<string | null>(null);
+  const [activeMovieHomeSelected, setActiveMovieHomeSelected] = useState<boolean>(false);
 
   // Active items at the current depth
   const currentItems =
@@ -257,6 +259,12 @@ export function GameMenu({
 
   // Keyboard navigation listener
   useEffect(() => {
+    const isPokerDiceActive =
+      activeMovie === 'poker-dice' || activeMovie === 'PokerDice';
+    if (isPokerDiceActive) {
+      return;
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowUp':
@@ -292,7 +300,7 @@ export function GameMenu({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleMoveUp, handleMoveDown, handleAccept, handleBack]);
+  }, [activeMovie, handleMoveUp, handleMoveDown, handleAccept, handleBack]);
 
   // Fast GSAP entrance tween on mount or depth change
   useEffect(() => {
@@ -317,7 +325,15 @@ export function GameMenu({
         return <Blackjack />;
       case 'poker-dice':
       case 'PokerDice':
-        return <PokerDice onComplete={() => setActiveMovie(null)} />;
+        return (
+          <PokerDice
+            onHomeFocusChange={setActiveMovieHomeSelected}
+            onComplete={() => {
+              setActiveMovieHomeSelected(false);
+              setActiveMovie(null);
+            }}
+          />
+        );
       case 'pingpong':
         return <PingpongStage />;
       case 'sound-fx':
@@ -418,19 +434,9 @@ export function GameMenu({
                 justifyContent: 'center',
               }}
             >
-              <AppleButton
+              <HomeBtn
                 size="fat"
-                label="Modern Flash"
-                leadingIcon={
-                  <LightningBolt
-                    width="18px"
-                    height="30px"
-                    fillColor="#000000"
-                    frontColor="#FFFFFF"
-                    backColor="#111827"
-                    strokeColor="#000000"
-                  />
-                }
+                selected={activeMovieHomeSelected}
                 onClick={handleBack}
                 style={{ width: '100%', maxWidth: '400px' }}
               />
@@ -473,20 +479,10 @@ export function GameMenu({
               }}
             >
               {navStack.length > 0 && (
-                <AppleButton
+                <HomeBtn
                   key="nav-back-button"
                   label="Modern Flash"
                   size="fat"
-                  leadingIcon={
-                    <LightningBolt
-                      width="18px"
-                      height="30px"
-                      fillColor="#000000"
-                      frontColor="#FFFFFF"
-                      backColor="#111827"
-                      strokeColor="#000000"
-                    />
-                  }
                   onClick={handleBack}
                   style={{ width: '100%', maxWidth: '400px' }}
                 />
@@ -496,21 +492,11 @@ export function GameMenu({
 
                 if (item.id === 'flash-logo' || item.id === 'flash-home') {
                   return (
-                    <AppleButton
+                    <HomeBtn
                       key={item.id}
                       label={item.label || 'Modern Flash'}
                       size="fat"
                       selected={isSelected}
-                      leadingIcon={
-                        <LightningBolt
-                          width="18px"
-                          height="30px"
-                          fillColor="#000000"
-                          frontColor={isSelected ? '#FCFF20' : '#FFFFFF'}
-                          backColor="#111827"
-                          strokeColor="#000000"
-                        />
-                      }
                       onClick={() => {
                         setSelectedIndex(idx);
                         activateItem(item);

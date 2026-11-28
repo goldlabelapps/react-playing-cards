@@ -6,4 +6,5 @@ export * from './ActionScript';
 export * from './PromptEngine';
 export * from './Sound';
 export * from './themes';
+export * from './components';
 export { mount, autoMount } from './bundle-entry';

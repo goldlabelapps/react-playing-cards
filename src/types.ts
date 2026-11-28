@@ -80,6 +80,7 @@ export type { AgentTextProps } from './MovieClips/Typography';
 export type { GameMenuProps, GameMenuItem } from './MovieClips/GameMenu';
 export type { PokerDiceProps, PokerDiceFace } from './MovieClips/PokerDice';
 export type { SoundFXProps } from './MovieClips/SoundFX';
+export type { HomeBtnProps } from './components/HomeBtn';
 
 /**
  * Props for the `<Blackjack />` MovieClip component.

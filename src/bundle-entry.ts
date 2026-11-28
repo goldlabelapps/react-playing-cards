@@ -9,6 +9,7 @@ import { FlashStory } from './MovieClips/FlashStory';
 import { GameMenu } from './MovieClips/GameMenu';
 import { PokerDice } from './MovieClips/PokerDice';
 import { SoundFX } from './MovieClips/SoundFX';
+import { HomeBtn } from './components/HomeBtn';
 import { soundManager, FlashSound, playSound, stopAllSounds, SOUND_MANIFEST, SOUND_CATALOG } from './Sound';
 import { themes, getTheme, appleTheme, AppleButton } from './themes';
 import type { MovieName, PromptScene } from './types';
@@ -90,6 +91,7 @@ if (typeof window !== 'undefined') {
     GameMenu,
     PokerDice,
     SoundFX,
+    HomeBtn,
     parsePrompt,
     actionScripts,
     registerActionScript,
@@ -117,6 +119,7 @@ export {
   GameMenu,
   PokerDice,
   SoundFX,
+  HomeBtn,
   parsePrompt,
   actionScripts,
   registerActionScript,

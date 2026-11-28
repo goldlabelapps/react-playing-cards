@@ -168,6 +168,54 @@ export interface ProjectCubeOptions {
   camera?: Camera3D;
   lightDir?: Vec3;
   offset?: Vec3;
+  cornerRatio?: number;
+}
+
+function lerpVec2(a: Vec2, b: Vec2, t: number): Vec2 {
+  return {
+    x: a.x + (b.x - a.x) * t,
+    y: a.y + (b.y - a.y) * t,
+  };
+}
+
+/**
+ * Builds an SVG path for a projected 4-corner quad with quadratic-Bezier
+ * rounded corners pulled back along each edge by cornerRatio.
+ */
+export function buildRoundedQuadPath(
+  corners: [Vec2, Vec2, Vec2, Vec2],
+  cornerRatio = 0.14,
+): string {
+  const ratio = Math.max(0, Math.min(0.35, cornerRatio));
+  if (ratio === 0) {
+    const [c0, c1, c2, c3] = corners;
+    return `M${c0.x.toFixed(2)},${c0.y.toFixed(2)} L${c1.x.toFixed(2)},${c1.y.toFixed(2)} L${c2.x.toFixed(2)},${c2.y.toFixed(2)} L${c3.x.toFixed(2)},${c3.y.toFixed(2)} Z`;
+  }
+
+  const pts = corners.map((curr, i) => {
+    const prev = corners[(i + 3) % 4];
+    const next = corners[(i + 1) % 4];
+    return {
+      curr,
+      inPt: lerpVec2(curr, prev, ratio),
+      outPt: lerpVec2(curr, next, ratio),
+    };
+  });
+
+  const parts: string[] = [
+    `M${pts[0].outPt.x.toFixed(2)},${pts[0].outPt.y.toFixed(2)}`,
+  ];
+
+  for (let i = 1; i <= 4; i++) {
+    const target = pts[i % 4];
+    parts.push(`L${target.inPt.x.toFixed(2)},${target.inPt.y.toFixed(2)}`);
+    parts.push(
+      `Q${target.curr.x.toFixed(2)},${target.curr.y.toFixed(2)} ${target.outPt.x.toFixed(2)},${target.outPt.y.toFixed(2)}`,
+    );
+  }
+
+  parts.push('Z');
+  return parts.join(' ');
 }
 
 /**
@@ -180,6 +228,7 @@ export function projectCube({
   camera = DEFAULT_CAMERA,
   lightDir = DEFAULT_LIGHT_DIR,
   offset = { x: 0, y: 0, z: 0 },
+  cornerRatio = 0.14,
 }: ProjectCubeOptions): ProjectedFace[] {
   const cameraPos: Vec3 = { x: 0, y: 0, z: -camera.distance };
   const projectedFaces: ProjectedFace[] = [];
@@ -228,6 +277,8 @@ export function projectCube({
 
     const svgMatrix = `matrix(${a.toFixed(4)}, ${b.toFixed(4)}, ${c.toFixed(4)}, ${d.toFixed(4)}, ${e.toFixed(2)}, ${f.toFixed(2)})`;
     const pointsString = `${tl.x.toFixed(2)},${tl.y.toFixed(2)} ${tr.x.toFixed(2)},${tr.y.toFixed(2)} ${br.x.toFixed(2)},${br.y.toFixed(2)} ${bl.x.toFixed(2)},${bl.y.toFixed(2)}`;
+    const corners: [Vec2, Vec2, Vec2, Vec2] = [tl, tr, br, bl];
+    const roundedPath = buildRoundedQuadPath(corners, cornerRatio);
 
     // Directional diffuse lighting clamped between ambient floor and full key light
     const rawDot = dotVec3(normal, lightDir);
@@ -235,8 +286,9 @@ export function projectCube({
 
     projectedFaces.push({
       id: face.id,
-      corners: [tl, tr, br, bl],
+      corners,
       pointsString,
+      roundedPath,
       center: center2d,
       depth: worldCenter.z,
       normal,
