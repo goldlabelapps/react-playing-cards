@@ -218,6 +218,125 @@ export function buildRoundedQuadPath(
   return parts.join(' ');
 }
 
+export interface CornerBevelPatch {
+  key: string;
+  path: string;
+  lightIntensity: number;
+  primaryFaceId: CubeFaceId;
+}
+
+function distSqVec2(a: Vec2, b: Vec2): number {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return dx * dx + dy * dy;
+}
+
+/**
+ * Builds exact SVG bevel patches for shared cube vertices (2-face silhouette
+ * corners and 3-face interior junctions) so rounded faces join cleanly without
+ * protruding square back-plates.
+ */
+export function buildCornerBevelPaths(
+  faces: readonly ProjectedFace[],
+  cornerRatio = 0.14,
+): CornerBevelPatch[] {
+  const ratio = Math.max(0, Math.min(0.35, cornerRatio));
+  if (ratio === 0 || faces.length < 2) {
+    return [];
+  }
+
+  type CornerEntry = {
+    face: ProjectedFace;
+    curr: Vec2;
+    inPt: Vec2;
+    outPt: Vec2;
+  };
+
+  const vertexGroups = new Map<string, CornerEntry[]>();
+
+  for (const face of faces) {
+    for (let i = 0; i < 4; i++) {
+      const curr = face.corners[i];
+      const prev = face.corners[(i + 3) % 4];
+      const next = face.corners[(i + 1) % 4];
+      const key = `${Math.round(curr.x * 10)},${Math.round(curr.y * 10)}`;
+      const entry: CornerEntry = {
+        face,
+        curr,
+        inPt: lerpVec2(curr, prev, ratio),
+        outPt: lerpVec2(curr, next, ratio),
+      };
+      const existing = vertexGroups.get(key);
+      if (existing) {
+        existing.push(entry);
+      } else {
+        vertexGroups.set(key, [entry]);
+      }
+    }
+  }
+
+  const patches: CornerBevelPatch[] = [];
+
+  for (const [key, group] of vertexGroups.entries()) {
+    if (group.length === 2) {
+      const [a, b] = group;
+      const aPts = [a.inPt, a.outPt];
+      const bPts = [b.inPt, b.outPt];
+      let bestAi = 0;
+      let bestBi = 0;
+      let bestD = Infinity;
+
+      for (let ai = 0; ai < 2; ai++) {
+        for (let bi = 0; bi < 2; bi++) {
+          const d = distSqVec2(aPts[ai], bPts[bi]);
+          if (d < bestD) {
+            bestD = d;
+            bestAi = ai;
+            bestBi = bi;
+          }
+        }
+      }
+
+      const pShared = aPts[bestAi];
+      const pOuterA = aPts[1 - bestAi];
+      const pOuterB = bPts[1 - bestBi];
+      const v = a.curr;
+
+      patches.push({
+        key: `bevel-2-${key}`,
+        path: `M${pOuterA.x.toFixed(2)},${pOuterA.y.toFixed(2)} Q${v.x.toFixed(2)},${v.y.toFixed(2)} ${pOuterB.x.toFixed(2)},${pOuterB.y.toFixed(2)} L${pShared.x.toFixed(2)},${pShared.y.toFixed(2)} Z`,
+        lightIntensity: (a.face.lightIntensity + b.face.lightIntensity) / 2,
+        primaryFaceId: b.face.id,
+      });
+    } else if (group.length >= 3) {
+      const uniquePts: Vec2[] = [];
+      for (const entry of group) {
+        for (const pt of [entry.inPt, entry.outPt]) {
+          if (!uniquePts.some((u) => distSqVec2(u, pt) < 1)) {
+            uniquePts.push(pt);
+          }
+        }
+      }
+
+      if (uniquePts.length >= 3) {
+        const [p0, p1, p2] = uniquePts;
+        const avgLight =
+          group.reduce((sum, item) => sum + item.face.lightIntensity, 0) /
+          group.length;
+
+        patches.push({
+          key: `bevel-3-${key}`,
+          path: `M${p0.x.toFixed(2)},${p0.y.toFixed(2)} L${p1.x.toFixed(2)},${p1.y.toFixed(2)} L${p2.x.toFixed(2)},${p2.y.toFixed(2)} Z`,
+          lightIntensity: avgLight,
+          primaryFaceId: group[group.length - 1].face.id,
+        });
+      }
+    }
+  }
+
+  return patches;
+}
+
 /**
  * Projects all 6 cube faces, performs true perspective back-face culling,
  * calculates directional lighting, and sorts visible faces back-to-front.
@@ -280,9 +399,9 @@ export function projectCube({
     const corners: [Vec2, Vec2, Vec2, Vec2] = [tl, tr, br, bl];
     const roundedPath = buildRoundedQuadPath(corners, cornerRatio);
 
-    // Directional diffuse lighting clamped between ambient floor and full key light
+    // Directional diffuse lighting kept bright so white faces stay crisp while preserving 3D plane separation
     const rawDot = dotVec3(normal, lightDir);
-    const lightIntensity = Math.max(0.45, Math.min(1, 0.58 + rawDot * 0.42));
+    const lightIntensity = Math.max(0.84, Math.min(1, 0.9 + rawDot * 0.14));
 
     projectedFaces.push({
       id: face.id,

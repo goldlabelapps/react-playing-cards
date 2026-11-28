@@ -24,8 +24,8 @@ export interface GameMenuProps {
   items?: GameMenuItem[];
   /** Navigation callback for external routing. */
   onNavigate?: (path: string) => void;
-  /** Callback triggered when a MovieClip demo is selected. */
-  onSelectMovie?: (movie: string) => void;
+  /** Callback triggered when a MovieClip demo is selected. Return true to handle navigation externally. */
+  onSelectMovie?: (movie: string) => boolean | void;
   /** Stage width constraint. Default: '100%'. */
   width?: string | number;
   /** Stage height constraint. Default: '100%'. */

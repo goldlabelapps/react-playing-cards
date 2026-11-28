@@ -178,8 +178,8 @@ export function GameMenu({
 
       // If item launches a movie demo
       if (item.movie) {
-        if (onSelectMovie) {
-          onSelectMovie(item.movie);
+        if (onSelectMovie && onSelectMovie(item.movie) === true) {
+          return;
         }
         setActiveMovie(item.movie);
         return;
@@ -327,6 +327,7 @@ export function GameMenu({
       case 'PokerDice':
         return (
           <PokerDice
+            style={{ paddingTop: '88px' }}
             onHomeFocusChange={setActiveMovieHomeSelected}
             onComplete={() => {
               setActiveMovieHomeSelected(false);
@@ -383,7 +384,9 @@ export function GameMenu({
         flexDirection: 'column',
         justifyContent: 'space-between',
         padding: 'clamp(12px, 2vw, 24px)',
-        paddingBottom: 'calc(clamp(12px, 2vw, 24px) + 84px)',
+        paddingBottom: activeMovie
+          ? 'clamp(12px, 2vw, 24px)'
+          : 'calc(clamp(12px, 2vw, 24px) + 84px)',
         boxSizing: 'border-box',
         color: '#f8fafc',
         fontFamily:
@@ -438,7 +441,7 @@ export function GameMenu({
                 size="fat"
                 selected={activeMovieHomeSelected}
                 onClick={handleBack}
-                style={{ width: '100%', maxWidth: '400px' }}
+                style={{ width: 'calc(100% - 16px)', maxWidth: '400px', margin: '8px' }}
               />
             </div>
 
@@ -475,7 +478,7 @@ export function GameMenu({
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                gap: 12,
+                gap: 6,
               }}
             >
               {navStack.length > 0 && (
@@ -484,7 +487,7 @@ export function GameMenu({
                   label="Modern Flash"
                   size="fat"
                   onClick={handleBack}
-                  style={{ width: '100%', maxWidth: '400px' }}
+                  style={{ width: 'calc(100% - 16px)', maxWidth: '400px', margin: '4px 8px' }}
                 />
               )}
               {currentItems.map((item, idx) => {
@@ -505,7 +508,7 @@ export function GameMenu({
                         setSelectedIndex(idx);
                         triggerSound('blip');
                       }}
-                      style={{ width: '100%', maxWidth: '400px' }}
+                      style={{ width: 'calc(100% - 16px)', maxWidth: '400px', margin: '4px 8px' }}
                     />
                   );
                 }
@@ -524,7 +527,7 @@ export function GameMenu({
                       setSelectedIndex(idx);
                       triggerSound('blip');
                     }}
-                    style={{ width: '100%', maxWidth: '400px' }}
+                    style={{ width: 'calc(100% - 16px)', maxWidth: '400px', margin: '4px 8px' }}
                   />
                 );
               })}

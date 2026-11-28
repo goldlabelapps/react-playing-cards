@@ -17,6 +17,7 @@ import {
   playSproingRest,
 } from '../../themes/apple';
 import {
+  buildCornerBevelPaths,
   DEFAULT_CAMERA,
   FACE_TARGET_ROTATIONS,
   getFrontMostFace,
@@ -101,7 +102,7 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
       height = '100%',
       className,
       style,
-      color = '#F8FAFC',
+      color = '#FFFFFF',
       pipColor,
       strokeColor,
       cornerRadius = 12,
@@ -124,6 +125,7 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
     const [isAutoSpinning, setIsAutoSpinning] = useState(autoSpin);
     const [controlsOpen, setControlsOpen] = useState(false);
     const [triggerHovered, setTriggerHovered] = useState(false);
+    const [rollHovered, setRollHovered] = useState(false);
     const [focusTarget, setFocusTarget] = useState<'home' | 'settings' | 'roll'>('roll');
 
     const popoverRef = useRef<HTMLDivElement | null>(null);
@@ -539,6 +541,11 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
       [cameraDistance, cornerRatio, focalLength, renderState],
     );
 
+    const cornerBevels = useMemo(
+      () => buildCornerBevelPaths(projectedFaces, cornerRatio),
+      [projectedFaces, cornerRatio],
+    );
+
     const frontFaceId = useMemo(
       () => getFrontMostFace(renderState),
       [renderState],
@@ -582,36 +589,46 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: '12px',
+          justifyContent: 'space-between',
           position: 'relative',
+          boxSizing: 'border-box',
           userSelect: 'none',
           overflow: 'hidden',
           ...style,
         }}
       >
-        <svg
-          width={size}
-          height={size}
-          viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
-          role="img"
-          aria-label={`3D die showing ${String(
-            typeof activeFaces[frontFaceId] === 'object'
-              ? activeFaces[frontFaceId].label ?? frontFaceId
-              : activeFaces[frontFaceId],
-          )}`}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
+        <div
           style={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-            touchAction: 'none',
-            cursor: interactive ? 'grab' : 'default',
-            overflow: 'visible',
+            flex: 1,
+            minHeight: 0,
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
+          <svg
+            width={size}
+            height={size}
+            viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
+            role="img"
+            aria-label={`3D die showing ${String(
+              typeof activeFaces[frontFaceId] === 'object'
+                ? activeFaces[frontFaceId].label ?? frontFaceId
+                : activeFaces[frontFaceId],
+            )}`}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              touchAction: 'none',
+              cursor: interactive ? 'grab' : 'default',
+              overflow: 'visible',
+            }}
+          >
           <defs>
             <radialGradient id="pokerDiceFloorShadow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#0F172A" stopOpacity={shadowOpacity} />
@@ -629,27 +646,27 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
             fill="url(#pokerDiceFloorShadow)"
           />
 
-          {/* Shaded rounded core silhouette back-plate for 3D bevelled corners */}
-          {cornerRadius > 0 && (
+          {/* Exact corner bevel patches for shared 2-face and 3-face junctions */}
+          {cornerBevels.length > 0 && (
             <g>
-              {projectedFaces.map((face) => {
-                const faceValue: DiceFaceValue = activeFaces[face.id];
+              {cornerBevels.map((patch) => {
+                const faceValue: DiceFaceValue = activeFaces[patch.primaryFaceId];
                 const baseHex =
                   typeof faceValue === 'object' && faceValue.background
                     ? faceValue.background
                     : color;
                 const bevelFill = shadeHexColor(
                   baseHex,
-                  Math.max(0.32, face.lightIntensity * 0.8),
+                  Math.max(0.38, patch.lightIntensity * 0.92),
                 );
 
                 return (
-                  <polygon
-                    key={`core-${face.id}`}
-                    points={face.pointsString}
+                  <path
+                    key={patch.key}
+                    d={patch.path}
                     fill={bevelFill}
                     stroke={bevelFill}
-                    strokeWidth={cornerRadius}
+                    strokeWidth={0.75}
                     strokeLinejoin="round"
                   />
                 );
@@ -689,6 +706,7 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
             })}
           </g>
         </svg>
+        </div>
 
         {showControls && (
           <>
@@ -701,13 +719,13 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
                 style={{
                   position: 'absolute',
                   left: '50%',
-                  bottom: '92px',
+                  bottom: '108px',
                   zIndex: 25,
                   width: 'min(360px, calc(100vw - 32px))',
                   padding: appleTheme.spacing.md,
                   borderRadius: appleTheme.radii.lg,
                   border: '1px solid rgba(255, 255, 255, 0.16)',
-                  background: 'rgba(29, 29, 31, 0.88)',
+                  background: 'rgba(29, 29, 31, 0.5)',
                   backdropFilter: 'blur(24px)',
                   WebkitBackdropFilter: 'blur(24px)',
                   boxShadow: appleTheme.shadows.elevated,
@@ -776,47 +794,32 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
                   </button>
                 </div>
 
-                {/* Primary roll & 3-axis spin controls */}
+                {/* 3-axis spin controls */}
                 <div
                   style={{
-                    display: 'flex',
-                    flexDirection: 'column',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
                     gap: '8px',
                   }}
                 >
                   <AppleButton
-                    variant="primary"
-                    size="md"
-                    label="Roll"
-                    onClick={() => roll()}
-                    style={{ width: '100%' }}
+                    variant="secondary"
+                    size="sm"
+                    label="Spin X"
+                    onClick={() => spinAxis('x', 90)}
                   />
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(3, 1fr)',
-                      gap: '8px',
-                    }}
-                  >
-                    <AppleButton
-                      variant="secondary"
-                      size="sm"
-                      label="Spin X"
-                      onClick={() => spinAxis('x', 90)}
-                    />
-                    <AppleButton
-                      variant="secondary"
-                      size="sm"
-                      label="Spin Y"
-                      onClick={() => spinAxis('y', 90)}
-                    />
-                    <AppleButton
-                      variant="secondary"
-                      size="sm"
-                      label="Spin Z"
-                      onClick={() => spinAxis('z', 90)}
-                    />
-                  </div>
+                  <AppleButton
+                    variant="secondary"
+                    size="sm"
+                    label="Spin Y"
+                    onClick={() => spinAxis('y', 90)}
+                  />
+                  <AppleButton
+                    variant="secondary"
+                    size="sm"
+                    label="Spin Z"
+                    onClick={() => spinAxis('z', 90)}
+                  />
                 </div>
 
                 {/* Mode toggles */}
@@ -889,17 +892,16 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
               </div>
             )}
 
-            {/* Centred Macromedia settings button with Roll button to its right */}
+            {/* Centred Macromedia settings button with Roll button to its right, raised above the bottom edge */}
             <div
               style={{
-                position: 'absolute',
-                left: '50%',
-                bottom: '24px',
-                transform: 'translateX(-50%)',
+                flexShrink: 0,
                 zIndex: 26,
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '12px',
+                paddingBottom: '40px',
               }}
             >
               <button
@@ -940,20 +942,21 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
                   height: '48px',
                   padding: '9px',
                   borderRadius: appleTheme.radii.pill,
-                  border: `1px solid ${appleTheme.palette.border}`,
+                  border:
+                    controlsOpen || triggerHovered || focusTarget === 'settings'
+                      ? '1.5px solid rgba(255, 255, 255, 0.7)'
+                      : '1.5px solid rgba(255, 255, 255, 0.28)',
                   background:
                     controlsOpen || triggerHovered || focusTarget === 'settings'
-                      ? appleTheme.palette.secondary
-                      : appleTheme.palette.primary,
-                  boxShadow:
-                    controlsOpen || triggerHovered || focusTarget === 'settings'
-                      ? `${appleTheme.shadows.glow}, ${appleTheme.shadows.insetBevel}`
-                      : `${appleTheme.shadows.elevated}, ${appleTheme.shadows.insetBevel}`,
+                      ? 'rgba(255, 255, 255, 0.08)'
+                      : 'transparent',
+                  boxShadow: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
                   flexShrink: 0,
+                  transition: 'background 0.16s ease, border-color 0.16s ease',
                 }}
               >
                 <svg
@@ -966,17 +969,36 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
                 >
                   <path
                     d={MACROMEDIA_FLASH_PATH}
-                    fill={appleTheme.palette.textPrimary}
+                    fill={
+                      controlsOpen || triggerHovered || focusTarget === 'settings'
+                        ? 'rgba(255, 255, 255, 0.92)'
+                        : 'rgba(255, 255, 255, 0.65)'
+                    }
                     fillRule="nonzero"
                   />
                 </svg>
               </button>
 
               <AppleButton
-                variant="primary"
+                variant="outline"
                 size="md"
                 label="Roll"
                 selected={focusTarget === 'roll'}
+                style={{
+                  background:
+                    rollHovered || focusTarget === 'roll'
+                      ? 'rgba(255, 255, 255, 0.08)'
+                      : 'transparent',
+                  border:
+                    rollHovered || focusTarget === 'roll'
+                      ? '1.5px solid rgba(255, 255, 255, 0.7)'
+                      : '1.5px solid rgba(255, 255, 255, 0.28)',
+                  color:
+                    rollHovered || focusTarget === 'roll'
+                      ? 'rgba(255, 255, 255, 0.92)'
+                      : 'rgba(255, 255, 255, 0.65)',
+                  boxShadow: 'none',
+                }}
                 leadingIcon={
                   <svg
                     width="20"
@@ -1001,7 +1023,11 @@ export const PokerDice = forwardRef<PokerDiceHandle, PokerDiceProps>(
                     <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor" />
                   </svg>
                 }
-                onMouseEnter={() => setFocusTarget('roll')}
+                onMouseEnter={() => {
+                  setRollHovered(true);
+                  setFocusTarget('roll');
+                }}
+                onMouseLeave={() => setRollHovered(false)}
                 onClick={() => {
                   setFocusTarget('roll');
                   setControlsOpen(false);

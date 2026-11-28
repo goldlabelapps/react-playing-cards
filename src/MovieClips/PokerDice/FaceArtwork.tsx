@@ -213,19 +213,6 @@ export function FaceArtwork({
 
   return (
     <g>
-      {/* Subtle playing-card inner border */}
-      <rect
-        x="6"
-        y="6"
-        width="88"
-        height="88"
-        rx="8"
-        fill="none"
-        stroke={ink}
-        strokeOpacity="0.16"
-        strokeWidth="1.5"
-      />
-
       {/* Top-left rank & suit corner index */}
       <Rank card={cardData} x={10.5} y={10.5} width={10.5} height={16.5} />
       <SuitGlyph suit={meta.suit} color={ink} x={10.75} y={28.5} size={10} />
@@ -249,8 +236,8 @@ export function FaceArtwork({
             width="50"
             height="72"
             rx="4"
-            fill="#F7F6F1"
-            fillOpacity="0.55"
+            fill="#FFFFFF"
+            fillOpacity="0.65"
             stroke={ink}
             strokeOpacity="0.22"
             strokeWidth="1"

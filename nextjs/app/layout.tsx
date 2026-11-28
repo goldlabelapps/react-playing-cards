@@ -1,10 +1,57 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '../lib/movies';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://modern-flash.pro'),
-  title: 'Modern Flash for Next.js',
-  description: 'SVG Flash animation engine and ActionScript runtime for Next.js and React.',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    'Modern Flash',
+    'Next.js',
+    'React',
+    'SVG animation',
+    'GSAP',
+    'ActionScript',
+    'MovieClip',
+    'vector graphics',
+  ],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_GB',
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: '/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'Modern Flash logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: ['/icon-512.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -22,7 +69,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Modern Flash',
+    title: SITE_NAME,
   },
 };
 
@@ -67,6 +114,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }
           .skip-link:focus {
             top: 16px;
+          }
+          .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
           }
         `}</style>
       </head>

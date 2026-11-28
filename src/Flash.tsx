@@ -32,6 +32,7 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
     style,
     onComplete,
     onNavigate,
+    onSelectMovie,
   },
   ref,
 ) {
@@ -254,7 +255,7 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
         return <SoundFX />;
       case 'game-menu':
       case 'GameMenu':
-        return <GameMenu onNavigate={onNavigate} />;
+        return <GameMenu onNavigate={onNavigate} onSelectMovie={onSelectMovie} />;
       case 'flash-story':
       case 'FlashStory':
         return (
@@ -264,6 +265,7 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
             speed={speed}
             onComplete={onComplete}
             onNavigate={onNavigate}
+            onSelectMovie={onSelectMovie}
           />
         );
       default:
@@ -274,6 +276,7 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
             speed={speed}
             onComplete={onComplete}
             onNavigate={onNavigate}
+            onSelectMovie={onSelectMovie}
           />
         );
     }

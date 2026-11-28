@@ -42,6 +42,8 @@ export interface FlashStoryProps {
   showGameMenu?: boolean;
   /** Navigation callback passed down to GameMenu. */
   onNavigate?: (path: string) => void;
+  /** Callback triggered when a MovieClip is selected from GameMenu. Return true to handle routing externally. */
+  onSelectMovie?: (movie: string) => boolean | void;
 }
 
 export const DEFAULT_STORY_MESSAGES: string[] = [
@@ -73,6 +75,7 @@ export function FlashStory({
   onComplete,
   showGameMenu = true,
   onNavigate,
+  onSelectMovie,
 }: FlashStoryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -186,6 +189,7 @@ export function FlashStory({
     return (
       <GameMenu
         onNavigate={onNavigate}
+        onSelectMovie={onSelectMovie}
         onReplayStory={handleReplayStory}
         width={width}
         height={height}

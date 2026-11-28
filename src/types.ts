@@ -150,6 +150,8 @@ export interface FlashProps {
   onComplete?: () => void;
   /** Navigation callback for external routing. */
   onNavigate?: (path: string) => void;
+  /** Callback triggered when a MovieClip is selected from GameMenu. Return true to handle routing externally. */
+  onSelectMovie?: (movie: string) => boolean | void;
 }
 
 /**
