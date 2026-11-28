@@ -360,6 +360,7 @@ export function GameMenu({
         flexDirection: 'column',
         justifyContent: 'space-between',
         padding: 'clamp(12px, 2vw, 24px)',
+        paddingBottom: 'calc(clamp(12px, 2vw, 24px) + 84px)',
         boxSizing: 'border-box',
         color: '#f8fafc',
         fontFamily:
