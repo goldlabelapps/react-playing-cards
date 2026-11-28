@@ -54,11 +54,15 @@ export type BuiltinMovie =
   | 'sprite-demo'
   | 'playing-cards'
   | 'blackjack'
+  | 'poker-dice'
+  | 'PokerDice'
   | 'corkscrew'
   | 'twist'
   | 'flipInX'
   | 'deal'
   | 'lightning'
+  | 'starwars'
+  | 'StarWars'
   | 'macromedia'
   | 'flash-story'
   | 'FlashStory'
@@ -67,9 +71,11 @@ export type BuiltinMovie =
   | 'game-menu'
   | 'GameMenu';
 
+export type { StarWarsProps, StarWarsProps as MacromediaProps } from './MovieClips/StarWars';
 export type { FlashStoryProps } from './MovieClips/FlashStory';
 export type { AgentTextProps } from './MovieClips/Typography';
 export type { GameMenuProps, GameMenuItem } from './MovieClips/GameMenu';
+export type { PokerDiceProps, PokerDiceFace } from './MovieClips/PokerDice';
 
 /**
  * Props for the `<Blackjack />` MovieClip component.
@@ -146,7 +152,7 @@ export interface FlashProps {
  */
 export interface PromptSceneElement {
   id: string;
-  type: 'card' | 'ball' | 'logo' | 'title' | 'lightning' | 'sprite' | 'macromedia' | 'flash-story' | 'story';
+  type: 'card' | 'ball' | 'logo' | 'title' | 'lightning' | 'sprite' | 'starwars' | 'StarWars' | 'macromedia' | 'flash-story' | 'story';
   x?: number;
   y?: number;
   scale?: number;
@@ -187,6 +193,9 @@ export interface LogoProps {
   style?: CSSProperties;
 }
 
+export * from './themes/types';
+
+
 /**
  * Props for the `<Pingpongball />` MovieClip component.
  */
@@ -198,3 +207,6 @@ export interface PingpongballProps {
   className?: string;
   style?: CSSProperties;
 }
+
+export * from './themes/types';
+

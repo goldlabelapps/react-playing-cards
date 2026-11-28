@@ -7,7 +7,7 @@ import twistActionScript from './twist';
 import flipInXActionScript from './flip';
 import dealActionScript from './deal';
 import lightningActionScript from './lightning';
-import macromediaActionScript from './macromedia';
+import starWarsActionScript from './starWars';
 import flashStoryActionScript from './flashStory';
 import agentTextActionScript from './agentText';
 import { blackjackActionScript } from '../MovieClips/Blackjack';
@@ -32,7 +32,7 @@ export { flipInXActionScript, flipInX } from './flip';
 export type { FlipInXOptions } from './flip';
 export { dealActionScript } from './deal';
 export { lightningActionScript } from './lightning';
-export { macromediaActionScript } from './macromedia';
+export { starWarsActionScript, macromediaActionScript } from './starWars';
 export { flashStoryActionScript } from './flashStory';
 export { agentTextActionScript } from './agentText';
 
@@ -51,7 +51,9 @@ const builtinRegistry: Record<string, ActionScriptFactory> = {
   flipInX: flipInXActionScript as unknown as ActionScriptFactory,
   deal: dealActionScript,
   lightning: lightningActionScript,
-  macromedia: macromediaActionScript,
+  starwars: starWarsActionScript,
+  StarWars: starWarsActionScript,
+  macromedia: starWarsActionScript,
   'flash-story': flashStoryActionScript,
   FlashStory: flashStoryActionScript,
   'agent-text': agentTextActionScript,

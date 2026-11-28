@@ -222,7 +222,7 @@ final class SettingsController
                                 </tr>
                                 <tr>
                                     <td><strong><?php esc_html_e('Supported Movies', 'modern-flash'); ?></strong></td>
-                                    <td><code>FlashStory</code>, <code>logo</code>, <code>starfighter</code>, <code>cardFlip</code>, <code>hudMacromedia</code></td>
+                                    <td><code>FlashStory</code>, <code>logo</code>, <code>starfighter</code>, <code>cardFlip</code>, <code>StarWars</code></td>
                                 </tr>
                             </tbody>
                         </table>

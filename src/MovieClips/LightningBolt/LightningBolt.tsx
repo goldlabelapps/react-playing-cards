@@ -1,19 +1,24 @@
 import type { SVGProps } from 'react';
 
 export interface LightningBoltProps extends SVGProps<SVGSVGElement> {
+  color?: string;
+  fillColor?: string;
   frontColor?: string;
   backColor?: string;
   strokeColor?: string;
 }
 
 export function LightningBolt({
-  frontColor = '#0288d1',
-  backColor = '#000000',
-  strokeColor = '#052841',
+  color,
+  fillColor = '#FCFF20',
+  frontColor = '#FFFFFF',
+  backColor = '#FFFFFF',
+  strokeColor = '#000000',
   width = '365.270812px',
   height = '750px',
   ...props
 }: LightningBoltProps) {
+  const resolvedFill = color ?? fillColor;
   return (
     <svg width={width} height={height} viewBox="0 0 365.270812 750" {...props}>
       <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -33,7 +38,7 @@ export function LightningBolt({
             id="white"
             stroke={strokeColor}
             strokeWidth="10"
-            fill="#FFFFFF"
+            fill={resolvedFill}
             fillRule="nonzero"
           />
         </g>

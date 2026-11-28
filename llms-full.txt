@@ -58,12 +58,11 @@ The library operates across two distinct environments from a single codebase:
 
 ---
 
-## Live Production Showcases
+## Live Production Showcase
 
 Experience Modern Flash running in production:
 
-- **Flagship Web Showcase (Next.js 15)**: [https://modern-flash.pro](https://modern-flash.pro)
-- **WordPress Theme Stage (FSE Block Theme)**: [https://flash.modern-wordpress.pro](https://flash.modern-wordpress.pro)
+- **Flagship Web Application (Next.js 15)**: [https://modern-flash.pro](https://modern-flash.pro)
 
 ---
 
@@ -221,7 +220,7 @@ export function InteractiveCard() {
     <div>
       <Flash
         ref={flashRef}
-        movie="macromedia"
+        movie="starwars"
         autoPlay={false}
         loop={false}
         width="100%"
@@ -312,7 +311,7 @@ MovieClips are modular vector components rendered inside the `<Stage />`:
 | :--- | :--- |
 | `PlayingCards` | Comprehensive standard card deck with vector suits, ranks, face art, and card backs. |
 | `Blackjack` | Complete felt table layout with dealer tray, shoe, and betting circles. |
-| `Macromedia` | Retro Flash MX interface, loader, and brand assets. |
+| `StarWars` | Star Wars fighter cockpit HUD telemetry, laser fire, and starfield. |
 | `LightningBolt` | Multi-node procedural electric arcs with SVG glow filters. |
 | `Logo` | Scalable Goldlabel brand mark with animated vector strokes. |
 | `Pingpongball` | Vector ball with motion trail and squash-and-stretch geometry. |
@@ -331,7 +330,7 @@ ActionScripts are GreenSock timeline choreographies registered in the engine:
 | `lightning` | High-frequency discharge with opacity flickering and filter displacement. |
 | `loading` | Authentic Flash progress bar with percentage counter and spinning loader. |
 | `logo` | Elastic scale entrance with spring damping. |
-| `macromedia` | Complete Flash MX boot sequence with sound synchronisation. |
+| `starwars` | Star Wars cockpit HUD telemetry and flight dynamic choreography. |
 | `pingpong` | High-speed ball bounce with elastic wall collisions. |
 | `sprite` | Frame-by-frame sprite sheet stepper and walk cycles. |
 | `twist` | Elastic coordinate shearing and 2D bounce oscillation. |
@@ -1139,8 +1138,7 @@ Modern Flash co-exists on the shared Google Cloud production host (`wp-lab-live`
 | **Modern Flash** | `modern-flash-wordpress`| `3880:80` | Isolated local plugin development container |
 
 ### Host Ingress Routing
-The production Caddy ingress router manages subdomains dynamically:
-- `flash.modern-wordpress.pro`: Serves the WordPress Flash stage site at `/var/www/html/flash`.
+The production Caddy ingress router manages routing directly:
 - `modern-flash.pro` (and `www.modern-flash.pro`): Reverse proxies directly to `127.0.0.1:3830` (Next.js flagship showcase).
 - `app.34.16.50.74.sslip.io`: Production fallback ingress for direct IP routing.
 
@@ -1327,11 +1325,9 @@ Node.js Runtime       : Node.js 22.23.5 LTS (Systemd: modern-flash-nextjs)
 Active Public Endpoints:
 1. Modern Flash Next.js    : https://modern-flash.pro (Port 3830)
    (Fallback Sslip)         : https://app.34.16.50.74.sslip.io
-2. Modern WordPress Flash  : https://flash.modern-wordpress.pro (PHP / Theme)
-3. Modern WordPress Main   : https://modern-wordpress.pro
-4. Government Baseline     : https://ed-tech.co
-5. Not Here To Fuck Spiders: https://notheretofuckspiders.art
-6. Modern WordPress Books  : https://books.modern-wordpress.pro
+2. Modern WordPress Main   : https://modern-wordpress.pro
+3. Government Baseline     : https://ed-tech.co
+4. Not Here To Fuck Spiders: https://notheretofuckspiders.art
 ================================================================================
 ```
 

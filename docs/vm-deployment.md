@@ -23,11 +23,9 @@ Node.js Runtime       : Node.js 22.23.5 LTS (Systemd: modern-flash-nextjs)
 Active Public Endpoints:
 1. Modern Flash Next.js    : https://modern-flash.pro (Port 3830)
    (Fallback Sslip)         : https://app.34.16.50.74.sslip.io
-2. Modern WordPress Flash  : https://flash.modern-wordpress.pro (PHP / Theme)
-3. Modern WordPress Main   : https://modern-wordpress.pro
-4. Government Baseline     : https://ed-tech.co
-5. Not Here To Fuck Spiders: https://notheretofuckspiders.art
-6. Modern WordPress Books  : https://books.modern-wordpress.pro
+2. Modern WordPress Main   : https://modern-wordpress.pro
+3. Government Baseline     : https://ed-tech.co
+4. Not Here To Fuck Spiders: https://notheretofuckspiders.art
 ================================================================================
 ```
 
@@ -125,14 +123,7 @@ This command stages themes, plugins, and static files to `/tmp/deploy`, synchron
 ### Option B: Release With Database Migration (With Database Snapshot)
 *Used when database schemas, page structures, or content fixtures must be imported.*
 
-To migrate the Flash database only:
-```bash
-cd ../modern-wordpress
-make deploy-db-flash
-# Or: ./bin/deploy --with-db=flash
-```
-
-To migrate the entire multi-site database fleet:
+To migrate the multi-site database fleet:
 ```bash
 cd ../modern-wordpress
 make deploy-db

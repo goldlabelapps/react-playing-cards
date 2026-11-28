@@ -5,10 +5,11 @@ import { Logo } from './MovieClips/Logo';
 import { Pingpongball } from './MovieClips/Pingpongball';
 import { SpriteMC } from './MovieClips/Sprite';
 import { Blackjack } from './MovieClips/Blackjack';
+import { PokerDice } from './MovieClips/PokerDice';
 import { LightningBolt } from './MovieClips/LightningBolt';
 import { Base, Rank, Suit } from './MovieClips/PlayingCards';
 import { TitleText, AgentText } from './MovieClips/Typography';
-import { Macromedia } from './MovieClips/Macromedia';
+import { StarWars } from './MovieClips/StarWars';
 import { FlashStory } from './MovieClips/FlashStory';
 import { GameMenu } from './MovieClips/GameMenu';
 import { getActionScript, corkScrew } from './ActionScript';
@@ -176,7 +177,7 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
       case 'lightning':
         return (
           <div key={el.id} data-element-id={el.id} style={commonStyle}>
-            <LightningBolt width="180px" height="300px" frontColor={(el.props.color as string) || '#38bdf8'} />
+            <LightningBolt width="180px" height="300px" color={(el.props.color as string) || '#FCFF20'} />
           </div>
         );
       case 'sprite':
@@ -185,10 +186,12 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
             <SpriteMC size={(el.props.size as number) || 80} />
           </div>
         );
+      case 'starwars':
+      case 'StarWars':
       case 'macromedia':
         return (
           <div key={el.id} data-element-id={el.id} style={commonStyle}>
-            <Macromedia color={(el.props.color as string) || '#E5252A'} />
+            <StarWars color={(el.props.color as string) || '#E5252A'} />
           </div>
         );
       case 'flash-story':
@@ -229,13 +232,18 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
         );
       case 'blackjack':
         return <Blackjack />;
+      case 'poker-dice':
+      case 'PokerDice':
+        return <PokerDice />;
       case 'sprite':
       case 'sprite-demo':
         return <SpriteMC />;
       case 'lightning':
         return <LightningBolt />;
+      case 'starwars':
+      case 'StarWars':
       case 'macromedia':
-        return <Macromedia />;
+        return <StarWars />;
       case 'agent-text':
       case 'AgentText':
         return <AgentText />;

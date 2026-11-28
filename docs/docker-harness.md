@@ -174,21 +174,18 @@ Modern Flash co-exists on the shared Google Cloud production host (`wp-lab-live`
 | **Modern WordPress** | `wordpress` (Learn) | `8080:80` | Primary educational lesson archive |
 | **Modern WordPress** | `wordpress_government` | `8081:80` | Baseline public-sector evaluation site |
 | **Modern WordPress** | `wordpress_nhtfs` | `8082:80` | Cyber-noir brutalist fiction laboratory |
-| **Modern WordPress** | `wordpress_flash` | `8083:80` | Dedicated Flash stage site (`/var/www/html/flash`) |
-| **Modern WordPress** | `wordpress_books` | `8084:80` | Digital publishing platform |
 | **Modern WordPress** | `db` (MariaDB) | `3307:3306` | Centralised relational database service |
 | **Modern Flash** | `modern-flash-vite` | `3800:3800` | Developer animation studio and canvas debugger |
 | **Modern Flash** | `modern-flash-nextjs` | `3830:3830` | Flagship App Router showcase |
 | **Modern Flash** | `modern-flash-wordpress`| `3880:80` | Isolated local plugin development container |
 
 ### Host Ingress Routing
-The production Caddy ingress router manages subdomains dynamically:
-- `flash.modern-wordpress.pro`: Serves the WordPress Flash stage site at `/var/www/html/flash`.
+The production Caddy ingress router manages routing directly:
 - `modern-flash.pro` (and `www.modern-flash.pro`): Reverse proxies directly to `127.0.0.1:3830` (Next.js flagship showcase).
 - `app.34.16.50.74.sslip.io`: Production fallback ingress for direct IP routing.
 
 ### Release Pipeline Integration
-The deployment engine in Modern WordPress (`bin/deploy`) automates artifact deployment for the WordPress vector:
-1. Compiles the standalone browser bundle via `pnpm run build:bundle`.
-2. Copies `dist/flash-bundle.min.js` and plugin files directly to `/var/www/html/flash/wp-content/plugins/modern-flash`.
-3. Activates the `mwp_flash` theme and flushes rewrite rules on the live VM.
+The deployment runner (`scripts/deploy.sh`) automates artifact deployment for the Modern Flash flagship application:
+1. Compiles the standalone vector runtime bundle and builds the Next.js production artifact.
+2. Synchronises standalone build artifacts, static chunks, and public assets to `/var/www/modern-flash-nextjs`.
+3. Recycles the `modern-flash-nextjs` systemd service and verifies HTTPS endpoints.

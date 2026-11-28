@@ -36,9 +36,9 @@ const SEED_SCENES: FlashScene[] = [
   },
   {
     id: 'seed-hud-boot',
-    title: 'Macromedia HUD Boot Sequence',
+    title: 'Star Wars HUD Boot Sequence',
     prompt: 'Classic vector telemetry HUD radar sweep',
-    movie: 'hudMacromedia',
+    movie: 'starwars',
     speed: 1.0,
     created_at: new Date().toISOString(),
   },

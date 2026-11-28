@@ -6,13 +6,71 @@ import {
 } from 'react';
 import { gsap } from 'gsap';
 import { playSound } from '../../Sound';
-import { Macromedia } from '../Macromedia';
+import { StarWars } from '../StarWars';
 import { LightningBolt } from '../LightningBolt';
 import { Blackjack } from '../Blackjack';
 import { Pingpongball } from '../Pingpongball';
+import { PokerDice } from '../PokerDice';
 import { SpriteMC } from '../Sprite';
 import { AgentText } from '../Typography/AgentText';
+import { Button as AppleButton } from '../../themes/apple';
 import type { GameMenuItem, GameMenuProps } from './types';
+
+function PingpongStage() {
+  const ballRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ballRef.current;
+    if (!el) return;
+
+    const tl = gsap.timeline({ repeat: -1 });
+    tl.to(el, {
+      y: 110,
+      duration: 0.55,
+      ease: 'power2.in',
+    })
+      .to(el, {
+        scaleX: 1.4,
+        scaleY: 0.6,
+        duration: 0.08,
+        ease: 'power1.out',
+      })
+      .to(el, {
+        scaleX: 0.9,
+        scaleY: 1.15,
+        y: -110,
+        duration: 0.55,
+        ease: 'power2.out',
+      })
+      .to(el, {
+        scaleX: 1.25,
+        scaleY: 0.75,
+        duration: 0.08,
+        ease: 'power1.out',
+      });
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <div ref={ballRef} style={{ position: 'relative', width: 56, height: 56 }}>
+        <Pingpongball color="#F59E0B" size={56} style={{ filter: 'drop-shadow(0 0 16px rgba(245, 158, 11, 0.75))' }} />
+      </div>
+    </div>
+  );
+}
 
 export function GameMenu({
   items: customItems,
@@ -22,9 +80,9 @@ export function GameMenu({
   height = '100%',
   className,
   style,
-  title = 'GAME MENU',
+  title: _title = 'GAME MENU',
   onBackToTop,
-  onReplayStory,
+  onReplayStory: _onReplayStory,
   soundEnabled = true,
   children,
 }: GameMenuProps) {
@@ -50,124 +108,42 @@ export function GameMenu({
     [soundEnabled]
   );
 
-  // Default menu tree covering the whole application
+  // Flash Logo Home Item
+  const flashLogoItem: GameMenuItem = {
+    id: 'flash-logo',
+    label: 'Home',
+    description: 'Return to stage home',
+    badge: 'HOME',
+    icon: '⚡',
+    route: '/',
+  };
+
+  // Default menu covering primary options including the Flash logo
   const defaultItems: GameMenuItem[] = [
+    flashLogoItem,
     {
-      id: 'demos',
-      label: 'Vector Demos',
-      description: 'Interactive ActionScript vector animations',
-      badge: '5 CLIPS',
-      icon: '⚡',
-      children: [
-        {
-          id: 'macromedia',
-          label: 'Macromedia Starburst',
-          description: 'Classic 1996 vector starburst emblem and laser sweep',
-          badge: 'RETRO',
-          icon: '✦',
-          movie: 'macromedia',
-        },
-        {
-          id: 'lightning',
-          label: 'Lightning Surge',
-          description: 'High-voltage electric discharge vector animation',
-          badge: 'SURGE',
-          icon: '⚡',
-          movie: 'lightning',
-        },
-        {
-          id: 'blackjack',
-          label: 'Blackjack 21',
-          description: 'Interactive playing card dealing table and score engine',
-          badge: 'CARDS',
-          icon: '♠',
-          movie: 'blackjack',
-        },
-        {
-          id: 'pingpong',
-          label: 'Ping Pong Rally',
-          description: 'High-velocity vector ball rally across stage bounds',
-          badge: 'ARCADE',
-          icon: '🏓',
-          movie: 'pingpong',
-        },
-        {
-          id: 'sprite',
-          label: 'Animated Sprite',
-          description: 'Retro 8-bit character animation cycle',
-          badge: '8-BIT',
-          icon: '👾',
-          movie: 'sprite',
-        },
-      ],
+      id: 'poker-dice',
+      label: 'Poker Dice',
+      description: 'Classic 5-die poker hand rolling table',
+      badge: 'DICE',
+      icon: '🎲',
+      movie: 'poker-dice',
     },
     {
-      id: 'studio',
-      label: 'Prompt Engine Studio',
-      description: 'Natural language prompt to vector animation compiler',
-      badge: 'EXPORTER',
-      icon: '✨',
-      route: '/examples',
-    },
-    {
-      id: 'soundboard',
-      label: 'Soundboard & SFX Library',
-      description: 'Explore 108 curated arcade, UI, combat, and retro audio clips',
-      badge: '108 SFX',
-      icon: '🔊',
-      route: '/sounds',
-    },
-    {
-      id: 'agent',
-      label: 'Agent Telemetry',
-      description: 'Simulate background agent task status telemetry',
-      badge: 'STORY',
-      icon: '🤖',
-      action: () => {
-        if (onReplayStory) {
-          onReplayStory();
-        }
-      },
-    },
-    {
-      id: 'options',
-      label: 'Display & Audio Options',
-      description: 'Configure runtime options and sound effects',
-      badge: 'SETUP',
-      icon: '⚙️',
-      children: [
-        {
-          id: 'test-sfx',
-          label: 'Audition Coin Sound',
-          description: 'Play retro arcade pickup audio trigger',
-          badge: 'TEST',
-          icon: '🪙',
-          action: () => {
-            playSound('pickups/coin-01', { volume: 0.6 });
-          },
-        },
-        {
-          id: 'test-jump',
-          label: 'Audition Movement SFX',
-          description: 'Play dynamic jump audio trigger',
-          badge: 'TEST',
-          icon: '💨',
-          action: () => {
-            playSound('movement/jump-01', { volume: 0.5 });
-          },
-        },
-        {
-          id: 'zero-scroll',
-          label: 'Anti-Scrolling Invariant',
-          description: 'Single viewport Flash runtime eliminating all scrolling',
-          badge: 'CANVAS',
-          icon: '🛡️',
-        },
-      ],
+      id: 'pingpong',
+      label: 'Pingpong Ball',
+      description: 'High-velocity vector ball rally across stage bounds',
+      badge: 'ARCADE',
+      icon: '🏓',
+      movie: 'pingpong',
     },
   ];
 
-  const rootItems = customItems ?? defaultItems;
+  const rootItems = customItems
+    ? customItems.some((it) => it.id === 'flash-logo' || it.id === 'flash-home')
+      ? customItems
+      : [flashLogoItem, ...customItems]
+    : defaultItems;
 
   // Navigation state
   // navStack contains previous parent items. Empty means we are at top level.
@@ -183,61 +159,57 @@ export function GameMenu({
 
   const currentSelectedItem = currentItems[selectedIndex] ?? currentItems[0];
 
-  // Breadcrumb path display
-  const breadcrumb = [
-    title,
-    ...navStack.map((item) => item.label.toUpperCase()),
-  ].join(' > ');
+  // Activate a specific menu item
+  const activateItem = useCallback(
+    (item: GameMenuItem) => {
+      if (!item || item.disabled) return;
 
-  // Green Button (OK, Forward, Accept)
+      triggerSound('accept');
+
+      // If item has children, drill down into submenu
+      if (item.children && item.children.length > 0) {
+        setNavStack((prev) => [...prev, item]);
+        setSelectedIndex(0);
+        return;
+      }
+
+      // If item launches a movie demo
+      if (item.movie) {
+        if (onSelectMovie) {
+          onSelectMovie(item.movie);
+        }
+        setActiveMovie(item.movie);
+        return;
+      }
+
+      // If item navigates to route
+      if (item.route) {
+        if (onNavigate) {
+          onNavigate(item.route);
+        } else if (typeof window !== 'undefined') {
+          window.location.pathname = item.route;
+        }
+        return;
+      }
+
+      // If item has custom action
+      if (item.action) {
+        item.action();
+      }
+    },
+    [onNavigate, onSelectMovie, triggerSound]
+  );
+
+  // Accept current keyboard selection
   const handleAccept = useCallback(() => {
     if (activeMovie) {
-      // If previewing movie, accept restarts it
       triggerSound('accept');
       return;
     }
-
-    if (!currentSelectedItem || currentSelectedItem.disabled) return;
-
-    triggerSound('accept');
-
-    // If item has children, drill down into submenu
-    if (currentSelectedItem.children && currentSelectedItem.children.length > 0) {
-      setNavStack((prev) => [...prev, currentSelectedItem]);
-      setSelectedIndex(0);
-      return;
+    if (currentSelectedItem) {
+      activateItem(currentSelectedItem);
     }
-
-    // If item launches a movie demo
-    if (currentSelectedItem.movie) {
-      if (onSelectMovie) {
-        onSelectMovie(currentSelectedItem.movie);
-      }
-      setActiveMovie(currentSelectedItem.movie);
-      return;
-    }
-
-    // If item navigates to route
-    if (currentSelectedItem.route) {
-      if (onNavigate) {
-        onNavigate(currentSelectedItem.route);
-      } else if (typeof window !== 'undefined') {
-        window.location.pathname = currentSelectedItem.route;
-      }
-      return;
-    }
-
-    // If item has custom action
-    if (currentSelectedItem.action) {
-      currentSelectedItem.action();
-    }
-  }, [
-    activeMovie,
-    currentSelectedItem,
-    onNavigate,
-    onSelectMovie,
-    triggerSound,
-  ]);
+  }, [activeMovie, currentSelectedItem, activateItem, triggerSound]);
 
   // Red Button (Back, Cancel)
   const handleBack = useCallback(() => {
@@ -333,18 +305,41 @@ export function GameMenu({
   // Render movie demo preview when selected
   const renderActiveMovie = () => {
     switch (activeMovie) {
+      case 'starwars':
       case 'macromedia':
-        return <Macromedia color="#E5252A" />;
+        return <StarWars color="#E5252A" />;
       case 'lightning':
-        return <LightningBolt width="160px" height="260px" frontColor="#38bdf8" />;
+        return <LightningBolt width="160px" height="260px" color="#FCFF20" />;
       case 'blackjack':
         return <Blackjack />;
+      case 'poker-dice':
+      case 'PokerDice':
+        return <PokerDice />;
       case 'pingpong':
-        return <Pingpongball color="#C09F52" size={48} />;
+        return <PingpongStage />;
       case 'sprite':
         return <SpriteMC size={90} />;
       case 'agent-text':
         return <AgentText title="Running `check apps/web contents`" status="active" />;
+      case 'apple-button':
+      case 'apple':
+        return (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '16px',
+              width: '100%',
+              maxWidth: '380px',
+              padding: '16px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <AppleButton size="fat" label="Primary Button" style={{ width: '100%' }} />
+            <AppleButton size="fat" selected label="Selected Button" style={{ width: '100%' }} />
+          </div>
+        );
       default:
         return null;
     }
@@ -375,61 +370,6 @@ export function GameMenu({
       role="menu"
       aria-label="Video Game Navigation Menu"
     >
-      {/* Top HUD Header: Breadcrumb & Level indicator */}
-      <header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderBottom: '2px solid #1e293b',
-          paddingBottom: 8,
-          marginBottom: 10,
-          flexShrink: 0,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 800,
-              letterSpacing: '0.12em',
-              background: '#15868F',
-              color: '#ffffff',
-              padding: '2px 8px',
-              borderRadius: 4,
-              border: '1px solid #2A2A2A',
-            }}
-          >
-            MODERN FLASH
-          </span>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: '0.06em',
-              color: '#38bdf8',
-            }}
-          >
-            {breadcrumb}
-          </div>
-        </div>
-
-        <div
-          style={{
-            fontSize: 11,
-            color: '#64748b',
-            fontWeight: 700,
-            letterSpacing: '0.08em',
-          }}
-        >
-          {activeMovie
-            ? 'PREVIEW MODE'
-            : navStack.length === 0
-              ? 'TOP LEVEL'
-              : `LEVEL ${navStack.length}`}
-        </div>
-      </header>
-
       {/* Main Display Stage Area (Zero Scrolling) */}
       <main
         style={{
@@ -464,12 +404,27 @@ export function GameMenu({
                 position: 'absolute',
                 top: 10,
                 left: 12,
+                zIndex: 10,
+              }}
+            >
+              <AppleButton
+                size="sm"
+                label="Back"
+                onClick={handleBack}
+              />
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
                 fontSize: 11,
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 color: '#94a3b8',
                 background: 'rgba(15, 23, 42, 0.85)',
-                padding: '2px 8px',
+                padding: '3px 8px',
                 borderRadius: 4,
                 border: '1px solid #334155',
               }}
@@ -490,404 +445,115 @@ export function GameMenu({
             </div>
           </div>
         ) : (
-          // Video Game Menu Split: Items List on Left, Telemetry HUD on Right
-          <>
-            {/* Left Column: Menu Items List */}
+          // Single Column Full-Width Apple Buttons (Zero Scrolling)
+          <div
+            style={{
+              flex: 1,
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+            }}
+          >
             <div
               ref={listRef}
               style={{
-                flex: '1 1 55%',
+                width: '100%',
+                maxWidth: '400px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                gap: 8,
-                overflow: 'hidden',
+                alignItems: 'center',
+                gap: 12,
               }}
             >
+              {navStack.length > 0 && (
+                <AppleButton
+                  key="nav-back-button"
+                  label="Back"
+                  size="fat"
+                  onClick={handleBack}
+                  style={{ width: '100%', maxWidth: '400px' }}
+                />
+              )}
               {currentItems.map((item, idx) => {
                 const isSelected = idx === selectedIndex;
-                const hasChildren = Boolean(item.children?.length);
+
+                if (item.id === 'flash-logo' || item.id === 'flash-home') {
+                  return (
+                    <a
+                      key={item.id}
+                      href={item.route ?? '/'}
+                      aria-label={item.label || 'Home'}
+                      title={item.label || 'Home'}
+                      role="menuitem"
+                      aria-selected={isSelected}
+                      tabIndex={isSelected ? 0 : -1}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '64px',
+                        height: '64px',
+                        borderRadius: '50%',
+                        backgroundColor: isSelected ? '#111827' : '#0a0f1d',
+                        border: isSelected ? '2px solid #FCFF20' : '2px solid #2A2A2A',
+                        boxShadow: isSelected
+                          ? '0 0 18px rgba(252, 255, 32, 0.65), 3px 3px 0px 0px #FFB020'
+                          : '3px 3px 0px 0px #2A2A2A, 0 4px 12px rgba(0, 0, 0, 0.4)',
+                        cursor: 'pointer',
+                        textDecoration: 'none',
+                        outline: 'none',
+                        marginBottom: '8px',
+                        transform: isSelected ? 'scale(1.08)' : 'scale(1)',
+                        transition:
+                          'transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease',
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSelectedIndex(idx);
+                        activateItem(item);
+                      }}
+                      onMouseEnter={() => {
+                        setSelectedIndex(idx);
+                        triggerSound('blip');
+                      }}
+                    >
+                      <LightningBolt
+                        width="24px"
+                        height="48px"
+                        fillColor={isSelected ? '#FCFF20' : '#FFB020'}
+                        frontColor="#FFFFFF"
+                        backColor="#FFFFFF"
+                        strokeColor="#000000"
+                      />
+                    </a>
+                  );
+                }
 
                 return (
-                  <button
+                  <AppleButton
                     key={item.id}
+                    label={item.label}
+                    size="fat"
+                    selected={isSelected}
                     onClick={() => {
                       setSelectedIndex(idx);
-                      // Second click on already selected item acts as accept
-                      if (isSelected) {
-                        handleAccept();
-                      } else {
-                        triggerSound('blip');
-                      }
+                      activateItem(item);
                     }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      width: '100%',
-                      background: isSelected
-                        ? 'linear-gradient(90deg, rgba(21, 134, 143, 0.35) 0%, rgba(13, 21, 39, 0.95) 100%)'
-                        : '#0d1527',
-                      color: isSelected ? '#ffffff' : '#94a3b8',
-                      border: isSelected ? '2px solid #15868F' : '2px solid #1e293b',
-                      borderLeft: isSelected ? '6px solid #15868F' : '2px solid #1e293b',
-                      boxShadow: isSelected
-                        ? '3px 3px 0px 0px #15868F'
-                        : '2px 2px 0px 0px #070b14',
-                      borderRadius: 6,
-                      padding: '10px 14px',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'all 0.12s ease',
-                      minHeight: 46,
-                      boxSizing: 'border-box',
+                    onMouseEnter={() => {
+                      setSelectedIndex(idx);
+                      triggerSound('blip');
                     }}
-                    role="menuitem"
-                    aria-selected={isSelected}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span
-                        style={{
-                          fontSize: 14,
-                          color: isSelected ? '#38bdf8' : '#64748b',
-                          fontWeight: 800,
-                        }}
-                      >
-                        {isSelected ? '▶' : '•'}
-                      </span>
-                      {item.icon && (
-                        <span style={{ fontSize: 16 }}>{item.icon}</span>
-                      )}
-                      <div>
-                        <div
-                          style={{
-                            fontSize: 14,
-                            fontWeight: isSelected ? 800 : 600,
-                            letterSpacing: '-0.01em',
-                            color: isSelected ? '#ffffff' : '#e2e8f0',
-                          }}
-                        >
-                          {item.label}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      {item.badge && (
-                        <span
-                          style={{
-                            fontSize: 10,
-                            fontWeight: 700,
-                            letterSpacing: '0.06em',
-                            background: isSelected
-                              ? 'rgba(56, 189, 248, 0.2)'
-                              : '#1e293b',
-                            color: isSelected ? '#38bdf8' : '#64748b',
-                            padding: '2px 6px',
-                            borderRadius: 3,
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
-                          }}
-                        >
-                          {item.badge}
-                        </span>
-                      )}
-                      {hasChildren && (
-                        <span
-                          style={{
-                            fontSize: 13,
-                            fontWeight: 800,
-                            color: isSelected ? '#10b981' : '#475569',
-                          }}
-                        >
-                          ›
-                        </span>
-                      )}
-                    </div>
-                  </button>
+                    style={{ width: '100%', maxWidth: '400px' }}
+                  />
                 );
               })}
             </div>
-
-            {/* Right Column: Context HUD Telemetry */}
-            <div
-              style={{
-                flex: '1 1 45%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                background: '#070b14',
-                border: '2px solid #2A2A2A',
-                boxShadow: '3px 3px 0px 0px #2A2A2A',
-                borderRadius: 8,
-                padding: '16px',
-                boxSizing: 'border-box',
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 800,
-                    letterSpacing: '0.12em',
-                    color: '#64748b',
-                    marginBottom: 8,
-                  }}
-                >
-                  TARGET SELECTION
-                </div>
-
-                <div
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 800,
-                    color: '#ffffff',
-                    marginBottom: 6,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                  }}
-                >
-                  {currentSelectedItem?.icon} {currentSelectedItem?.label}
-                </div>
-
-                <p
-                  style={{
-                    fontSize: 13,
-                    lineHeight: 1.5,
-                    color: '#94a3b8',
-                    margin: '0 0 12px 0',
-                  }}
-                >
-                  {currentSelectedItem?.description ??
-                    'Navigate quickly across application vectors without scrolling.'}
-                </p>
-
-                {currentSelectedItem?.children && (
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: '#10b981',
-                      fontWeight: 700,
-                      background: 'rgba(16, 185, 129, 0.12)',
-                      padding: '4px 8px',
-                      borderRadius: 4,
-                      border: '1px solid rgba(16, 185, 129, 0.3)',
-                      display: 'inline-block',
-                    }}
-                  >
-                    Submenu containing {currentSelectedItem.children.length} options
-                  </div>
-                )}
-
-                {currentSelectedItem?.route && (
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: '#38bdf8',
-                      fontWeight: 700,
-                      background: 'rgba(56, 189, 248, 0.12)',
-                      padding: '4px 8px',
-                      borderRadius: 4,
-                      border: '1px solid rgba(56, 189, 248, 0.3)',
-                      display: 'inline-block',
-                    }}
-                  >
-                    Direct Route: {currentSelectedItem.route}
-                  </div>
-                )}
-
-                {currentSelectedItem?.movie && (
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: '#f59e0b',
-                      fontWeight: 700,
-                      background: 'rgba(245, 158, 11, 0.12)',
-                      padding: '4px 8px',
-                      borderRadius: 4,
-                      border: '1px solid rgba(245, 158, 11, 0.3)',
-                      display: 'inline-block',
-                    }}
-                  >
-                    Stage MovieClip: {currentSelectedItem.movie}
-                  </div>
-                )}
-              </div>
-
-              <div
-                style={{
-                  borderTop: '1px solid #1e293b',
-                  paddingTop: 10,
-                  fontSize: 11,
-                  color: '#64748b',
-                  lineHeight: 1.4,
-                }}
-              >
-                No scrolling. Pure bounded stage navigation. Press Green to proceed or Red to return.
-              </div>
-            </div>
-          </>
+          </div>
         )}
       </main>
-
-      {/* Video Game Controller Bar: Directional controls, Green (OK) and Red (Back) buttons */}
-      <footer
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 12,
-          borderTop: '2px solid #1e293b',
-          paddingTop: 12,
-          marginTop: 10,
-          flexShrink: 0,
-        }}
-      >
-        {/* Directional Pad Navigation Affordance */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <button
-            onClick={handleMoveUp}
-            aria-label="Move selection up"
-            style={{
-              background: '#0d1527',
-              color: '#ffffff',
-              border: '2px solid #2A2A2A',
-              boxShadow: '2px 2px 0px 0px #2A2A2A',
-              borderRadius: 6,
-              width: 38,
-              height: 38,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              fontWeight: 800,
-              fontSize: 14,
-            }}
-          >
-            ▲
-          </button>
-          <button
-            onClick={handleMoveDown}
-            aria-label="Move selection down"
-            style={{
-              background: '#0d1527',
-              color: '#ffffff',
-              border: '2px solid #2A2A2A',
-              boxShadow: '2px 2px 0px 0px #2A2A2A',
-              borderRadius: 6,
-              width: 38,
-              height: 38,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              fontWeight: 800,
-              fontSize: 14,
-            }}
-          >
-            ▼
-          </button>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: '0.06em',
-              color: '#64748b',
-              marginLeft: 4,
-            }}
-          >
-            NAVIGATE [↑ / ↓]
-          </span>
-        </div>
-
-        {/* Action Buttons: Red Button (Back) and Green Button (Accept) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          {/* Red Button: Back / Cancel */}
-          <button
-            onClick={handleBack}
-            style={{
-              background: '#ef4444',
-              color: '#ffffff',
-              border: '2px solid #2A2A2A',
-              boxShadow: '3px 3px 0px 0px #2A2A2A',
-              borderRadius: 6,
-              padding: '8px 16px',
-              fontSize: 13,
-              fontWeight: 800,
-              letterSpacing: '0.04em',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              minHeight: 44,
-              transition: 'transform 0.08s ease',
-            }}
-            aria-label="Back or cancel"
-          >
-            <span
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: '50%',
-                background: '#7f1d1d',
-                color: '#ffffff',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 11,
-                fontWeight: 900,
-                border: '1px solid rgba(255, 255, 255, 0.4)',
-              }}
-            >
-              B
-            </span>
-            <span>BACK</span>
-          </button>
-
-          {/* Green Button: OK / Forward / Accept */}
-          <button
-            onClick={handleAccept}
-            style={{
-              background: '#10b981',
-              color: '#ffffff',
-              border: '2px solid #2A2A2A',
-              boxShadow: '3px 3px 0px 0px #2A2A2A',
-              borderRadius: 6,
-              padding: '8px 18px',
-              fontSize: 13,
-              fontWeight: 800,
-              letterSpacing: '0.04em',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              minHeight: 44,
-              transition: 'transform 0.08s ease',
-            }}
-            aria-label="OK, forward, or accept"
-          >
-            <span
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: '50%',
-                background: '#064e3b',
-                color: '#ffffff',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 11,
-                fontWeight: 900,
-                border: '1px solid rgba(255, 255, 255, 0.4)',
-              }}
-            >
-              A
-            </span>
-            <span>{currentSelectedItem?.children ? 'FORWARD' : 'ACCEPT'}</span>
-          </button>
-        </div>
-      </footer>
 
       {children}
     </div>

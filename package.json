@@ -19,6 +19,16 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./themes": {
+      "types": "./dist/themes/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./themes/apple": {
+      "types": "./dist/themes/apple/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
     "./bundle": "./dist/flash-bundle.min.js",
     "./styles.css": "./dist/style.css"
   },

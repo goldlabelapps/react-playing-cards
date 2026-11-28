@@ -41,6 +41,6 @@ export default function App() {
     return <ExamplesPage onNavigate={navigate} />;
   }
 
-  // Default stripped-down landing page with Macromedia Flash animation
+  // Default stripped-down landing page with Flash animation
   return <LandingPage onNavigate={navigate} />;
 }

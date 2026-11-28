@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { gsap } from 'gsap';
 import { playLaserShootSound } from '../../Sound/fighterAudio';
-import { MACROMEDIA_FLASH_PATH, FLASH_RAYS } from './constants';
+import { STARWARS_FLASH_PATH, FLASH_RAYS } from './constants';
 import {
   BASE_FAR_STARS,
   BASE_MID_STARS,
   BASE_NEAR_STARS,
 } from './starsData';
 
-export interface MacromediaProps {
+export interface StarWarsProps {
   width?: string | number;
   height?: string | number;
   color?: string;
@@ -17,14 +17,16 @@ export interface MacromediaProps {
   showLogo?: boolean;
 }
 
-export function Macromedia({
+export type MacromediaProps = StarWarsProps;
+
+export function StarWars({
   width = '100%',
   height = '100%',
   color = '#4C979C',
   className,
   style,
   showLogo = false,
-}: MacromediaProps) {
+}: StarWarsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [keys, setKeys] = useState({
     up: false,
@@ -257,7 +259,7 @@ export function Macromedia({
     <div
       ref={containerRef}
       className={className}
-      data-movieclip="macromedia"
+      data-movieclip="starwars"
       style={{
         position: 'relative',
         width,
@@ -396,9 +398,9 @@ export function Macromedia({
         aria-label="Starfighter Cockpit HUD & Dynamic Telemetry"
       >
         <defs>
-          {/* Clip path for Macromedia Flash burst (when enabled) */}
-          <clipPath id="macromediaLogoClip">
-            <path d={MACROMEDIA_FLASH_PATH} />
+          {/* Clip path for Star Wars Flash burst (when enabled) */}
+          <clipPath id="starWarsLogoClip">
+            <path d={STARWARS_FLASH_PATH} />
           </clipPath>
         </defs>
 
@@ -514,7 +516,7 @@ export function Macromedia({
           </g>
         </g>
 
-        {/* 3. OPTIONAL MACROMEDIA FLASH BURST LOGO (HIDDEN BY DEFAULT) */}
+        {/* 3. OPTIONAL STAR WARS FLASH BURST LOGO (HIDDEN BY DEFAULT) */}
         {showLogo && (
           <g data-part="emblem" transform="translate(64, 66)">
             {FLASH_RAYS.map((pathD, idx) => (
@@ -528,14 +530,14 @@ export function Macromedia({
                 }}
               />
             ))}
-            <g clipPath="url(#macromediaLogoClip)">
+            <g clipPath="url(#starWarsLogoClip)">
               <rect
                 data-part="beam"
                 x="120"
                 y="20"
                 width="80"
                 height="190"
-                fill="url(#macromediaBeamGrad)"
+                fill="url(#starWarsBeamGrad)"
                 transform="skewX(-28)"
                 opacity="0"
               />
@@ -813,4 +815,5 @@ export function Macromedia({
   );
 }
 
-export default Macromedia;
+export const Macromedia = StarWars;
+export default StarWars;

@@ -7,7 +7,9 @@ import { actionScripts, registerActionScript, getActionScript, corkScrew, asMovi
 import * as PlayingCards from './MovieClips/PlayingCards';
 import { FlashStory } from './MovieClips/FlashStory';
 import { GameMenu } from './MovieClips/GameMenu';
+import { PokerDice } from './MovieClips/PokerDice';
 import { soundManager, FlashSound, playSound, SOUND_MANIFEST, SOUND_CATALOG } from './Sound';
+import { themes, getTheme, appleTheme, AppleButton } from './themes';
 import type { MovieName, PromptScene } from './types';
 
 interface MountOptions {
@@ -85,6 +87,7 @@ if (typeof window !== 'undefined') {
     Stage,
     FlashStory,
     GameMenu,
+    PokerDice,
     parsePrompt,
     actionScripts,
     registerActionScript,
@@ -97,6 +100,10 @@ if (typeof window !== 'undefined') {
     playSound,
     soundCatalog: SOUND_CATALOG,
     soundManifest: SOUND_MANIFEST,
+    themes,
+    getTheme,
+    appleTheme,
+    AppleButton,
   };
 }
 
@@ -105,6 +112,7 @@ export {
   Stage,
   FlashStory,
   GameMenu,
+  PokerDice,
   parsePrompt,
   actionScripts,
   registerActionScript,
@@ -117,4 +125,8 @@ export {
   playSound,
   SOUND_CATALOG,
   SOUND_MANIFEST,
+  themes,
+  getTheme,
+  appleTheme,
+  AppleButton,
 };
