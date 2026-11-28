@@ -11,4 +11,7 @@ export interface PokerDiceProps {
   color?: string;
   pipColor?: string;
   soundEnabled?: boolean;
+  statusMessage?: string;
+  durationSeconds?: number;
+  onComplete?: () => void;
 }

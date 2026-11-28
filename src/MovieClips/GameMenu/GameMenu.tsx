@@ -200,17 +200,6 @@ export function GameMenu({
     [onNavigate, onSelectMovie, triggerSound]
   );
 
-  // Accept current keyboard selection
-  const handleAccept = useCallback(() => {
-    if (activeMovie) {
-      triggerSound('accept');
-      return;
-    }
-    if (currentSelectedItem) {
-      activateItem(currentSelectedItem);
-    }
-  }, [activeMovie, currentSelectedItem, activateItem, triggerSound]);
-
   // Red Button (Back, Cancel)
   const handleBack = useCallback(() => {
     triggerSound('cancel');
@@ -233,6 +222,17 @@ export function GameMenu({
       onBackToTop();
     }
   }, [activeMovie, navStack.length, onBackToTop, triggerSound]);
+
+  // Accept current keyboard selection
+  const handleAccept = useCallback(() => {
+    if (activeMovie) {
+      handleBack();
+      return;
+    }
+    if (currentSelectedItem) {
+      activateItem(currentSelectedItem);
+    }
+  }, [activeMovie, handleBack, currentSelectedItem, activateItem]);
 
   // Navigate Up
   const handleMoveUp = useCallback(() => {
@@ -314,7 +314,7 @@ export function GameMenu({
         return <Blackjack />;
       case 'poker-dice':
       case 'PokerDice':
-        return <PokerDice />;
+        return <PokerDice onComplete={() => setActiveMovie(null)} />;
       case 'pingpong':
         return <PingpongStage />;
       case 'sprite':
@@ -391,47 +391,10 @@ export function GameMenu({
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'rgba(7, 11, 20, 0.7)',
-              border: '2px solid #2A2A2A',
-              boxShadow: '4px 4px 0px 0px #2A2A2A',
-              borderRadius: 8,
               position: 'relative',
               overflow: 'hidden',
             }}
           >
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                left: 12,
-                zIndex: 10,
-              }}
-            >
-              <AppleButton
-                size="sm"
-                label="Back"
-                onClick={handleBack}
-              />
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                top: 12,
-                right: 12,
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                color: '#94a3b8',
-                background: 'rgba(15, 23, 42, 0.85)',
-                padding: '3px 8px',
-                borderRadius: 4,
-                border: '1px solid #334155',
-              }}
-            >
-              RUNNING CLIP: {activeMovie.toUpperCase()}
-            </div>
-
             <div
               style={{
                 width: '100%',
@@ -442,6 +405,23 @@ export function GameMenu({
               }}
             >
               {renderActiveMovie()}
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 24,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 10,
+              }}
+            >
+              <AppleButton
+                size="sm"
+                selected
+                label="Back"
+                onClick={handleBack}
+              />
             </div>
           </div>
         ) : (
