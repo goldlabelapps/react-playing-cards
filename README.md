@@ -369,6 +369,7 @@ modern-flash/
 ├── assets/                  # Brand iconography and vector graphics
 ├── docs/                    # Technical manuals and architectural specifications
 │   ├── agentic-control-surface.md
+│   ├── apple-button-sproing.md
 │   ├── docker-distribution.md
 │   ├── docker-harness.md
 │   ├── dual-ecosystem-integration.md
@@ -417,6 +418,7 @@ Documentation is categorised into developer levels based on technical depth and 
 - [Docker Distribution Specification](docs/docker-distribution.md): Public Docker Hub registry, multi-platform buildx compilation, and zero-dependency container execution.
 
 ### Level 2: Application Engineer (Practical Web Architecture)
+- [AppleButton Sproing Animation](docs/apple-button-sproing.md): GSAP squash-and-stretch spring physics, motion phases, calibration tokens, and reduced-motion compliance for `AppleButton`.
 - [Flagship Web Application](docs/flagship-web-app.md): Public Next.js 15 web application architecture, zero-scroll viewport geometry, Google Cloud VM deployment, and Firebase suite integration.
 - [Docker Harness Specification](docs/docker-harness.md): Container harness, port bindings (`:3800`, `:3830`, `:3880`), and local operational commands.
 

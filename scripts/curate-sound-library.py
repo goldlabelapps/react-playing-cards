@@ -116,9 +116,6 @@ CURATED_SOUNDS = [
     ("mm", "Impact/m4a/Impact1.m4a", "impact", "impact/impact-01", "Arcade Impact 01", ["impact", "crash", "collision"]),
     ("mm", "Impact/m4a/Impact2.m4a", "impact", "impact/impact-02", "Arcade Impact 02", ["impact", "heavy", "slam"]),
     ("mm", "Impact/m4a/Impact3.m4a", "impact", "impact/impact-03", "Arcade Impact 03", ["impact", "smack"]),
-    ("mm", "Impact/m4a/Impact1.m4a", "impact", "impact/impact-01", "Arcade Impact 01", ["impact", "crash", "collision"]),
-    ("mm", "Impact/m4a/Impact2.m4a", "impact", "impact/impact-02", "Arcade Impact 02", ["impact", "heavy", "slam"]),
-    ("mm", "Impact/m4a/Impact3.m4a", "impact", "impact/impact-03", "Arcade Impact 03", ["impact", "smack"]),
 
     # --- ARCADE CHIPTUNE & RETRO (MM) ---
     ("mm", "Misc/m4a/KerChing1.m4a", "arcade", "arcade/kerching-01", "Cash Register 01", ["arcade", "cash", "money", "kerching", "bell"]),

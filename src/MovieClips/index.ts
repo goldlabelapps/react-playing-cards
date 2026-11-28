@@ -9,4 +9,5 @@ export * from './PokerDice';
 export * from './StarWars';
 export * from './FlashStory';
 export * from './GameMenu';
+export * from './SoundFX';
 

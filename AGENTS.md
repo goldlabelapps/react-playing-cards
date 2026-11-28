@@ -66,6 +66,15 @@ Flash is inherently an anti-scrolling medium designed to eliminate passive doom-
 - **Edge-to-Edge Geometry**: 0px padding, 0px margin, 0px border-radius, occupying `100vw` by `100dvh` (or `100%`).
 - **Absolute Scroll Suppression**: Hard lockout on document scrolling (`overflow: hidden`, `overscroll-behavior: none`). Progression happens through timelines, frames, and interactive state transitions on the bounded stage, never via spatial scrolling.
 
+## AppleButton Sproing Animation Invariant
+
+All `AppleButton` interactions (`src/themes/apple/Button.tsx`) must drive rollover, keyboard selection, press, activation, and rest feedback through the GSAP sproing module (`src/themes/apple/sproing.ts`):
+- **GSAP-Only Transform Ownership**: Never animate `AppleButton` transforms with CSS `transition: transform` or `@keyframes`. GSAP timelines own `scaleX`, `scaleY`, and `y` via `playSproingHover`, `playSproingPress`, `playSproingActivate`, and `playSproingRest`.
+- **Squash-and-Stretch Spring Physics**: Rollover and activation must execute a fast anticipation squash followed by an `elastic.out` spring rebound calibrated in `SPROING_CONFIG`.
+- **Interrupt Safety**: Every sproing trigger must call `gsap.killTweensOf(element)` before starting and clean up on unmount so rapid pointer sweeps never queue or fight.
+- **Reduced Motion Compliance**: Respect `prefers-reduced-motion: reduce` by bypassing elastic overshoot and keeping transforms at neutral scale.
+- **Documentation Reference**: Keep [docs/apple-button-sproing.md](docs/apple-button-sproing.md) aligned with `SPROING_CONFIG` whenever timings or curves change.
+
 ## Defensive Security & Supply Chain Baselines
 
 - Government Standard GS-AI-DATA-02: Never commit API credentials, tokens, private cryptographic keys, or database connection strings.

@@ -44,6 +44,7 @@ class ModernSoundManager {
   private categoryGains = new Map<SoundCategory, GainNode>();
   private masterVolume = 0.8;
   private basePath = '';
+  private muted = false;
 
   constructor() {
     // Initialise audio on first user gesture if in browser
@@ -267,6 +268,7 @@ class ModernSoundManager {
    * Mute / Unmute all sound output across both procedural and sample engines.
    */
   public setMuted(muted: boolean): boolean {
+    this.muted = muted;
     setFighterAudioMuted(muted);
     if (this.masterGain && this.audioCtx) {
       this.masterGain.gain.setValueAtTime(muted ? 0 : this.masterVolume, this.audioCtx.currentTime);
@@ -278,7 +280,7 @@ class ModernSoundManager {
   }
 
   public isMuted(): boolean {
-    return isFighterAudioMuted();
+    return this.muted;
   }
 
   public toggleMuted(): boolean {
@@ -419,4 +421,8 @@ export function toggleAudio() {
 
 export function isAudioMuted() {
   return soundManager.isMuted();
+}
+
+export function stopAllSounds(): void {
+  soundManager.stopAll();
 }

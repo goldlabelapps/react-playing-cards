@@ -27,7 +27,7 @@ export function InteractiveStage() {
     >
       {mounted ? (
         <Flash
-          movie="FlashStory"
+          movie="PokerDice"
           speed={1}
           loop={false}
           autoPlay={true}

@@ -12,6 +12,7 @@ import { TitleText, AgentText } from './MovieClips/Typography';
 import { StarWars } from './MovieClips/StarWars';
 import { FlashStory } from './MovieClips/FlashStory';
 import { GameMenu } from './MovieClips/GameMenu';
+import { SoundFX } from './MovieClips/SoundFX';
 import { getActionScript, corkScrew } from './ActionScript';
 import type { FlashHandle, FlashProps, PromptSceneElement } from './types';
 
@@ -247,6 +248,10 @@ export const Flash = forwardRef<FlashHandle, FlashProps>(function Flash(
       case 'agent-text':
       case 'AgentText':
         return <AgentText />;
+      case 'sound-fx':
+      case 'soundfx':
+      case 'SoundFX':
+        return <SoundFX />;
       case 'game-menu':
       case 'GameMenu':
         return <GameMenu onNavigate={onNavigate} />;
