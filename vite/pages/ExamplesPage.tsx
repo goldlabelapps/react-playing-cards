@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { HomeBtn } from '../../src/components/HomeBtn';
 import { Flash } from '../../src/Flash';
 import { parsePrompt } from '../../src/PromptEngine';
 import type { FlashHandle, PromptScene } from '../../src/types';
@@ -59,27 +60,13 @@ export default function MyAnimation() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <button
+              <HomeBtn
+                size="sm"
                 onClick={() => {
                   if (onNavigate) onNavigate('/');
                   else window.location.pathname = '/';
                 }}
-                style={{
-                  background: '#0f172a',
-                  color: '#94a3b8',
-                  border: '1px solid #334155',
-                  padding: '6px 14px',
-                  borderRadius: 6,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                }}
-              >
-                ← Back to Home
-              </button>
+              />
               <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.02em', color: '#38bdf8', margin: 0 }}>
                 Modern Flash
               </h1>

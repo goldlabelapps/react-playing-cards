@@ -18,8 +18,8 @@ export const appleTheme: ThemeDefinition = {
     primaryHover: '#fdfd5e',
     primaryActive: '#fdfd5e',
     primaryGlow: 'rgba(252, 255, 32, 0.45)',
-    secondary: '#FFB020',
-    secondaryHover: '#e59e1c',
+    secondary: '#FFFFFF',
+    secondaryHover: '#f5f5f7',
     background: '#000000',
     backgroundLight: '#ffffff',
     surface: '#1d1d1f',
@@ -74,7 +74,7 @@ export const appleTheme: ThemeDefinition = {
   shadows: {
     subtle: '0 2px 8px rgba(0, 0, 0, 0.24)',
     elevated: '0 8px 32px rgba(0, 0, 0, 0.38)',
-    glow: '0 4px 20px rgba(255, 176, 32, 0.42)',
+    glow: '0 4px 20px rgba(255, 255, 255, 0.55)',
     insetBevel: 'inset 0 1px 1px rgba(255, 255, 255, 0.45)',
   },
   formFields: {
@@ -85,8 +85,8 @@ export const appleTheme: ThemeDefinition = {
     color: '#000000',
     fontSize: '17px',
     padding: '12px 16px',
-    focusBorder: '#FFB020',
-    focusRing: '0 0 0 4px rgba(255, 176, 32, 0.4)',
+    focusBorder: '#FFFFFF',
+    focusRing: '0 0 0 4px rgba(255, 255, 255, 0.5)',
   },
 };
 

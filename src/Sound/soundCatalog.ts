@@ -44,10 +44,7 @@ export type SoundId =
   | 'explosions/small-01'
   | 'explosions/small-02'
   | 'impact/impact-01'
-  | 'impact/impact-01'
   | 'impact/impact-02'
-  | 'impact/impact-02'
-  | 'impact/impact-03'
   | 'impact/impact-03'
   | 'impact/enemy-01'
   | 'impact/hurt-01'
@@ -156,9 +153,9 @@ export const SOUND_MANIFEST: SoundManifest = {
   "description": "Modern Flash Curated Sound Effects Manifest",
   "format": "m4a",
   "codec": "AAC",
-  "totalSounds": 108,
-  "totalSizeBytes": 2208653,
-  "totalSizeFormatted": "2.11 MB",
+  "totalSounds": 105,
+  "totalSizeBytes": 2108203,
+  "totalSizeFormatted": "2.01 MB",
   "categories": [
     {
       "id": "arcade",
@@ -184,9 +181,9 @@ export const SOUND_MANIFEST: SoundManifest = {
     {
       "id": "impact",
       "name": "Impact",
-      "count": 13,
-      "sizeBytes": 252529,
-      "sizeFormatted": "246.6 KB"
+      "count": 10,
+      "sizeBytes": 152079,
+      "sizeFormatted": "148.5 KB"
     },
     {
       "id": "jingles",
@@ -982,26 +979,6 @@ export const SOUND_MANIFEST: SoundManifest = {
       ]
     },
     {
-      "id": "impact/impact-01",
-      "name": "Arcade Impact 01",
-      "category": "impact",
-      "filename": "impact_impact-01.m4a",
-      "path": "/sfx/impact/impact_impact-01.m4a",
-      "format": "m4a",
-      "codec": "AAC",
-      "mimeType": "audio/mp4",
-      "sizeBytes": 33564,
-      "sizeFormatted": "32.8 KB",
-      "durationSeconds": 0.281,
-      "sampleRate": 22050,
-      "channels": 1,
-      "tags": [
-        "impact",
-        "crash",
-        "collision"
-      ]
-    },
-    {
       "id": "impact/impact-02",
       "name": "Arcade Impact 02",
       "category": "impact",
@@ -1019,45 +996,6 @@ export const SOUND_MANIFEST: SoundManifest = {
         "impact",
         "heavy",
         "slam"
-      ]
-    },
-    {
-      "id": "impact/impact-02",
-      "name": "Arcade Impact 02",
-      "category": "impact",
-      "filename": "impact_impact-02.m4a",
-      "path": "/sfx/impact/impact_impact-02.m4a",
-      "format": "m4a",
-      "codec": "AAC",
-      "mimeType": "audio/mp4",
-      "sizeBytes": 33386,
-      "sizeFormatted": "32.6 KB",
-      "durationSeconds": 0.18,
-      "sampleRate": 22050,
-      "channels": 1,
-      "tags": [
-        "impact",
-        "heavy",
-        "slam"
-      ]
-    },
-    {
-      "id": "impact/impact-03",
-      "name": "Arcade Impact 03",
-      "category": "impact",
-      "filename": "impact_impact-03.m4a",
-      "path": "/sfx/impact/impact_impact-03.m4a",
-      "format": "m4a",
-      "codec": "AAC",
-      "mimeType": "audio/mp4",
-      "sizeBytes": 33500,
-      "sizeFormatted": "32.7 KB",
-      "durationSeconds": 0.221,
-      "sampleRate": 22050,
-      "channels": 1,
-      "tags": [
-        "impact",
-        "smack"
       ]
     },
     {

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { HomeBtn } from '../../src/components/HomeBtn';
 import {
   playSound,
   useSound,
@@ -80,27 +81,13 @@ export function SoundboardPage({ onNavigate }: SoundboardPageProps) {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <button
+            <HomeBtn
+              size="sm"
               onClick={() => {
                 if (onNavigate) onNavigate('/');
                 else window.location.pathname = '/';
               }}
-              style={{
-                background: '#0f172a',
-                color: '#94a3b8',
-                border: '1px solid #334155',
-                padding: '8px 14px',
-                borderRadius: 6,
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-              }}
-            >
-              ← Back to Home
-            </button>
+            />
             <div>
               <h1
                 style={{

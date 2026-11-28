@@ -68,6 +68,9 @@ export type BuiltinMovie =
   | 'FlashStory'
   | 'agent-text'
   | 'AgentText'
+  | 'sound-fx'
+  | 'soundfx'
+  | 'SoundFX'
   | 'game-menu'
   | 'GameMenu';
 
@@ -76,6 +79,8 @@ export type { FlashStoryProps } from './MovieClips/FlashStory';
 export type { AgentTextProps } from './MovieClips/Typography';
 export type { GameMenuProps, GameMenuItem } from './MovieClips/GameMenu';
 export type { PokerDiceProps, PokerDiceFace } from './MovieClips/PokerDice';
+export type { SoundFXProps } from './MovieClips/SoundFX';
+export type { HomeBtnProps } from './components/HomeBtn';
 
 /**
  * Props for the `<Blackjack />` MovieClip component.

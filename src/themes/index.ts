@@ -4,6 +4,13 @@ import type { ThemeDefinition } from './types';
 export * from './types';
 export { appleTheme } from './apple';
 export { Button as AppleButton } from './apple/Button';
+export {
+  SPROING_CONFIG,
+  playSproingHover,
+  playSproingPress,
+  playSproingActivate,
+  playSproingRest,
+} from './apple/sproing';
 
 /**
  * Universal Theme Registry indexed by theme slug.

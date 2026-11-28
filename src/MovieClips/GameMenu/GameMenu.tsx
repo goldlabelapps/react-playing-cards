@@ -5,14 +5,16 @@ import {
   useCallback,
 } from 'react';
 import { gsap } from 'gsap';
-import { playSound } from '../../Sound';
+import { playSound, soundManager } from '../../Sound';
 import { StarWars } from '../StarWars';
 import { LightningBolt } from '../LightningBolt';
 import { Blackjack } from '../Blackjack';
 import { Pingpongball } from '../Pingpongball';
 import { PokerDice } from '../PokerDice';
+import { SoundFX } from '../SoundFX';
 import { SpriteMC } from '../Sprite';
 import { AgentText } from '../Typography/AgentText';
+import { HomeBtn } from '../../components/HomeBtn';
 import { Button as AppleButton } from '../../themes/apple';
 import type { GameMenuItem, GameMenuProps } from './types';
 
@@ -95,7 +97,7 @@ export function GameMenu({
       if (!soundEnabled) return;
       try {
         if (type === 'blip') {
-          playSound('arcade/beep-01', { volume: 0.35 });
+          playSound('ui/hover-01', { volume: 0.18 });
         } else if (type === 'accept') {
           playSound('pickups/coin-01', { volume: 0.45 });
         } else if (type === 'cancel') {
@@ -111,7 +113,7 @@ export function GameMenu({
   // Flash Logo Home Item
   const flashLogoItem: GameMenuItem = {
     id: 'flash-logo',
-    label: 'Home',
+    label: 'Modern Flash',
     description: 'Return to stage home',
     badge: 'HOME',
     icon: '⚡',
@@ -130,12 +132,12 @@ export function GameMenu({
       movie: 'poker-dice',
     },
     {
-      id: 'pingpong',
-      label: 'Pingpong Ball',
-      description: 'High-velocity vector ball rally across stage bounds',
-      badge: 'ARCADE',
-      icon: '🏓',
-      movie: 'pingpong',
+      id: 'sound-fx',
+      label: 'Sound FX',
+      description: 'Interactive retro sound effects laboratory',
+      badge: 'SFX',
+      icon: '🔊',
+      movie: 'sound-fx',
     },
   ];
 
@@ -150,6 +152,7 @@ export function GameMenu({
   const [navStack, setNavStack] = useState<GameMenuItem[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [activeMovie, setActiveMovie] = useState<string | null>(null);
+  const [activeMovieHomeSelected, setActiveMovieHomeSelected] = useState<boolean>(false);
 
   // Active items at the current depth
   const currentItems =
@@ -202,13 +205,15 @@ export function GameMenu({
 
   // Red Button (Back, Cancel)
   const handleBack = useCallback(() => {
-    triggerSound('cancel');
-
-    // If currently previewing a movie demo, exit back to the menu
+    // If currently previewing a movie demo, kill all audio and exit back to the menu
     if (activeMovie) {
+      soundManager.stopAll();
+      triggerSound('cancel');
       setActiveMovie(null);
       return;
     }
+
+    triggerSound('cancel');
 
     // If inside a submenu, pop back up one level
     if (navStack.length > 0) {
@@ -254,6 +259,12 @@ export function GameMenu({
 
   // Keyboard navigation listener
   useEffect(() => {
+    const isPokerDiceActive =
+      activeMovie === 'poker-dice' || activeMovie === 'PokerDice';
+    if (isPokerDiceActive) {
+      return;
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowUp':
@@ -289,7 +300,7 @@ export function GameMenu({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleMoveUp, handleMoveDown, handleAccept, handleBack]);
+  }, [activeMovie, handleMoveUp, handleMoveDown, handleAccept, handleBack]);
 
   // Fast GSAP entrance tween on mount or depth change
   useEffect(() => {
@@ -314,9 +325,21 @@ export function GameMenu({
         return <Blackjack />;
       case 'poker-dice':
       case 'PokerDice':
-        return <PokerDice onComplete={() => setActiveMovie(null)} />;
+        return (
+          <PokerDice
+            onHomeFocusChange={setActiveMovieHomeSelected}
+            onComplete={() => {
+              setActiveMovieHomeSelected(false);
+              setActiveMovie(null);
+            }}
+          />
+        );
       case 'pingpong':
         return <PingpongStage />;
+      case 'sound-fx':
+      case 'soundfx':
+      case 'SoundFX':
+        return <SoundFX onBack={handleBack} />;
       case 'sprite':
         return <SpriteMC size={90} />;
       case 'agent-text':
@@ -398,6 +421,29 @@ export function GameMenu({
           >
             <div
               style={{
+                position: 'absolute',
+                top: 24,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '100%',
+                maxWidth: '400px',
+                padding: '0 clamp(12px, 2vw, 24px)',
+                boxSizing: 'border-box',
+                zIndex: 10,
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <HomeBtn
+                size="fat"
+                selected={activeMovieHomeSelected}
+                onClick={handleBack}
+                style={{ width: '100%', maxWidth: '400px' }}
+              />
+            </div>
+
+            <div
+              style={{
                 width: '100%',
                 height: '100%',
                 display: 'flex',
@@ -406,23 +452,6 @@ export function GameMenu({
               }}
             >
               {renderActiveMovie()}
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 24,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                zIndex: 10,
-              }}
-            >
-              <AppleButton
-                size="sm"
-                selected
-                label="Back"
-                onClick={handleBack}
-              />
             </div>
           </div>
         ) : (
@@ -450,9 +479,9 @@ export function GameMenu({
               }}
             >
               {navStack.length > 0 && (
-                <AppleButton
+                <HomeBtn
                   key="nav-back-button"
-                  label="Back"
+                  label="Modern Flash"
                   size="fat"
                   onClick={handleBack}
                   style={{ width: '100%', maxWidth: '400px' }}
@@ -463,36 +492,12 @@ export function GameMenu({
 
                 if (item.id === 'flash-logo' || item.id === 'flash-home') {
                   return (
-                    <a
+                    <HomeBtn
                       key={item.id}
-                      href={item.route ?? '/'}
-                      aria-label={item.label || 'Home'}
-                      title={item.label || 'Home'}
-                      role="menuitem"
-                      aria-selected={isSelected}
-                      tabIndex={isSelected ? 0 : -1}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '64px',
-                        height: '64px',
-                        borderRadius: '50%',
-                        backgroundColor: isSelected ? '#111827' : '#0a0f1d',
-                        border: isSelected ? '2px solid #FCFF20' : '2px solid #2A2A2A',
-                        boxShadow: isSelected
-                          ? '0 0 18px rgba(252, 255, 32, 0.65), 3px 3px 0px 0px #FFB020'
-                          : '3px 3px 0px 0px #2A2A2A, 0 4px 12px rgba(0, 0, 0, 0.4)',
-                        cursor: 'pointer',
-                        textDecoration: 'none',
-                        outline: 'none',
-                        marginBottom: '8px',
-                        transform: isSelected ? 'scale(1.08)' : 'scale(1)',
-                        transition:
-                          'transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease',
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault();
+                      label={item.label || 'Modern Flash'}
+                      size="fat"
+                      selected={isSelected}
+                      onClick={() => {
                         setSelectedIndex(idx);
                         activateItem(item);
                       }}
@@ -500,16 +505,8 @@ export function GameMenu({
                         setSelectedIndex(idx);
                         triggerSound('blip');
                       }}
-                    >
-                      <LightningBolt
-                        width="24px"
-                        height="48px"
-                        fillColor={isSelected ? '#FCFF20' : '#FFB020'}
-                        frontColor="#FFFFFF"
-                        backColor="#FFFFFF"
-                        strokeColor="#000000"
-                      />
-                    </a>
+                      style={{ width: '100%', maxWidth: '400px' }}
+                    />
                   );
                 }
 
